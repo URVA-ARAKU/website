@@ -80,4 +80,126 @@
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+
+  <!-- ─── Individual Storefront Products ─── -->
+  <url>
+    <loc>https://urvaswadeshi.in/product/3b7c5df9-0442-46d4-822d-d59818f2b7fb</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/idi6k3ue/image/upload/v1791904263/urvaa/products/tribal-araku.jpg</image:loc>
+      <image:title>Urvaa Araku Arabica Coffee Powder</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://urvaswadeshi.in/product/e2b0c5b2-d664-4881-b90a-8168299628a8</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/idi6k3ue/image/upload/v1791904263/urvaa/products/mana-godavari.jpg</image:loc>
+      <image:title>Authentic Thati Bellam (Palm Jaggery)</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://urvaswadeshi.in/product/b52923d2-78a4-4d12-9607-e60078395026</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/idi6k3ue/image/upload/v1791904263/urvaa/products/from-our-villages.jpg</image:loc>
+      <image:title>Urvaa Raw Forest Honey</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://urvaswadeshi.in/product/4eb7b27b-de95-4d75-afec-8e204d797649</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/idi6k3ue/image/upload/v1791904263/urvaa/products/rural-heritage.jpg</image:loc>
+      <image:title>Godavari Putharekulu</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://urvaswadeshi.in/product/4c11039f-8ed9-4777-b8af-323b033dba36</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/idi6k3ue/image/upload/v1791904263/urvaa/products/eco-friendly.jpg</image:loc>
+      <image:title>Handcrafted Siali Leaf Dining Plates</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://urvaswadeshi.in/product/283d1786-90fe-4d6b-bda8-4ee13039c7cb</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/idi6k3ue/image/upload/v1791904263/urvaa/products/kolam-cultural.jpg</image:loc>
+      <image:title>Urvaa Herbal Mosquito Repellent Dhoop</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://urvaswadeshi.in/product/449b25f1-d2e2-4681-a5f7-eeefa85be1a6</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/idi6k3ue/image/upload/v1791904263/urvaa/products/swadesi-handlooms.jpg</image:loc>
+      <image:title>Traditional Swadesi Handloom Cotton Dhoti</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://urvaswadeshi.in/product/98cf2a98-faf2-4c5f-a81d-1bd8a9931fd7</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/idi6k3ue/image/upload/v1791904263/urvaa/products/rooted-in-rural-life.jpg</image:loc>
+      <image:title>Authentic Swadesi Handloom Pure Cotton Saree</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://urvaswadeshi.in/product/5ff3918a-e829-49aa-8220-d7743a2353b6</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/idi6k3ue/image/upload/v1791904263/urvaa/products/kadiyam-plants.jpg</image:loc>
+      <image:title>Kadiyam Royal Jasmine Flowering Live Plant</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://urvaswadeshi.in/product/893d2003-fdbd-4420-88ab-c47b9f49e3a4</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/idi6k3ue/image/upload/v1791904263/urvaa/products/golden-harvest-village.jpg</image:loc>
+      <image:title>Kadiyam Dwarf Mango Grafted Live Plant</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://urvaswadeshi.in/product/aead7d23-ed19-48f6-b5f8-35966dabd9d6</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/idi6k3ue/image/upload/v1791904263/urvaa/products/urvaa-rural-marketplace-showcase.png</image:loc>
+      <image:title>Traditional Bamboo Kitchen Basket and Steamer</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://urvaswadeshi.in/product/3d1b4b90-f3c7-4b66-9a1b-a095a2dc7013</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/idi6k3ue/image/upload/v1791904263/urvaa/products/rural-heritage.jpg</image:loc>
+      <image:title>Atreyapuram Bellam Putharekulu (Dry Fruit Pack of 10)</image:title>
+    </image:image>
+  </url>
 </urlset>

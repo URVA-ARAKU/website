@@ -1,0 +1,23 @@
+{
+  "name": "URVA - Delivering the Authentic Rural Aura",
+  "short_name": "URVA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF7F2",
+  "theme_color": "#C89B3C",
+  "description": "Discover authentic regional foods, Araku Arabica coffee, pure forest honey, palm jaggery, traditional handlooms, and nursery plants directly sourced from rural artisans across India.",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

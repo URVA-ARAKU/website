@@ -98,11 +98,6 @@
       "permanent": true
     },
     {
-      "source": "/category/(.*)",
-      "destination": "/products",
-      "permanent": true
-    },
-    {
       "source": "/index.php/category/(.*)",
       "destination": "/products",
       "permanent": true

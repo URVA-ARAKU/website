@@ -102,10 +102,9 @@ Disallow: /my-orders
 Disallow: /index.php/
 Disallow: /api/v1/admin/
 Disallow: /api/v1/payments/
-Crawl-delay: 1
 
 # ============================================
-# SOCIAL MEDIA CRAWLERS
+# SOCIAL MEDIA SHARING (OpenGraph / Previews)
 # ============================================
 User-agent: facebookexternalhit
 Allow: /
@@ -120,7 +119,28 @@ User-agent: WhatsApp
 Allow: /
 
 # ============================================
-# BAD BOTS - BLOCK COMPLETELY
+# AI SEARCH & DISCOVERY (GEO Optimization)
+# ============================================
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+Disallow: /checkout
+Disallow: /cart
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# ============================================
+# AGGRESSIVE SCRAPERS - BLOCK COMPLETELY
 # ============================================
 User-agent: AhrefsBot
 Disallow: /
@@ -134,19 +154,7 @@ Disallow: /
 User-agent: DotBot
 Disallow: /
 
-User-agent: GPTBot
-Disallow: /
-
-User-agent: ChatGPT-User
-Disallow: /
-
 User-agent: CCBot
-Disallow: /
-
-User-agent: anthropic-ai
-Disallow: /
-
-User-agent: Claude-Web
 Disallow: /
 
 User-agent: Bytespider
