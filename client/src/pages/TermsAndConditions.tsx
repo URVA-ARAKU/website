@@ -1,8 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { usePageSEO } from '../hooks/usePageSEO';
-import { LegalNav, LegalContactCard } from '../components/legal/LegalNav';
-import { FaFileContract, FaCheckCircle, FaShieldHalved } from 'react-icons/fa6';
+import { LegalNav } from '../components/legal/LegalNav';
+import { FaFileContract } from 'react-icons/fa6';
 
 const TermsAndConditions: React.FC = () => {
   usePageSEO({
