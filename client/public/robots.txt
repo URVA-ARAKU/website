@@ -28,8 +28,17 @@ Disallow: /*?*add-to-cart=
 # Allow main storefront and category routes
 Allow: /category/
 
-# Block API endpoints from indexing
-Disallow: /api/
+# Allow public storefront APIs required for SPA rendering
+Allow: /api/v1/banners
+Allow: /api/v1/products
+Allow: /api/v1/categories
+
+# Block private and administrative APIs
+Disallow: /api/v1/admin/
+Disallow: /api/v1/payments/
+Disallow: /api/v1/orders/
+Disallow: /api/v1/user/
+Disallow: /api/v1/upload/
 
 # Block query parameters (sorting, internal searches, checkout sessions)
 Disallow: /*?*sort=
@@ -56,6 +65,9 @@ Allow: /terms
 Allow: /privacy
 Allow: /shipping-policy
 Allow: /refund-policy
+Allow: /api/v1/banners
+Allow: /api/v1/products
+Allow: /api/v1/categories
 Disallow: /admin/
 Disallow: /shipper/
 Disallow: /checkout
@@ -63,7 +75,8 @@ Disallow: /cart
 Disallow: /my-orders
 Disallow: /order/
 Disallow: /index.php/
-Disallow: /api/
+Disallow: /api/v1/admin/
+Disallow: /api/v1/payments/
 
 # ============================================
 # GOOGLEBOT-IMAGE (Google Images)
@@ -78,13 +91,17 @@ Allow: /public/
 # ============================================
 User-agent: Bingbot
 Allow: /
+Allow: /api/v1/banners
+Allow: /api/v1/products
+Allow: /api/v1/categories
 Disallow: /admin/
 Disallow: /shipper/
 Disallow: /checkout
 Disallow: /cart
 Disallow: /my-orders
 Disallow: /index.php/
-Disallow: /api/
+Disallow: /api/v1/admin/
+Disallow: /api/v1/payments/
 Crawl-delay: 1
 
 # ============================================
