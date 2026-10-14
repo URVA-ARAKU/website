@@ -6,8 +6,15 @@ import { userNotExists } from '../redux/reducers/user.reducer';
 import { RootState } from '../redux/store';
 import { notify } from '../utils/util';
 import { supabase } from '../supabaseConfig';
+import { usePageSEO } from '../hooks/usePageSEO';
 
 const ProfilePage: React.FC = () => {
+  usePageSEO({
+    title: 'My Profile | URVA',
+    description: 'Manage your URVA account settings and profile.',
+    noIndex: true,
+  });
+
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user);
 

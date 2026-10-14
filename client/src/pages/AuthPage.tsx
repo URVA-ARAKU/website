@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import Login from '../components/auth/Login';
 import Signup from '../components/auth/Signup';
+import { usePageSEO } from '../hooks/usePageSEO';
 
 const AuthPage: React.FC = () => {
   const [isSignUp, setIsSignUp] = useState(false);
+
+  usePageSEO({
+    title: isSignUp ? 'Sign Up | URVA' : 'Sign In | URVA',
+    description: 'Sign in or create your URVA account.',
+    noIndex: true,
+  });
 
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-[#FAFAFA] py-10 px-4">
