@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { usePageSEO } from '../hooks/usePageSEO';
-import { LegalNav } from '../components/legal/LegalNav';
+import { LegalNav, LegalContactCard } from '../components/legal/LegalNav';
 import { FaTruckFast } from 'react-icons/fa6';
 
 const ShippingPolicy: React.FC = () => {

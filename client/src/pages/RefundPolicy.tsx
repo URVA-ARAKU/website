@@ -1,7 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { usePageSEO } from '../hooks/usePageSEO';
-import { LegalNav } from '../components/legal/LegalNav';
-import { FaArrowRotateLeft } from 'react-icons/fa6';
+import { LegalNav, LegalContactCard } from '../components/legal/LegalNav';
+import { FaArrowRotateLeft, FaCircleCheck } from 'react-icons/fa6';
 
 const RefundPolicy: React.FC = () => {
   usePageSEO({
