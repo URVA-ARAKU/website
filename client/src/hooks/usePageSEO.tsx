@@ -11,7 +11,7 @@ interface SEOProps {
   schema?: object | object[];
 }
 
-const BASE_URL = 'https://urvaa.in';
+const BASE_URL = 'https://urvaswadeshi.in';
 const DEFAULT_IMAGE = 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png';
 
 /**

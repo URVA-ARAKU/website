@@ -135,4 +135,4 @@ Disallow: /
 # ============================================
 # SITEMAP
 # ============================================
-Sitemap: https://urvaa.in/sitemap.xml
+Sitemap: https://urvaswadeshi.in/sitemap.xml

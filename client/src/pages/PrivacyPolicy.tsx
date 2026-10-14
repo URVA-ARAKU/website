@@ -33,8 +33,8 @@ const PrivacyPolicy: React.FC = () => {
             </h1>
             <p className="text-xs sm:text-sm text-neutral-500 mt-2 max-w-2xl leading-relaxed">
               At <strong>URVA</strong> (
-              <a href="https://urvaa.in" className="text-[#E57A22] font-semibold hover:underline">
-                https://urvaa.in
+              <a href="https://urvaswadeshi.in" className="text-[#E57A22] font-semibold hover:underline">
+                https://urvaswadeshi.in
               </a>
               ), we hold the trust of our customers and rural artisan partners in highest regard. This policy outlines how your personal information is gathered, safeguarded, and utilized.
             </p>

@@ -12,7 +12,7 @@ interface SEOProps {
   jsonLd?: object | object[];
 }
 
-const DOMAIN = 'https://urvaa.in';
+const DOMAIN = 'https://urvaswadeshi.in';
 
 const DEFAULT_TITLE = 'URVA | Delivering the Authentic Rural Aura';
 const DEFAULT_DESCRIPTION =

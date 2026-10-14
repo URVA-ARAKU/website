@@ -7,7 +7,7 @@ import { FaFileContract } from 'react-icons/fa6';
 const TermsAndConditions: React.FC = () => {
   usePageSEO({
     title: 'Terms & Conditions | URVA',
-    description: 'Read the official terms and conditions for purchasing authentic rural and regional products on URVA (https://urvaa.in).',
+    description: 'Read the official terms and conditions for purchasing authentic rural and regional products on URVA (https://urvaswadeshi.in).',
     canonical: '/terms',
     noIndex: false,
   });
@@ -33,8 +33,8 @@ const TermsAndConditions: React.FC = () => {
             </h1>
             <p className="text-xs sm:text-sm text-neutral-500 mt-2 max-w-2xl leading-relaxed">
               These Terms and Conditions govern your access to and use of <strong>URVA</strong> (
-              <a href="https://urvaa.in" className="text-[#E57A22] font-semibold hover:underline">
-                https://urvaa.in
+              <a href="https://urvaswadeshi.in" className="text-[#E57A22] font-semibold hover:underline">
+                https://urvaswadeshi.in
               </a>
               ), an authentic regional commerce platform connecting rural Indian cooperatives and artisans directly with customers.
             </p>

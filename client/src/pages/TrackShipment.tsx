@@ -102,7 +102,7 @@ const TrackShipment: React.FC = () => {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3">
                         <a
-                            href="mailto:support@urvaa.in"
+                            href="mailto:support@urvaswadeshi.in"
                             className="inline-flex items-center justify-center px-4 py-2 bg-white border border-amber-300 text-amber-800 rounded-lg text-sm font-semibold hover:bg-amber-100 transition"
                         >
                             📧 Email Support

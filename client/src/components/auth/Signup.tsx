@@ -86,7 +86,7 @@ const SignupPage: React.FC = () => {
         dispatch(userExists({
           _id: 'user_google_' + Date.now(),
           uid: 'user_google_uid_' + Date.now(),
-          email: 'customer@urvaa.in',
+          email: 'customer@urvaswadeshi.in',
           name: 'URVA Customer',
           role: 'user',
           provider: 'google'

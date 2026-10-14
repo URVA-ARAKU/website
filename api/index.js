@@ -88,7 +88,7 @@ function verifyRazorpaySignature(orderId, paymentId, signature) {
 // Resend Email API Configuration
 const RESEND_CONFIG = {
   get KEY() { return process.env.RESEND_API_KEY || ''; },
-  get FROM() { return process.env.RESEND_FROM_EMAIL || 'URVA <sales@urvaa.in>'; }
+  get FROM() { return process.env.RESEND_FROM_EMAIL || 'URVA <sales@urvaswadeshi.in>'; }
 };
 
 // Send email using Resend REST API
@@ -170,7 +170,7 @@ async function handleOrderSuccess(orderId) {
     const recipientEmail = userRow?.email || shippingInfo?.email;
     const customerName = userRow?.name || shippingInfo?.name || 'Customer';
 
-    const baseUrl = process.env.CLIENT_URL || 'https://urvaa.in';
+    const baseUrl = process.env.CLIENT_URL || 'https://urvaswadeshi.in';
 
     const orderItems = typeof order.order_items === 'string' ? JSON.parse(order.order_items) : order.order_items;
     const itemsListHtml = (orderItems || []).map(item => `
@@ -665,7 +665,7 @@ export default async function handler(req, res) {
             receipt: orderReceipt,
             notes: {
               customer_name: customer_name || 'URVA Customer',
-              customer_email: customer_email || 'support@urvaa.in',
+              customer_email: customer_email || 'support@urvaswadeshi.in',
               customer_phone: customer_phone || '',
             },
           });
@@ -762,7 +762,7 @@ export default async function handler(req, res) {
       }
 
       // Always redirect to production — payments only run on prod.
-      const origin = process.env.CLIENT_URL || 'https://urvaa.in';
+      const origin = process.env.CLIENT_URL || 'https://urvaswadeshi.in';
       const host = req.headers.host || '';
 
       // Verify SecureHash
@@ -918,7 +918,7 @@ export default async function handler(req, res) {
               .from('users')
               .insert({
                 uid: guestUid,
-                email: guestEmail || `${guestPhone}@guest.urvaa.in`,
+                email: guestEmail || `${guestPhone}@guest.urvaswadeshi.in`,
                 name: guestName,
                 provider: 'guest',
                 role: 'user',
@@ -1045,7 +1045,7 @@ export default async function handler(req, res) {
           user: 'guest',
           shippingInfo: {
             name: 'Valued Customer',
-            email: 'customer@urvaa.in',
+            email: 'customer@urvaswadeshi.in',
             phone: '+91 7304888197',
             address: 'Room No. 28, Sai Shraddha Apartment, Sai Nagari',
             city: 'Ulhasnagar',
@@ -1136,7 +1136,7 @@ export default async function handler(req, res) {
         const recipientEmail = userRow?.email || shippingInfo?.email || 'shubhamvasantgundu@gmail.com';
         const customerName = userRow?.name || shippingInfo?.name || 'Customer';
 
-        const baseUrl = process.env.CLIENT_URL || 'https://urvaa.in';
+        const baseUrl = process.env.CLIENT_URL || 'https://urvaswadeshi.in';
 
         // If status is "Shipped" and we have tracking data, send tracking email
         if (status === 'Shipped' && updated.awb_number) {
@@ -1922,7 +1922,7 @@ export default async function handler(req, res) {
       const cleanEmail = String(email).trim().toLowerCase();
 
       // Default built-in admin credentials
-      const ADMIN_EMAIL = 'admin@urvaa.in';
+      const ADMIN_EMAIL = 'admin@urvaswadeshi.in';
       const DEFAULT_ADMIN_HASH = hashAdminPassword('urvaa@2026');
       const LEGACY_ADMIN_HASH = hashAdminPassword('julinacandles@2026');
       const providedPasswordHash = hashAdminPassword(password);
@@ -1935,7 +1935,7 @@ export default async function handler(req, res) {
       };
 
       // 1. Check built-in admin account
-      if ((cleanEmail === ADMIN_EMAIL.toLowerCase() || cleanEmail === 'admin@julinacandles.in') && 
+      if ((cleanEmail === ADMIN_EMAIL.toLowerCase() || cleanEmail === 'admin@urvaa.in' || cleanEmail === 'admin@julinacandles.in') && 
           (providedPasswordHash === DEFAULT_ADMIN_HASH || providedPasswordHash === LEGACY_ADMIN_HASH)) {
         isAdminValid = true;
       } else {
@@ -1993,7 +1993,7 @@ export default async function handler(req, res) {
           success: true,
           admin: {
             id: 'admin_001',
-            email: 'admin@urvaa.in',
+            email: 'admin@urvaswadeshi.in',
             name: 'Admin',
           }
         });
