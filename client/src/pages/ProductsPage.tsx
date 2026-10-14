@@ -40,13 +40,13 @@ const ProductsPage: React.FC = () => {
     description: selectedCategory
       ? `Browse authentic ${selectedCategory} sourced directly from rural artisans, cooperatives, and farmers across India on URVA.`
       : 'Browse products from URVA: authentic regional foods, Araku coffee, Godavari sweets, handlooms, plants, and thoughtful everyday goods.',
-    canonical: selectedCategory ? `/products?category=${encodeURIComponent(selectedCategory)}` : '/products',
+    canonical: '/products',
     keywords: selectedCategory
       ? `${selectedCategory}, buy ${selectedCategory} online, URVA, rural marketplace, swadeshi India`
       : 'URVA, rural products India, regional foods, swadeshi handlooms, kadiyam plants, araku coffee',
     schema: [
       collectionPageSchema({
-        url: selectedCategory ? `/products?category=${encodeURIComponent(selectedCategory)}` : '/products',
+        url: '/products',
         name: selectedCategory ? `${selectedCategory} | URVA` : 'Explore Products | URVA',
         description: 'Explore regional and rural specialty products from across India.',
         numberOfItems: data?.totalProducts || productList.length,
