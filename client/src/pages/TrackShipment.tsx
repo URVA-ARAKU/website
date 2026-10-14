@@ -1,9 +1,33 @@
 import React, { useState } from 'react';
 import { FaSearch, FaShippingFast } from 'react-icons/fa';
+import { usePageSEO } from '../hooks/usePageSEO';
+import { webPageSchema, breadcrumbSchema } from '../seo/schemas';
 
 const TrackShipment: React.FC = () => {
     const [awbNumber, setAwbNumber] = useState('');
     const [mobileNumber, setMobileNumber] = useState('');
+
+    usePageSEO({
+        title: 'Track Your Shipment & Order Delivery | URVA',
+        description: 'Track the real-time shipping status and delivery progress of your authentic rural Indian goods ordered from URVA.',
+        canonical: '/track-shipment',
+        keywords: 'track order, track shipment, URVA delivery tracking, APSRTC cargo tracking, rural goods delivery status',
+        schema: [
+            webPageSchema({
+                url: '/track-shipment',
+                name: 'Track Your Shipment | URVA',
+                description: 'Real-time consignment tracking for orders placed on URVA.',
+                breadcrumb: [
+                    { name: 'Home', url: '/' },
+                    { name: 'Track Shipment', url: '/track-shipment' },
+                ],
+            }),
+            breadcrumbSchema([
+                { name: 'Home', url: '/' },
+                { name: 'Track Shipment', url: '/track-shipment' },
+            ]),
+        ],
+    });
 
     const handleTrack = (e: React.FormEvent) => {
         e.preventDefault();

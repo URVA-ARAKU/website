@@ -208,10 +208,16 @@ const ProductDetails: React.FC = () => {
 
   // Dynamic SEO
   usePageSEO({
-    title: resolvedProduct ? `${resolvedProduct.name} | URVA` : 'Product | URVA',
-    description: resolvedProduct?.description || 'Authentic rural Indian specialty from URVA.',
+    title: resolvedProduct ? `${resolvedProduct.name} – Buy Authentic Online | URVA` : 'Product Details | URVA',
+    description: resolvedProduct?.description 
+      ? `${resolvedProduct.description.slice(0, 150)}... 100% authentic regional product from URVA.` 
+      : 'Authentic rural Indian specialty from URVA with nationwide fast delivery.',
     canonical: `/product/${productId}`,
-    ogImage: activeImage,
+    ogType: 'product',
+    ogImage: activeImage || resolvedProduct?.photo,
+    keywords: resolvedProduct 
+      ? `${resolvedProduct.name}, buy ${resolvedProduct.name} online, ${resolvedProduct.category || ''}, URVA, authentic rural goods, swadeshi India` 
+      : 'URVA, product',
     schema: resolvedProduct ? [
       webPageSchema({
         url: `/product/${productId}`,
@@ -226,12 +232,14 @@ const ProductDetails: React.FC = () => {
       productSchema({
         name: resolvedProduct.name,
         description: resolvedProduct.description,
-        image: activeImage,
+        image: activeImage || resolvedProduct.photo || '',
         url: `/product/${productId}`,
         sku: selectedVariety?.sku || `URVA-${productId}`,
         price: price,
         mrp: mrp,
-        availability: 'https://schema.org/InStock',
+        availability: (resolvedProduct.stock && resolvedProduct.stock <= 0) 
+          ? 'https://schema.org/OutOfStock' 
+          : 'https://schema.org/InStock',
       }),
       breadcrumbSchema([
         { name: 'Home', url: '/' },

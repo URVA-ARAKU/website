@@ -10,8 +10,9 @@ import ExploreProducts from '../components/ExploreProducts';
 import { useLatestProductsQuery } from '../redux/api/product.api';
 import { useGetBannersQuery } from '../redux/api/banner.api';
 import { usePageSEO } from '../hooks/usePageSEO';
-import { webPageSchema } from '../seo/schemas';
+import { webPageSchema, faqSchema } from '../seo/schemas';
 import { optimizeCloudinaryUrl } from '../utils/cloudinaryOptimize';
+import FAQSection, { faqData } from '../components/common/FAQSection';
 
 const HomePage: React.FC = () => {
   const { data: productData } = useLatestProductsQuery('');
@@ -35,6 +36,7 @@ const HomePage: React.FC = () => {
           'A rural-products commerce brand built around One Village – One Product and the regional stories behind India’s goods.',
         breadcrumb: [{ name: 'Home', url: '/' }],
       }),
+      faqSchema(faqData),
     ],
   });
 
@@ -96,6 +98,11 @@ const HomePage: React.FC = () => {
       {/* ─── 9. Customer Testimonials ─── */}
       <div className="content-auto">
         <CustomerTestimonials />
+      </div>
+
+      {/* ─── 10. Frequently Asked Questions (FAQ Section) ─── */}
+      <div className="content-auto">
+        <FAQSection />
       </div>
     </div>
   );

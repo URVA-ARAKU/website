@@ -75,7 +75,7 @@ export function productSchema({
     description,
     image,
     url: `${BASE}${url}`,
-    sku: sku || `JCM-${Math.random().toString(36).substr(2, 6)}`,
+    sku: sku || `URVA-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
     brand: {
       '@type': 'Brand',
       name: 'URVA',
@@ -83,8 +83,9 @@ export function productSchema({
     manufacturer: {
       '@id': ORG_ID,
     },
+    itemCondition: 'https://schema.org/NewCondition',
     category: 'Regional Products',
-    keywords: 'regional products, rural products, India, URVA',
+    keywords: 'regional products, rural products, India, URVA, swadeshi',
     offers: {
       '@type': 'Offer',
       url: `${BASE}${url}`,
@@ -95,6 +96,38 @@ export function productSchema({
       availability,
       seller: { '@id': ORG_ID },
     },
+  };
+}
+
+// COLLECTION PAGE / CATEGORY
+export function collectionPageSchema({
+  url,
+  name,
+  description,
+  image,
+  breadcrumb,
+  numberOfItems,
+}: {
+  url: string;
+  name: string;
+  description: string;
+  image?: string;
+  breadcrumb?: { name: string; url: string }[];
+  numberOfItems?: number;
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${BASE}${url}`,
+    url: `${BASE}${url}`,
+    name,
+    description,
+    isPartOf: { '@id': `${BASE}/#website` },
+    publisher: { '@id': ORG_ID },
+    inLanguage: 'en-IN',
+    ...(image ? { image } : {}),
+    ...(numberOfItems !== undefined ? { numberOfItems } : {}),
+    ...(breadcrumb ? { breadcrumb: breadcrumbSchema(breadcrumb) } : {}),
   };
 }
 

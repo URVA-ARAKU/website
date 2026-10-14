@@ -6,6 +6,7 @@ import ProductCard from '../components/ProductCard';
 import { useCategoriesQuery, useSearchProductsQuery } from '../redux/api/product.api';
 import { Product } from '../types/api-types';
 import { usePageSEO } from '../hooks/usePageSEO';
+import { collectionPageSchema, breadcrumbSchema, itemListSchema } from '../seo/schemas';
 
 const ProductsPage: React.FC = () => {
   const location = useLocation();
@@ -21,13 +22,6 @@ const ProductsPage: React.FC = () => {
     setPage(1);
   }, [location.search]);
 
-  usePageSEO({
-    title: 'Explore Products | URVA',
-    description:
-      'Browse products from URVA, a growing collection inspired by regional foods, rural makers, handlooms, plants, and thoughtful everyday goods.',
-    canonical: '/products',
-  });
-
   const { data: categoriesData } = useCategoriesQuery('');
   const { data, isLoading, isError } = useSearchProductsQuery({
     search,
@@ -35,6 +29,46 @@ const ProductsPage: React.FC = () => {
     price: undefined,
     sort: sort !== 'relevance' ? sort : undefined,
     page,
+  });
+
+  const productList = data?.products || [];
+
+  usePageSEO({
+    title: selectedCategory 
+      ? `${selectedCategory} – Explore Authentic Products | URVA` 
+      : 'Explore Regional Products, Sweets & Crafts | URVA',
+    description: selectedCategory
+      ? `Browse authentic ${selectedCategory} sourced directly from rural artisans, cooperatives, and farmers across India on URVA.`
+      : 'Browse products from URVA: authentic regional foods, Araku coffee, Godavari sweets, handlooms, plants, and thoughtful everyday goods.',
+    canonical: selectedCategory ? `/products?category=${encodeURIComponent(selectedCategory)}` : '/products',
+    keywords: selectedCategory
+      ? `${selectedCategory}, buy ${selectedCategory} online, URVA, rural marketplace, swadeshi India`
+      : 'URVA, rural products India, regional foods, swadeshi handlooms, kadiyam plants, araku coffee',
+    schema: [
+      collectionPageSchema({
+        url: selectedCategory ? `/products?category=${encodeURIComponent(selectedCategory)}` : '/products',
+        name: selectedCategory ? `${selectedCategory} | URVA` : 'Explore Products | URVA',
+        description: 'Explore regional and rural specialty products from across India.',
+        numberOfItems: data?.totalProducts || productList.length,
+        breadcrumb: [
+          { name: 'Home', url: '/' },
+          { name: selectedCategory ? selectedCategory : 'Products', url: '/products' },
+        ],
+      }),
+      breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Products', url: '/products' },
+      ]),
+      ...(productList.length > 0 ? [
+        itemListSchema(
+          productList.slice(0, 10).map((p, idx) => ({
+            name: p.name,
+            url: `/product/${p._id}`,
+            position: idx + 1,
+          }))
+        )
+      ] : []),
+    ],
   });
 
   const categories = categoriesData?.categories || [];

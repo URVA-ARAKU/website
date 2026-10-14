@@ -6,6 +6,7 @@ import { useSearchProductsQuery } from '../redux/api/product.api';
 import { Product } from '../types/api-types';
 import { usePageSEO } from '../hooks/usePageSEO';
 import { urvaaCategories } from '../data/categories';
+import { collectionPageSchema, breadcrumbSchema, itemListSchema } from '../seo/schemas';
 
 const CategoryPage: React.FC = () => {
   const { categorySlug } = useParams<{ categorySlug: string }>();
@@ -18,12 +19,6 @@ const CategoryPage: React.FC = () => {
     setPage(1);
   }, [categorySlug]);
 
-  usePageSEO({
-    title: category ? `${category.title} | URVA` : 'Category | URVA',
-    description: category?.description ?? 'Explore curated collections from URVA.',
-    canonical: categorySlug ? `/category/${categorySlug}` : '/category',
-  });
-
   const { data, isLoading, isError, refetch } = useSearchProductsQuery(
     {
       search: '',
@@ -34,6 +29,49 @@ const CategoryPage: React.FC = () => {
     },
     { skip: !category },
   );
+
+  const productList = data?.products || [];
+
+  usePageSEO({
+    title: category ? `${category.title} – Buy Authentic Rural Specialties | URVA` : 'Category | URVA',
+    description: category?.description 
+      ? `${category.description} 100% authentic, farmer & artisan direct with nationwide delivery across India on URVA.` 
+      : 'Explore curated regional collections from URVA.',
+    canonical: categorySlug ? `/category/${categorySlug}` : '/products',
+    ogImage: category?.image,
+    ogType: 'website',
+    keywords: category 
+      ? `${category.title}, buy ${category.title} online, URVA, ${category.products.join(', ')}, swadeshi, authentic rural India` 
+      : 'URVA, regional products, swadeshi',
+    schema: category ? [
+      collectionPageSchema({
+        url: `/category/${categorySlug}`,
+        name: `${category.title} | URVA`,
+        description: category.description,
+        image: category.image,
+        numberOfItems: data?.totalProducts || category.products.length,
+        breadcrumb: [
+          { name: 'Home', url: '/' },
+          { name: 'Products', url: '/products' },
+          { name: category.title, url: `/category/${categorySlug}` },
+        ],
+      }),
+      breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Products', url: '/products' },
+        { name: category.title, url: `/category/${categorySlug}` },
+      ]),
+      ...(productList.length > 0 ? [
+        itemListSchema(
+          productList.slice(0, 10).map((p, idx) => ({
+            name: p.name,
+            url: `/product/${p._id}`,
+            position: idx + 1,
+          }))
+        )
+      ] : []),
+    ] : [],
+  });
 
   if (!category) return <Navigate to="/not-found" replace />;
 

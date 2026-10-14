@@ -6,7 +6,7 @@ interface FAQItem {
   answer: string;
 }
 
-const faqData: FAQItem[] = [
+export const faqData: FAQItem[] = [
   {
     question: 'What is URVA?',
     answer: 'URVA is a rural-products commerce brand built around One Village – One Product and the regional stories behind Indian goods.'

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaLock, FaEnvelope, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { notify } from '../../utils/util';
+import { usePageSEO } from '../../hooks/usePageSEO';
 
 const AdminLogin: React.FC = () => {
   const navigate = useNavigate();
@@ -9,6 +10,12 @@ const AdminLogin: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  usePageSEO({
+    title: 'Admin Console | URVA',
+    description: 'Merchant portal login for URVA platform administrators.',
+    noIndex: true,
+  });
 
   useEffect(() => {
     // Check if already logged in

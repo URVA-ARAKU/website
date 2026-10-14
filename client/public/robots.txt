@@ -22,9 +22,11 @@ Disallow: /track-shipment
 # Block legacy WordPress and WooCommerce paths
 Disallow: /index.php/
 Disallow: /index.php
-Disallow: /category/
 Disallow: /*?*mailpoet_page=
 Disallow: /*?*add-to-cart=
+
+# Allow main storefront and category routes
+Allow: /category/
 
 # Block API endpoints from indexing
 Disallow: /api/
@@ -47,8 +49,9 @@ User-agent: Googlebot
 Allow: /
 Allow: /products
 Allow: /product/
+Allow: /category/
 Allow: /about
-Allow: /search
+Allow: /track-shipment
 Allow: /terms
 Allow: /privacy
 Allow: /shipping-policy
