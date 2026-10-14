@@ -573,6 +573,12 @@ export default async function handler(req, res) {
     return;
   }
 
+  // Google Search Console verification fallback
+  if (url.includes('googleb1a15cf20f5449cc.html')) {
+    res.setHeader('Content-Type', 'text/html');
+    return res.status(200).send('google-site-verification: googleb1a15cf20f5449cc.html');
+  }
+
   // Serve cached GET response if less than 30 seconds old (never cache admin routes)
   if (req.method === 'GET' && !url.includes('/admin/') && global.fastApiCache.has(url)) {
     const cached = global.fastApiCache.get(url);

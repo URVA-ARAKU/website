@@ -114,6 +114,18 @@
       "destination": "/api/index.js"
     },
     {
+      "source": "/googleb1a15cf20f5449cc.html",
+      "destination": "/googleb1a15cf20f5449cc.html"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/sitemap.xml"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/robots.txt"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
