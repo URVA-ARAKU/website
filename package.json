@@ -1,0 +1,15 @@
+{
+  "name": "urvaa",
+  "type": "module",
+  "version": "1.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "lint": "npm --prefix client run lint"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "razorpay": "^2.9.8"
+  }
+}

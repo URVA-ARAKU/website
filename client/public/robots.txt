@@ -1,0 +1,138 @@
+# robots.txt – URVA
+# Last Updated: 2026-08-10
+# Purpose: SEO optimization & crawler management
+
+# ============================================
+# DEFAULT CRAWLER RULES
+# ============================================
+User-agent: *
+Allow: /
+
+# Block admin panel and private user routes
+Disallow: /admin/
+Disallow: /admin
+Disallow: /shipper/
+Disallow: /checkout
+Disallow: /cart
+Disallow: /my-orders
+Disallow: /order/
+Disallow: /shipping
+Disallow: /track-shipment
+
+# Block legacy WordPress and WooCommerce paths
+Disallow: /index.php/
+Disallow: /index.php
+Disallow: /category/
+Disallow: /*?*mailpoet_page=
+Disallow: /*?*add-to-cart=
+
+# Block API endpoints from indexing
+Disallow: /api/
+
+# Block query parameters (sorting, internal searches, checkout sessions)
+Disallow: /*?*sort=
+Disallow: /*?*page=
+Disallow: /*?*filter=
+Disallow: /*?*payment=
+
+# Allow important public assets
+Allow: /images/
+Allow: /founders/
+Allow: /public/
+
+# ============================================
+# GOOGLEBOT (Google Search)
+# ============================================
+User-agent: Googlebot
+Allow: /
+Allow: /products
+Allow: /product/
+Allow: /about
+Allow: /search
+Allow: /terms
+Allow: /privacy
+Allow: /shipping-policy
+Allow: /refund-policy
+Disallow: /admin/
+Disallow: /shipper/
+Disallow: /checkout
+Disallow: /cart
+Disallow: /my-orders
+Disallow: /order/
+Disallow: /index.php/
+Disallow: /api/
+
+# ============================================
+# GOOGLEBOT-IMAGE (Google Images)
+# ============================================
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /founders/
+Allow: /public/
+
+# ============================================
+# BINGBOT (Bing Search)
+# ============================================
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /shipper/
+Disallow: /checkout
+Disallow: /cart
+Disallow: /my-orders
+Disallow: /index.php/
+Disallow: /api/
+Crawl-delay: 1
+
+# ============================================
+# SOCIAL MEDIA CRAWLERS
+# ============================================
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+# ============================================
+# BAD BOTS - BLOCK COMPLETELY
+# ============================================
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+# ============================================
+# SITEMAP
+# ============================================
+Sitemap: https://urvaa.in/sitemap.xml

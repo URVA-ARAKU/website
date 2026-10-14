@@ -1,0 +1,122 @@
+{
+  "buildCommand": "cd client && npm install --include=dev && npm run build",
+  "outputDirectory": "client/dist",
+  "redirects": [
+    {
+      "source": "/index.php/shop/(.*)",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/shop",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/terms-of-use/(.*)",
+      "destination": "/terms",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/terms-of-use",
+      "destination": "/terms",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/privacy-policy/(.*)",
+      "destination": "/privacy",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/privacy-policy",
+      "destination": "/privacy",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/contact-us/(.*)",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/contact-us",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/my-account/(.*)",
+      "destination": "/my-orders",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/my-account",
+      "destination": "/my-orders",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/product/(.*)",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/blog-page/(.*)",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/blog-page",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/millets-vs-white-rice-what-should-you-choose/(.*)",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/millets-vs-white-rice-what-should-you-choose",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/blog/(.*)",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/nutrition/(.*)",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/nutrition",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/category/(.*)",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/index.php/category/(.*)",
+      "destination": "/products",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+
