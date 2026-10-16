@@ -232,9 +232,9 @@ const Shipping: React.FC = () => {
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            className="w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-semibold py-3.5 px-4 rounded-lg uppercase tracking-wider transition-colors shadow-sm text-xs mt-4 flex items-center justify-center gap-2"
+                            className="w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-semibold py-3.5 px-4 rounded-lg uppercase tracking-wider transition-colors shadow-sm text-xs mt-4 flex items-center justify-center gap-2 cursor-pointer"
                         >
-                            <span>Proceed to Payment ➔</span>
+                            <span>Proceed to Pay with UPI &gt;</span>
                         </button>
                     </form>
                 </div>

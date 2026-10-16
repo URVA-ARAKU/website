@@ -18,7 +18,6 @@ import {
   FaMobileScreenButton,
   FaShieldHalved,
   FaCircleInfo,
-  FaArrowUpRightFromSquare,
 } from 'react-icons/fa6';
 
 const CheckoutForm: React.FC = () => {
@@ -56,8 +55,11 @@ const CheckoutForm: React.FC = () => {
   const UPI_ID = '9346422451@ybl';
   const MERCHANT_NAME = 'URVA Rural Aura';
 
-  // Construct standard UPI Payment String
-  const upiDeepLink = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total}&cu=INR&tn=${encodeURIComponent('URVA Order Payment')}`;
+  // Construct standard & app-specific UPI Payment URLs
+  const upiDeepLink = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent('URVA Order Payment')}`;
+  const phonePeDeepLink = `phonepe://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent('URVA Order Payment')}`;
+  const gPayDeepLink = `tez://upi/pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent('URVA Order Payment')}`;
+  const paytmDeepLink = `paytmmp://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent('URVA Order Payment')}`;
 
   // Official merchant PhonePe QR Code image
   const qrCodeUrl = '/qr.jpeg';
@@ -252,10 +254,83 @@ const CheckoutForm: React.FC = () => {
           </div>
         </div>
 
-        {/* STEP 1: Scan & Pay QR Code */}
-        <div className="bg-[#F4F1EA] p-6 rounded-3xl border-2 border-[#E2D9CC] text-center space-y-5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF8F4] border border-[#E2D9CC] text-xs font-bold text-[#8B5A2B] uppercase tracking-wider">
-            <FaQrcode /> Step 1: Scan QR to Pay
+        {/* STEP 1: Pay with UPI & QR Code */}
+        <div className="bg-[#F4F1EA] p-6 sm:p-7 rounded-3xl border-2 border-[#E2D9CC] space-y-6">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF8F4] border border-[#E2D9CC] text-xs font-bold text-[#8B5A2B] uppercase tracking-wider">
+              <FaQrcode /> Step 1: Pay with UPI
+            </div>
+            <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+              Zero Transaction Fee
+            </span>
+          </div>
+
+          {/* PRIMARY "PAY WITH UPI >" HERO BUTTON */}
+          <div className="space-y-3">
+            <a
+              href={upiDeepLink}
+              onClick={() => notify('Opening UPI App... Complete payment and enter your 12-digit UTR below.', 'info')}
+              className="w-full flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-[#5A3825] hover:bg-[#8B5A2B] text-white shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer border border-[#3F2618]"
+            >
+              <div className="flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                  <FaMobileScreenButton />
+                </div>
+                <div className="text-left">
+                  <span className="block text-base sm:text-lg font-serif font-bold text-white leading-tight">
+                    Pay with UPI &gt;
+                  </span>
+                  <span className="block text-[11px] sm:text-xs text-[#E2D9CC] font-normal">
+                    Google Pay, PhonePe, Paytm, BHIM or any UPI app
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-base sm:text-xl font-bold font-serif text-white">
+                  ₹ {total.toFixed(2)}
+                </span>
+                <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold text-white group-hover:translate-x-1 transition-transform">
+                  &gt;
+                </span>
+              </div>
+            </a>
+
+            {/* Quick 1-Tap App Triggers */}
+            <div className="grid grid-cols-3 gap-2">
+              <a
+                href={phonePeDeepLink}
+                onClick={() => notify('Opening PhonePe...', 'info')}
+                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FAF8F4] hover:bg-[#EAE5D9] border border-[#E2D9CC] text-xs font-bold text-[#5A3825] transition shadow-2xs hover:border-[#8B5A2B]"
+              >
+                <span>PhonePe</span>
+                <span className="text-[11px] text-[#8B5A2B] font-bold">&gt;</span>
+              </a>
+              <a
+                href={gPayDeepLink}
+                onClick={() => notify('Opening Google Pay...', 'info')}
+                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FAF8F4] hover:bg-[#EAE5D9] border border-[#E2D9CC] text-xs font-bold text-[#5A3825] transition shadow-2xs hover:border-[#8B5A2B]"
+              >
+                <span>Google Pay</span>
+                <span className="text-[11px] text-[#8B5A2B] font-bold">&gt;</span>
+              </a>
+              <a
+                href={paytmDeepLink}
+                onClick={() => notify('Opening Paytm...', 'info')}
+                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FAF8F4] hover:bg-[#EAE5D9] border border-[#E2D9CC] text-xs font-bold text-[#5A3825] transition shadow-2xs hover:border-[#8B5A2B]"
+              >
+                <span>Paytm</span>
+                <span className="text-[11px] text-[#8B5A2B] font-bold">&gt;</span>
+              </a>
+            </div>
+          </div>
+
+          {/* DIVIDER: OR SCAN QR CODE */}
+          <div className="relative flex py-1 items-center">
+            <div className="flex-grow border-t border-[#E2D9CC]"></div>
+            <span className="shrink-0 mx-3 text-[10px] uppercase font-bold tracking-wider text-[#8C7364] bg-[#F4F1EA] px-2">
+              Or Scan QR Code to Pay
+            </span>
+            <div className="flex-grow border-t border-[#E2D9CC]"></div>
           </div>
 
           {/* QR Code Canvas */}
@@ -264,17 +339,17 @@ const CheckoutForm: React.FC = () => {
               <img
                 src={qrCodeUrl}
                 alt={`Scan to pay ₹${total} to ${UPI_ID}`}
-                className="w-56 h-56 sm:w-64 sm:h-64 object-contain rounded-lg"
+                className="w-52 h-52 sm:w-60 sm:h-60 object-contain rounded-lg"
               />
             </div>
             <div className="mt-3 text-center">
-              <span className="text-xs font-semibold text-[#8C7364] block">Scan using any UPI App</span>
+              <span className="text-xs font-semibold text-[#8C7364] block">Scan using any UPI App Camera</span>
               <span className="text-lg font-bold text-[#5A3825] font-serif">₹ {total.toFixed(2)}</span>
             </div>
           </div>
 
-          {/* Supported UPI Apps Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-[11px] font-semibold text-[#5A3825]">
+          {/* Supported UPI Badges */}
+          <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] font-semibold text-[#5A3825]">
             <span className="px-2.5 py-1 rounded-lg bg-[#FAF8F4] border border-[#E2D9CC]">Google Pay</span>
             <span className="px-2.5 py-1 rounded-lg bg-[#FAF8F4] border border-[#E2D9CC]">PhonePe</span>
             <span className="px-2.5 py-1 rounded-lg bg-[#FAF8F4] border border-[#E2D9CC]">Paytm</span>
@@ -282,8 +357,8 @@ const CheckoutForm: React.FC = () => {
             <span className="px-2.5 py-1 rounded-lg bg-[#FAF8F4] border border-[#E2D9CC]">Cred</span>
           </div>
 
-          {/* UPI ID Copy Bar & Mobile Direct Pay */}
-          <div className="max-w-md mx-auto space-y-2.5">
+          {/* UPI ID Copy Bar */}
+          <div className="max-w-md mx-auto">
             <div className="flex items-center justify-between gap-2 p-2.5 px-3.5 bg-[#FAF8F4] rounded-xl border border-[#E2D9CC]">
               <div className="text-left overflow-hidden">
                 <span className="text-[10px] uppercase font-bold text-[#8C7364] block tracking-wider">UPI ID:</span>
@@ -298,16 +373,6 @@ const CheckoutForm: React.FC = () => {
                 <span>{isCopied ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
-
-            {/* Mobile Direct Pay Trigger */}
-            <a
-              href={upiDeepLink}
-              className="sm:hidden w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#FAF8F4] hover:bg-[#E2D9CC] border border-[#5A3825] text-xs font-bold text-[#5A3825] transition shadow-xs"
-            >
-              <FaMobileScreenButton />
-              <span>Tap to Open Installed UPI App</span>
-              <FaArrowUpRightFromSquare size={11} />
-            </a>
           </div>
         </div>
 
