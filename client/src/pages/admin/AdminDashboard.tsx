@@ -92,11 +92,11 @@ const AdminDashboard: React.FC = () => {
           label: 'Revenue',
           data: Object.values(rawData),
           fill: true,
-          backgroundColor: 'rgba(17, 17, 17, 0.04)',
-          borderColor: '#111111',
+          backgroundColor: 'rgba(139, 90, 43, 0.08)',
+          borderColor: '#8B5A2B',
           borderWidth: 2.5,
-          pointBackgroundColor: '#111111',
-          pointBorderColor: '#ffffff',
+          pointBackgroundColor: '#5A3825',
+          pointBorderColor: '#FAF8F4',
           pointBorderWidth: 2,
           pointRadius: 4,
           pointHoverRadius: 6,
@@ -117,9 +117,9 @@ const AdminDashboard: React.FC = () => {
       datasets: [
         {
           data,
-          backgroundColor: ['#111111', '#525252', '#A3A3A3', '#E57A22'],
+          backgroundColor: ['#5A3825', '#8B5A2B', '#C8BCAB', '#D97706'],
           borderWidth: 2,
-          borderColor: '#ffffff',
+          borderColor: '#FAF8F4',
         },
       ],
     };
@@ -133,7 +133,7 @@ const AdminDashboard: React.FC = () => {
         position: 'bottom' as const,
         labels: {
           font: { family: 'Plus Jakarta Sans', size: 11 },
-          color: '#4B5563',
+          color: '#5A3825',
           padding: 14,
           usePointStyle: true,
         }
@@ -144,18 +144,18 @@ const AdminDashboard: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="w-8 h-8 border-2 border-neutral-900 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-2 border-[#5A3825] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="bg-white p-8 rounded-3xl border border-neutral-200 text-center shadow-xs max-w-md mx-auto my-12 font-sans">
+      <div className="bg-[#FAF8F4] p-8 rounded-3xl border border-[#E2D9CC] text-center shadow-xs max-w-md mx-auto my-12 font-sans">
         <p className="text-red-600 font-semibold mb-2 text-sm">Error loading dashboard statistics.</p>
         <button
           onClick={() => refetch()}
-          className="bg-neutral-900 text-white px-5 py-2 rounded-xl text-xs font-semibold shadow-xs hover:bg-neutral-800 transition mt-2"
+          className="bg-[#5A3825] text-white px-5 py-2 rounded-xl text-xs font-semibold shadow-xs hover:bg-[#3F2618] transition mt-2"
         >
           Retry
         </button>
@@ -166,15 +166,15 @@ const AdminDashboard: React.FC = () => {
   return (
     <div className="space-y-6 font-sans">
       {/* Top Banner & Quick Actions Bar */}
-      <div className="bg-[#111111] text-white p-6 md:p-8 rounded-3xl shadow-md border border-neutral-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="bg-[#5A3825] text-white p-6 md:p-8 rounded-3xl shadow-md border border-[#3F2618] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="relative z-10 space-y-1.5 max-w-xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-800 border border-neutral-700 text-neutral-300 text-[10px] font-bold uppercase tracking-widest mb-1">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#3F2618]/60 border border-[#8B5A2B] text-[#F4F1EA] text-[10px] font-bold uppercase tracking-widest mb-1">
             <span>Store Operations Console</span>
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-serif font-bold text-white tracking-tight">
             URVA Marketplace
           </h1>
-          <p className="text-xs text-neutral-400">
+          <p className="text-xs text-[#F4F1EA]/85">
             Monitor real-time sales, manage catalog availability, and fulfill customer orders.
           </p>
         </div>
@@ -183,19 +183,19 @@ const AdminDashboard: React.FC = () => {
         <div className="relative z-10 flex flex-wrap items-center gap-2.5">
           <button
             onClick={() => navigate('/admin/banners')}
-            className="flex items-center gap-2 bg-[#E57A22] hover:bg-[#d46d1a] text-white font-bold px-4 py-2.5 rounded-xl text-xs transition shadow-xs"
+            className="flex items-center gap-2 bg-[#8B5A2B] hover:bg-[#70441E] text-white font-bold px-4 py-2.5 rounded-xl text-xs transition shadow-xs"
           >
             <FaImage /> Campaigns & Banners
           </button>
           <button
             onClick={() => navigate('/admin/products/new')}
-            className="flex items-center gap-2 bg-white hover:bg-neutral-150 text-neutral-950 font-bold px-4 py-2.5 rounded-xl text-xs transition shadow-xs"
+            className="flex items-center gap-2 bg-[#FAF8F4] hover:bg-white text-[#5A3825] font-bold px-4 py-2.5 rounded-xl text-xs transition shadow-xs"
           >
             <FaPlus /> Add Product
           </button>
           <button
             onClick={() => navigate('/admin/coupons')}
-            className="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition border border-neutral-700"
+            className="flex items-center gap-2 bg-[#3F2618] hover:bg-[#2E1C13] text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition border border-[#8B5A2B]"
           >
             <FaTicketAlt /> New Coupon
           </button>
@@ -203,14 +203,14 @@ const AdminDashboard: React.FC = () => {
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition border border-neutral-700"
+            className="flex items-center gap-2 bg-[#3F2618] hover:bg-[#2E1C13] text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition border border-[#8B5A2B]"
           >
             <FaExternalLinkAlt /> Live Store
           </a>
         </div>
 
         {/* Subtle decorative glow */}
-        <div className="absolute right-0 top-0 w-80 h-80 bg-neutral-800/40 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute right-0 top-0 w-80 h-80 bg-[#3F2618]/40 rounded-full blur-3xl pointer-events-none"></div>
       </div>
 
       {/* Widgets section */}
@@ -220,34 +220,34 @@ const AdminDashboard: React.FC = () => {
           value={`₹${(stats?.totalRevenue || 0).toLocaleString('en-IN')}`} 
           description="Gross lifetime revenue" 
           icon={<FaRupeeSign className="text-base" />}
-          accentClass="bg-neutral-100 text-neutral-900 border border-neutral-200"
+          accentClass="bg-[#F4F1EA] text-[#5A3825] border border-[#E2D9CC]"
         />
         <Widget 
           heading="Total Orders" 
           value={(stats?.totalOrders || 0).toLocaleString('en-IN')} 
           description="Customer orders placed" 
           icon={<FaShoppingBag className="text-base" />}
-          accentClass="bg-neutral-100 text-neutral-900 border border-neutral-200"
+          accentClass="bg-[#F4F1EA] text-[#5A3825] border border-[#E2D9CC]"
         />
         <Widget 
           heading="Active Coupons" 
           value={(stats?.totalCoupons || 0).toLocaleString('en-IN')} 
           description="Available promo codes" 
           icon={<FaTicketAlt className="text-base" />}
-          accentClass="bg-neutral-100 text-neutral-900 border border-neutral-200"
+          accentClass="bg-[#F4F1EA] text-[#5A3825] border border-[#E2D9CC]"
         />
         <Widget 
           heading="Total Products" 
           value={(productsData?.products?.length || stats?.totalProducts || 0).toLocaleString('en-IN')} 
           description="Catalog inventory"
           icon={<FaBoxes className="text-base" />}
-          accentClass="bg-neutral-100 text-neutral-900 border border-neutral-200"
+          accentClass="bg-[#F4F1EA] text-[#5A3825] border border-[#E2D9CC]"
         />
       </section>
 
       {/* Low Stock Alert Notification Banner if any */}
       {lowStockProducts.length > 0 && (
-        <div className="bg-amber-50/80 border border-amber-200 rounded-2xl p-5 shadow-2xs">
+        <div className="bg-amber-50/90 border border-amber-200 rounded-2xl p-5 shadow-2xs">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg shrink-0">
@@ -264,7 +264,7 @@ const AdminDashboard: React.FC = () => {
             </div>
             <button
               onClick={() => navigate('/admin/products')}
-              className="text-xs font-semibold bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-xl transition shadow-2xs"
+              className="text-xs font-semibold bg-amber-700 hover:bg-amber-800 text-white px-4 py-2 rounded-xl transition shadow-2xs"
             >
               Manage Inventory
             </button>
@@ -273,7 +273,7 @@ const AdminDashboard: React.FC = () => {
             {lowStockProducts.slice(0, 5).map((p) => (
               <span
                 key={p._id}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-amber-200 text-neutral-800 font-medium shrink-0 text-[11px]"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF8F4] border border-amber-200 text-[#5A3825] font-medium shrink-0 text-[11px]"
               >
                 <span>{p.name}:</span>
                 <span className="font-bold text-amber-700">{p.stock} left</span>
@@ -290,13 +290,13 @@ const AdminDashboard: React.FC = () => {
 
       {/* Charts section */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-3xl border border-neutral-200 shadow-2xs lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
+        <div className="bg-[#FAF8F4] p-6 rounded-3xl border border-[#E2D9CC] shadow-sm lg:col-span-2 space-y-4">
+          <div className="flex items-center justify-between border-b border-[#E2D9CC] pb-4">
             <div>
-              <h3 className="text-sm font-bold text-neutral-900">Revenue Performance</h3>
-              <p className="text-xs text-neutral-500">Monthly gross sales overview</p>
+              <h3 className="text-sm font-serif font-bold text-[#5A3825]">Revenue Performance</h3>
+              <p className="text-xs text-[#8C7364]">Monthly gross sales overview</p>
             </div>
-            <span className="text-[11px] font-semibold text-neutral-700 bg-neutral-100 px-2.5 py-1 rounded-full border border-neutral-200">
+            <span className="text-[11px] font-semibold text-[#5A3825] bg-[#F4F1EA] px-2.5 py-1 rounded-full border border-[#E2D9CC]">
               Annual Overview
             </span>
           </div>
@@ -305,10 +305,10 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-3xl border border-neutral-200 shadow-2xs space-y-4">
-          <div className="border-b border-neutral-100 pb-4">
-            <h3 className="text-sm font-bold text-neutral-900">Order Status Demographic</h3>
-            <p className="text-xs text-neutral-500">Distribution by fulfillment status</p>
+        <div className="bg-[#FAF8F4] p-6 rounded-3xl border border-[#E2D9CC] shadow-sm space-y-4">
+          <div className="border-b border-[#E2D9CC] pb-4">
+            <h3 className="text-sm font-serif font-bold text-[#5A3825]">Order Status Demographic</h3>
+            <p className="text-xs text-[#8C7364]">Distribution by fulfillment status</p>
           </div>
           <div className="h-[240px] flex items-center justify-center relative">
             <Doughnut data={doughnutData} options={doughnutOptions} />
@@ -317,28 +317,28 @@ const AdminDashboard: React.FC = () => {
       </section>
 
       {/* Latest Orders section */}
-      <section className="bg-white p-6 rounded-3xl border border-neutral-200 shadow-2xs space-y-4">
-        <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
+      <section className="bg-[#FAF8F4] p-6 rounded-3xl border border-[#E2D9CC] shadow-sm space-y-4">
+        <div className="flex items-center justify-between border-b border-[#E2D9CC] pb-4">
           <div>
-            <h2 className="text-base font-bold text-neutral-900">Latest Customer Orders</h2>
-            <p className="text-xs text-neutral-500">Recent purchases needing processing or dispatch</p>
+            <h2 className="text-base font-serif font-bold text-[#5A3825]">Latest Customer Orders</h2>
+            <p className="text-xs text-[#8C7364]">Recent purchases needing processing or dispatch</p>
           </div>
           <Link 
             to="/admin/orders" 
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-900 hover:text-neutral-600 transition"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8B5A2B] hover:text-[#5A3825] transition"
           >
             View All Orders <FaArrowRight className="text-[10px]" />
           </Link>
         </div>
 
         {(!stats?.latestOrders || stats.latestOrders.length === 0) ? (
-          <div className="text-center py-10 text-neutral-400 text-xs">
+          <div className="text-center py-10 text-[#8C7364] text-xs">
             No recent orders placed yet.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-neutral-100 text-left text-xs">
-              <thead className="bg-neutral-50 text-neutral-500 uppercase tracking-wider text-[10px] font-semibold">
+            <table className="min-w-full divide-y divide-[#E2D9CC] text-left text-xs">
+              <thead className="bg-[#EAE5D9] text-[#5A3825] uppercase tracking-wider text-[10px] font-semibold">
                 <tr>
                   <th className="px-5 py-3">Order ID</th>
                   <th className="px-5 py-3">Date</th>
@@ -348,13 +348,13 @@ const AdminDashboard: React.FC = () => {
                   <th className="px-5 py-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-100 bg-white">
+              <tbody className="divide-y divide-[#E2D9CC] bg-[#FAF8F4]">
                 {stats.latestOrders.slice(0, 5).map((order) => (
-                  <tr key={order._id} className="hover:bg-neutral-50/70 transition-colors">
-                    <td className="px-5 py-3.5 font-mono font-semibold text-neutral-900 text-xs">
+                  <tr key={order._id} className="hover:bg-[#F4F1EA]/80 transition-colors">
+                    <td className="px-5 py-3.5 font-mono font-semibold text-[#5A3825] text-xs">
                       #{order._id ? order._id.slice(0, 8) : 'N/A'}
                     </td>
-                    <td className="px-5 py-3.5 text-neutral-500">
+                    <td className="px-5 py-3.5 text-[#8C7364]">
                       {order.createdAt ? dayjs(order.createdAt).format('DD MMM YYYY') : 'Recent'}
                     </td>
                     <td className="px-5 py-3.5">
@@ -362,16 +362,16 @@ const AdminDashboard: React.FC = () => {
                         {order.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-neutral-700 font-medium">
+                    <td className="px-5 py-3.5 text-[#5A3825] font-medium">
                       {order.orderItems?.length || 1} items
                     </td>
-                    <td className="px-5 py-3.5 font-bold text-neutral-900">
+                    <td className="px-5 py-3.5 font-bold text-[#5A3825]">
                       ₹{Number(order.total || 0).toFixed(2)}
                     </td>
                     <td className="px-5 py-3.5 text-right">
                       <button
                         onClick={() => navigate(`/admin/orders/${order._id}`)}
-                        className="px-3 py-1 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-900 font-semibold text-xs border border-neutral-200 transition"
+                        className="px-3 py-1 rounded-lg bg-[#F4F1EA] hover:bg-[#EAE5D9] text-[#5A3825] font-semibold text-xs border border-[#E2D9CC] transition"
                       >
                         Details
                       </button>
@@ -397,11 +397,11 @@ interface WidgetProps {
 }
 
 const Widget: React.FC<WidgetProps> = ({ heading, value, description, icon, accentClass }) => (
-  <div className="bg-white p-5 rounded-2xl border border-neutral-200 shadow-2xs hover:shadow-xs transition-all duration-200 flex items-center justify-between group">
+  <div className="bg-[#FAF8F4] p-5 rounded-2xl border border-[#E2D9CC] shadow-2xs hover:shadow-sm transition-all duration-200 flex items-center justify-between group">
     <div className="space-y-1">
-      <h3 className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">{heading}</h3>
-      <p className="text-2xl font-bold text-neutral-900 tracking-tight">{value}</p>
-      <p className="text-[11px] text-neutral-500">{description}</p>
+      <h3 className="text-[10px] font-bold text-[#8C7364] uppercase tracking-wider">{heading}</h3>
+      <p className="text-2xl font-serif font-bold text-[#5A3825] tracking-tight">{value}</p>
+      <p className="text-[11px] text-[#8C7364]">{description}</p>
     </div>
     <div className={`p-3 rounded-xl ${accentClass} transition-transform duration-200 group-hover:scale-105`}>
       {icon}

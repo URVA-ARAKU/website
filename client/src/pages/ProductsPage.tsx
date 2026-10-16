@@ -84,23 +84,23 @@ const ProductsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] px-4 py-8 sm:px-8">
+    <div className="min-h-screen bg-[#F4F1EA] px-4 py-8 sm:px-8">
       <div className="mx-auto max-w-7xl space-y-8">
-        <header className="rounded-2xl bg-[#111111] px-6 py-10 text-white sm:px-10 border border-neutral-800">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+        <header className="rounded-2xl bg-[#5A3825] px-6 py-10 text-white sm:px-10 border border-[#3F2618] shadow-sm">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#CCA887]">
             One Village – One Product
           </p>
-          <h1 className="mt-2 font-sans text-3xl font-semibold sm:text-4xl text-white tracking-tight">
+          <h1 className="mt-2 font-sans text-3xl font-semibold sm:text-4xl text-[#F4F1EA] tracking-tight">
             Explore the URVA Collection
           </h1>
-          <p className="mt-2.5 max-w-2xl text-xs sm:text-sm leading-relaxed text-neutral-400">
+          <p className="mt-2.5 max-w-2xl text-xs sm:text-sm leading-relaxed text-[#E2D9CC]">
             Discover authentic regional foods, tribal harvests, handlooms, and everyday essentials.
           </p>
         </header>
 
         <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
-          <aside className="rounded-xl border border-neutral-200 bg-white p-5 self-start shadow-xs">
-            <h2 className="border-b border-neutral-200 pb-3 font-sans text-sm font-semibold uppercase tracking-wider text-[#111111]">
+          <aside className="rounded-xl border border-[#E2D9CC] bg-[#FAF8F4] p-5 self-start shadow-xs">
+            <h2 className="border-b border-[#E2D9CC] pb-3 font-sans text-sm font-semibold uppercase tracking-wider text-[#5A3825]">
               Categories
             </h2>
             <ul className="mt-3 space-y-1">
@@ -109,8 +109,8 @@ const ProductsPage: React.FC = () => {
                   onClick={() => handleCategoryClick('')}
                   className={`w-full text-left text-xs py-2 px-3 rounded-lg transition-colors ${
                     selectedCategory === ''
-                      ? 'bg-black text-white font-medium'
-                      : 'text-neutral-600 hover:bg-neutral-100 hover:text-black'
+                      ? 'bg-[#8B5A2B] text-white font-medium'
+                      : 'text-[#5A3825] hover:bg-[#F4F1EA] hover:text-[#8B5A2B]'
                   }`}
                 >
                   All Products
@@ -122,8 +122,8 @@ const ProductsPage: React.FC = () => {
                     onClick={() => handleCategoryClick(category)}
                     className={`w-full text-left text-xs py-2 px-3 rounded-lg transition-colors ${
                       selectedCategory === category
-                        ? 'bg-black text-white font-medium'
-                        : 'text-neutral-600 hover:bg-neutral-100 hover:text-black'
+                        ? 'bg-[#8B5A2B] text-white font-medium'
+                        : 'text-[#5A3825] hover:bg-[#F4F1EA] hover:text-[#8B5A2B]'
                     }`}
                   >
                     {category}
@@ -134,9 +134,9 @@ const ProductsPage: React.FC = () => {
           </aside>
 
           <main className="space-y-6">
-            <div className="flex flex-col items-center justify-between gap-4 rounded-xl border border-neutral-200 bg-white p-3.5 sm:flex-row shadow-xs">
+            <div className="flex flex-col items-center justify-between gap-4 rounded-xl border border-[#E2D9CC] bg-[#FAF8F4] p-3.5 sm:flex-row shadow-xs">
               <label className="relative w-full max-w-md">
-                <FaSearch aria-hidden="true" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-neutral-400" />
+                <FaSearch aria-hidden="true" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-[#8C7364]" />
                 <span className="sr-only">Search products</span>
                 <input
                   type="search"
@@ -146,15 +146,15 @@ const ProductsPage: React.FC = () => {
                     setSearch(event.target.value);
                     setPage(1);
                   }}
-                  className="w-full rounded-full border border-neutral-200 bg-[#FAFAFA] py-2 pl-9 pr-4 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+                  className="w-full rounded-full border border-[#E2D9CC] bg-[#F4F1EA] py-2 pl-9 pr-4 text-xs text-[#5A3825] placeholder:text-[#8C7364] focus:outline-none focus:border-[#8B5A2B] focus:ring-1 focus:ring-[#8B5A2B]"
                 />
               </label>
-              <label className="flex items-center gap-2 text-xs text-neutral-500">
+              <label className="flex items-center gap-2 text-xs text-[#8C7364]">
                 <span>Sort by:</span>
                 <select
                   value={sort}
                   onChange={(event) => setSort(event.target.value as 'asc' | 'desc' | 'relevance')}
-                  className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-[#111111] focus:outline-none focus:border-black"
+                  className="rounded-lg border border-[#E2D9CC] bg-[#FAF8F4] px-3 py-1.5 text-xs font-medium text-[#5A3825] focus:outline-none focus:border-[#8B5A2B]"
                 >
                   <option value="relevance">Recommended</option>
                   <option value="asc">Price: Low to High</option>

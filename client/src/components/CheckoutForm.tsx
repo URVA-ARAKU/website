@@ -168,7 +168,7 @@ const CheckoutForm: React.FC = () => {
           contact: shippingInfo.phone || '',
         },
         theme: {
-          color: '#111111',
+          color: '#5A3825',
         },
       };
 
@@ -182,46 +182,46 @@ const CheckoutForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] py-10 px-4 flex flex-col items-center">
+    <div className="min-h-screen bg-[#F4F1EA] py-10 px-4 flex flex-col items-center">
       <div className="w-full max-w-xl mb-4">
         <BackButton fallback="/products" />
       </div>
 
-      <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xs border border-neutral-200 max-w-xl w-full">
+      <div className="bg-[#FAF8F4] p-6 sm:p-8 rounded-2xl shadow-sm border border-[#E2D9CC] max-w-xl w-full">
         {/* Merchant Branding Header */}
-        <div className="flex flex-col items-center mb-6 text-center border-b border-neutral-200 pb-5">
+        <div className="flex flex-col items-center mb-6 text-center border-b border-[#E2D9CC] pb-5">
           <img src="https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png" alt="URVA — Delivering the Authentic Rural Aura" className="h-14 w-14 object-contain mb-2" />
-          <h1 className="text-2xl font-sans font-semibold tracking-tight text-[#111111]">URVA</h1>
-          <p className="text-xs text-neutral-500 mt-1">Secure Razorpay Payment Gateway</p>
+          <h1 className="text-2xl font-serif font-bold tracking-tight text-[#5A3825]">URVA</h1>
+          <p className="text-xs text-[#8C7364] mt-1 font-normal">Secure Razorpay Payment Gateway</p>
         </div>
 
         {/* Customer Info Summary */}
-        <div className="bg-neutral-50 p-4 rounded-xl mb-6 border border-neutral-200 text-xs sm:text-sm space-y-1">
-          <p className="font-semibold text-neutral-800 mb-2 uppercase tracking-wider text-xs">Shipping Summary:</p>
-          <p className="font-medium text-neutral-900">{shippingInfo.name}</p>
-          <p className="text-neutral-600">{shippingInfo.address}, {shippingInfo.city}, {shippingInfo.state} - {shippingInfo.pinCode}</p>
-          <p className="text-neutral-600">Phone: {shippingInfo.phone}</p>
+        <div className="bg-[#F4F1EA] p-4 rounded-xl mb-6 border border-[#E2D9CC] text-xs sm:text-sm space-y-1">
+          <p className="font-semibold text-[#5A3825] mb-2 uppercase tracking-wider text-xs">Shipping Summary:</p>
+          <p className="font-semibold text-[#5A3825]">{shippingInfo.name}</p>
+          <p className="text-[#8C7364]">{shippingInfo.address}, {shippingInfo.city}, {shippingInfo.state} - {shippingInfo.pinCode}</p>
+          <p className="text-[#8C7364]">Phone: {shippingInfo.phone}</p>
         </div>
 
         {/* Order Price Breakdown */}
-        <div className="space-y-2 mb-6 border-b border-neutral-200 pb-4 text-xs sm:text-sm">
-          <div className="flex justify-between text-neutral-600">
+        <div className="space-y-2 mb-6 border-b border-[#E2D9CC] pb-4 text-xs sm:text-sm">
+          <div className="flex justify-between text-[#8C7364]">
             <span>Subtotal</span>
-            <span>₹ {subTotal}</span>
+            <span className="font-medium text-[#5A3825]">₹ {subTotal}</span>
           </div>
           {discount > 0 && (
-            <div className="flex justify-between text-emerald-600 font-semibold">
+            <div className="flex justify-between text-[#8B5A2B] font-semibold">
               <span>Discount</span>
               <span>- ₹ {discount}</span>
             </div>
           )}
-          <div className="flex justify-between text-neutral-600">
+          <div className="flex justify-between text-[#8C7364]">
             <span>Shipping Charges</span>
-            <span>₹ {shippingCharges}</span>
+            <span className="font-medium text-[#5A3825]">₹ {shippingCharges}</span>
           </div>
-          <div className="flex justify-between text-base sm:text-lg font-sans font-bold text-[#111111] pt-2 border-t border-neutral-100">
+          <div className="flex justify-between text-base sm:text-lg font-serif font-bold text-[#5A3825] pt-2 border-t border-[#E2D9CC]">
             <span>Total Payable</span>
-            <span>₹ {total}</span>
+            <span className="text-xl font-extrabold text-[#5A3825]">₹ {total}</span>
           </div>
         </div>
 
@@ -230,7 +230,7 @@ const CheckoutForm: React.FC = () => {
           <button
             type="submit"
             disabled={isProcessing || cartItems.length === 0}
-            className="w-full bg-black hover:bg-neutral-800 text-white font-medium py-3.5 rounded-lg text-xs uppercase tracking-widest transition-all shadow-xs disabled:bg-neutral-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-semibold py-3.5 rounded-lg text-xs uppercase tracking-widest transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isProcessing ? (
               <>

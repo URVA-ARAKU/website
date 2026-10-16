@@ -287,27 +287,27 @@ const ProductDetails: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] text-[#111111] pb-20 pt-4 font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-[#F4F1EA] text-[#5A3825] pb-20 pt-4 font-sans overflow-x-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation & Back Link */}
-        <div className="flex items-center justify-between py-3 mb-6 text-xs text-neutral-500 border-b border-neutral-200">
+        <div className="flex items-center justify-between py-3 mb-6 text-xs text-[#8C7364] border-b border-[#E2D9CC]">
           <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 flex-wrap">
-            <Link to="/" className="hover:text-black transition-colors flex items-center gap-1">
+            <Link to="/" className="hover:text-[#5A3825] transition-colors flex items-center gap-1">
               <FaArrowLeft className="text-[10px]" /> Home
             </Link>
             <span>&rsaquo;</span>
-            <Link to="/products" className="hover:text-black transition-colors">
+            <Link to="/products" className="hover:text-[#5A3825] transition-colors">
               {resolvedProduct.category || 'Products'}
             </Link>
             <span>&rsaquo;</span>
-            <span className="font-semibold text-[#111111] truncate max-w-xs sm:max-w-md">
+            <span className="font-semibold text-[#5A3825] truncate max-w-xs sm:max-w-md">
               {resolvedProduct.name}
             </span>
           </nav>
 
           <Link
             to="/products"
-            className="hidden sm:inline-flex items-center gap-1.5 text-neutral-800 hover:text-black font-medium transition-colors"
+            className="hidden sm:inline-flex items-center gap-1.5 text-[#8B5A2B] hover:text-[#5A3825] font-medium transition-colors"
           >
             <span>All Products</span>
           </Link>
@@ -576,8 +576,8 @@ const ProductDetails: React.FC = () => {
                         }}
                         className={`cursor-pointer rounded-xl p-3.5 border transition-all duration-200 ${
                           isSelected
-                            ? 'border-black bg-neutral-50 shadow-xs ring-1 ring-black'
-                            : 'border-neutral-200 bg-white hover:border-neutral-400'
+                            ? 'border-[#5A3825] bg-[#FAF8F4] shadow-xs ring-1 ring-[#5A3825]'
+                            : 'border-[#E2D9CC] bg-[#FAF8F4]/60 hover:border-[#8B5A2B]'
                         }`}
                       >
                         <div className="flex items-center justify-between gap-3">
@@ -585,18 +585,18 @@ const ProductDetails: React.FC = () => {
                           <div className="flex items-center gap-3 min-w-0">
                             <div
                               className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                                isSelected ? 'border-black bg-black' : 'border-neutral-300 bg-white'
+                                isSelected ? 'border-[#5A3825] bg-[#5A3825]' : 'border-[#C8BCAB] bg-white'
                               }`}
                             >
                               {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                             </div>
 
                             <div className="min-w-0">
-                              <span className="text-xs sm:text-sm font-bold text-neutral-900 block truncate font-sans">
+                              <span className="text-xs sm:text-sm font-bold text-[#5A3825] block truncate font-sans">
                                 {variety.name}
                               </span>
                               {variety.savingsBadge && (
-                                <span className="inline-block bg-black text-white text-[9px] font-semibold px-2 py-0.5 rounded mt-0.5 tracking-tight uppercase">
+                                <span className="inline-block bg-[#8B5A2B] text-white text-[9px] font-semibold px-2 py-0.5 rounded mt-0.5 tracking-tight uppercase">
                                   {variety.savingsBadge}
                                 </span>
                               )}
@@ -605,11 +605,11 @@ const ProductDetails: React.FC = () => {
 
                           {/* Price & Unit Price */}
                           <div className="text-right shrink-0">
-                            <span className="text-xs sm:text-sm font-bold text-[#111111] block font-sans">
+                            <span className="text-xs sm:text-sm font-bold text-[#5A3825] block font-sans">
                               ₹{variety.price}
                             </span>
                             {variety.unitPrice && (
-                              <span className="text-[10px] text-neutral-400 block font-sans">
+                              <span className="text-[10px] text-[#8C7364] block font-sans">
                                 {variety.unitPrice}
                               </span>
                             )}
@@ -624,44 +624,44 @@ const ProductDetails: React.FC = () => {
               {/* Quantity Stepper & Main Action Buttons */}
               <div className="space-y-3 pt-2">
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-xs font-semibold text-neutral-700">Quantity</span>
+                  <span className="text-xs font-semibold text-[#5A3825]">Quantity</span>
 
                   {existingCartItem ? (
-                    <div className="flex items-center gap-3 bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-1">
+                    <div className="flex items-center gap-3 bg-[#FAF8F4] border border-[#E2D9CC] rounded-lg px-3 py-1">
                       <button
                         type="button"
                         onClick={() => dispatch(decrementCartItem(activeCartItemId))}
-                        className="w-6 h-6 rounded-md bg-white text-neutral-800 font-bold text-xs flex items-center justify-center border border-neutral-200 hover:bg-neutral-100 transition-colors"
+                        className="w-6 h-6 rounded-md bg-[#F4F1EA] text-[#5A3825] font-bold text-xs flex items-center justify-center border border-[#E2D9CC] hover:bg-[#EAE5D9] transition-colors"
                       >
                         −
                       </button>
-                      <span className="text-xs font-bold text-black min-w-[20px] text-center">
+                      <span className="text-xs font-bold text-[#5A3825] min-w-[20px] text-center">
                         {existingCartItem.quantity}
                       </span>
                       <button
                         type="button"
                         onClick={() => dispatch(incrementCartItem(activeCartItemId))}
-                        className="w-6 h-6 rounded-md bg-white text-neutral-800 font-bold text-xs flex items-center justify-center border border-neutral-200 hover:bg-neutral-100 transition-colors"
+                        className="w-6 h-6 rounded-md bg-[#F4F1EA] text-[#5A3825] font-bold text-xs flex items-center justify-center border border-[#E2D9CC] hover:bg-[#EAE5D9] transition-colors"
                       >
                         +
                       </button>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-3 bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-1">
+                    <div className="flex items-center gap-3 bg-[#FAF8F4] border border-[#E2D9CC] rounded-lg px-3 py-1">
                       <button
                         type="button"
                         onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                        className="w-6 h-6 rounded-md bg-white text-neutral-800 font-bold text-xs flex items-center justify-center border border-neutral-200 hover:bg-neutral-100 transition-colors"
+                        className="w-6 h-6 rounded-md bg-[#F4F1EA] text-[#5A3825] font-bold text-xs flex items-center justify-center border border-[#E2D9CC] hover:bg-[#EAE5D9] transition-colors"
                       >
                         −
                       </button>
-                      <span className="text-xs font-bold text-black min-w-[20px] text-center">
+                      <span className="text-xs font-bold text-[#5A3825] min-w-[20px] text-center">
                         {quantity}
                       </span>
                       <button
                         type="button"
                         onClick={() => setQuantity((q) => q + 1)}
-                        className="w-6 h-6 rounded-md bg-white text-neutral-800 font-bold text-xs flex items-center justify-center border border-neutral-200 hover:bg-neutral-100 transition-colors"
+                        className="w-6 h-6 rounded-md bg-[#F4F1EA] text-[#5A3825] font-bold text-xs flex items-center justify-center border border-[#E2D9CC] hover:bg-[#EAE5D9] transition-colors"
                       >
                         +
                       </button>
@@ -674,7 +674,7 @@ const ProductDetails: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="w-full bg-black hover:bg-neutral-800 text-white font-medium text-xs py-3.5 rounded-lg uppercase tracking-wider shadow-xs hover:shadow transition-all flex items-center justify-center gap-2"
+                    className="w-full bg-[#5A3825] hover:bg-[#3F2618] text-[#F4F1EA] font-semibold text-xs py-3.5 rounded-lg uppercase tracking-wider shadow-sm hover:shadow transition-all flex items-center justify-center gap-2"
                   >
                     <FaShoppingBag className="text-xs" />
                     <span>
@@ -687,36 +687,36 @@ const ProductDetails: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleBuyNow}
-                    className="w-full bg-[#E57A22] hover:bg-[#D06914] text-white font-medium text-xs py-3.5 rounded-lg uppercase tracking-wider shadow-xs hover:shadow transition-all flex items-center justify-center gap-2"
+                    className="w-full bg-[#8B5A2B] hover:bg-[#70441E] text-white font-semibold text-xs py-3.5 rounded-lg uppercase tracking-wider shadow-sm hover:shadow transition-all flex items-center justify-center gap-2"
                   >
                     <span>BUY NOW WITH FAST CHECKOUT</span>
                   </button>
                 </div>
 
                 {/* Secondary Wishlist & Share */}
-                <div className="flex items-center justify-center gap-4 pt-1 text-xs text-neutral-500">
+                <div className="flex items-center justify-center gap-4 pt-1 text-xs text-[#8C7364]">
                   <button
                     type="button"
                     onClick={() => {
                       setIsWishlisted(!isWishlisted);
                       toast.info(isWishlisted ? 'Removed from wishlist' : 'Saved to wishlist!');
                     }}
-                    className="flex items-center gap-1.5 hover:text-black transition-colors"
+                    className="flex items-center gap-1.5 hover:text-[#5A3825] transition-colors"
                   >
                     {isWishlisted ? (
-                      <FaHeart className="text-red-500 text-xs" />
+                      <FaHeart className="text-[#8B5A2B] text-xs" />
                     ) : (
                       <FaRegHeart className="text-xs" />
                     )}
                     <span>{isWishlisted ? 'Wishlisted' : 'Save for later'}</span>
                   </button>
 
-                  <span className="text-neutral-300">•</span>
+                  <span className="text-[#C8BCAB]">•</span>
                   
                   <button
                     type="button"
                     onClick={handleShare}
-                    className="flex items-center gap-1.5 hover:text-black transition-colors"
+                    className="flex items-center gap-1.5 hover:text-[#5A3825] transition-colors"
                   >
                     <FaShareAlt className="text-xs" />
                     <span>Share</span>
@@ -725,14 +725,14 @@ const ProductDetails: React.FC = () => {
               </div>
 
               {/* In-Stock & Dispatch Banner */}
-              <div className="flex items-center gap-2 text-xs font-medium text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-3.5 py-2.5 rounded-xl">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="flex items-center gap-2 text-xs font-medium text-emerald-900 bg-emerald-50/80 border border-emerald-200 px-3.5 py-2.5 rounded-xl">
+                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
                 <span>In Stock — Dispatched within 24 to 48 hours</span>
               </div>
 
               {/* Tiered Bulk Discount Banner */}
-              <div className="bg-neutral-50/80 p-3.5 rounded-xl border border-neutral-200/80 text-[11px] text-neutral-700 space-y-1">
-                <span className="font-semibold text-[#111111] block">Tiered Bulk Discounts:</span>
+              <div className="bg-[#FAF8F4] p-3.5 rounded-xl border border-[#E2D9CC] text-[11px] text-[#5A3825] space-y-1">
+                <span className="font-semibold text-[#5A3825] block">Tiered Bulk Discounts:</span>
                 <p>• Shop for ₹3,000 or more & get extra 5% off automatically.</p>
                 <p>• Shop for ₹5,000 or more & get extra 10% off automatically.</p>
               </div>
@@ -744,24 +744,24 @@ const ProductDetails: React.FC = () => {
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-900 border border-neutral-300 font-semibold text-xs py-2.5 rounded-lg transition-all shadow-2xs"
+                className="w-full flex items-center justify-center gap-2 bg-[#FAF8F4] hover:bg-[#EAE5D9] text-[#5A3825] border border-[#E2D9CC] font-semibold text-xs py-2.5 rounded-lg transition-all shadow-2xs"
               >
                 <FaWhatsapp className="text-sm text-emerald-600" />
                 <span>Got Questions? Chat with us on WhatsApp</span>
               </a>
 
               {/* Trust Badges */}
-              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-neutral-100 text-center text-[10px] text-neutral-600">
+              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[#E2D9CC] text-center text-[10px] text-[#8C7364]">
                 <div className="flex flex-col items-center gap-1">
-                  <FaCreditCard className="text-neutral-700 text-sm" />
+                  <FaCreditCard className="text-[#5A3825] text-sm" />
                   <span>Easy Payments</span>
                 </div>
                 <div className="flex flex-col items-center gap-1">
-                  <FaBoxOpen className="text-neutral-700 text-sm" />
+                  <FaBoxOpen className="text-[#5A3825] text-sm" />
                   <span>Easy Returns</span>
                 </div>
                 <div className="flex flex-col items-center gap-1">
-                  <FaMoneyBillWave className="text-neutral-700 text-sm" />
+                  <FaMoneyBillWave className="text-[#5A3825] text-sm" />
                   <span>COD Option</span>
                 </div>
               </div>
@@ -776,11 +776,11 @@ const ProductDetails: React.FC = () => {
           className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={() => setIsZoomOpen(false)}
         >
-          <div className="relative max-w-3xl w-full max-h-[90vh] bg-white rounded-3xl p-6 flex flex-col items-center">
+          <div className="relative max-w-3xl w-full max-h-[90vh] bg-[#FAF8F4] border border-[#E2D9CC] rounded-3xl p-6 flex flex-col items-center">
             <button
               type="button"
               onClick={() => setIsZoomOpen(false)}
-              className="absolute top-4 right-4 w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 text-gray-800 flex items-center justify-center"
+              className="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#EAE5D9] hover:bg-[#DDD5C5] text-[#5A3825] flex items-center justify-center transition-colors"
             >
               <FaTimes />
             </button>
@@ -789,7 +789,7 @@ const ProductDetails: React.FC = () => {
               alt={resolvedProduct.name}
               className="max-h-[75vh] w-auto object-contain rounded-xl"
             />
-            <span className="mt-3 text-xs font-semibold text-gray-600">
+            <span className="mt-3 text-xs font-semibold text-[#5A3825]">
               {resolvedProduct.name} — {selectedVariety?.label}
             </span>
           </div>

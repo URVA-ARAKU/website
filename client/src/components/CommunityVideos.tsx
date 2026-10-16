@@ -47,19 +47,19 @@ const CommunityVideos: React.FC = () => {
   if (videos.length === 0) return null;
 
   return (
-    <section aria-labelledby="community-videos-heading" className="bg-[#FAFAFA] border-t border-neutral-200 py-8 md:py-12">
+    <section aria-labelledby="community-videos-heading" className="bg-[#F4F1EA] border-t border-[#E2D9CC] py-8 md:py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mb-8 text-center max-w-2xl mx-auto sm:mb-10">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-400 block mb-1.5">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C7364] block mb-1.5">
             VILLAGE STORIES
           </span>
           <h2
             id="community-videos-heading"
-            className="font-sans text-2xl font-semibold tracking-tight text-[#111111] sm:text-3xl lg:text-4xl"
+            className="font-sans text-2xl font-semibold tracking-tight text-[#5A3825] sm:text-3xl lg:text-4xl"
           >
             Watch Our Rural Heritage
           </h2>
-          <p className="mt-2 text-xs md:text-sm text-neutral-500 max-w-lg mx-auto">
+          <p className="mt-2 text-xs md:text-sm text-[#8C7364] max-w-lg mx-auto">
             Short glimpses into the traditional craftsmanship and sustainable harvests behind URVA.
           </p>
         </div>

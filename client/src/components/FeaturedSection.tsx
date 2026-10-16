@@ -114,7 +114,7 @@ const FeaturedSection: React.FC = () => {
               onClick={() => showImage(index)}
               aria-label={`Go to slide ${index + 1}`}
               aria-current={index === activeImage ? 'true' : undefined}
-              className={`h-2 rounded-full transition-all duration-300 ${index === activeImage ? 'w-6 bg-[#E57A22]' : 'w-2 bg-white/50 hover:bg-white'
+              className={`h-2 rounded-full transition-all duration-300 ${index === activeImage ? 'w-6 bg-[#8B5A2B]' : 'w-2 bg-white/50 hover:bg-white'
                 }`}
             />
           ))}

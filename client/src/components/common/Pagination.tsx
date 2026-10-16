@@ -10,12 +10,16 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, onPage
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="flex justify-center items-center space-x-2">
+    <div className="flex justify-center items-center space-x-2 my-6 font-sans">
       {pages.map((page) => (
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`px-4 py-2 rounded-md ${page === currentPage ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'} hover:bg-blue-500 hover:text-white transition`}
+          className={`px-4 py-2 rounded-xl text-xs font-semibold transition shadow-2xs ${
+            page === currentPage
+              ? 'bg-[#8B5A2B] text-[#FAF8F4] border border-[#5A3825]'
+              : 'bg-[#FAF8F4] text-[#5A3825] border border-[#E2D9CC] hover:bg-[#F4F1EA]'
+          }`}
         >
           {page}
         </button>

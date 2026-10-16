@@ -13,36 +13,36 @@ const ShippingPolicy: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] py-10 sm:py-16 px-4 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-[#F4F1EA] py-10 sm:py-16 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-4xl mx-auto">
         {/* Navigation Tabs */}
         <LegalNav currentPath="/shipping-policy" />
 
         {/* Main Content Card */}
-        <div className="bg-white rounded-3xl p-6 sm:p-10 md:p-12 border border-neutral-200/80 shadow-xs">
+        <div className="bg-[#FAF8F4] rounded-3xl p-6 sm:p-10 md:p-12 border border-[#E2D9CC] shadow-sm">
           {/* Header Banner */}
-          <div className="border-b border-neutral-100 pb-8 mb-8">
+          <div className="border-b border-[#E2D9CC] pb-8 mb-8">
             <div className="flex items-center gap-2 mb-3">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-[#111111] text-white">
-                <FaTruckFast className="text-[#E57A22]" /> ORDER FULFILLMENT & LOGISTICS
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-[#5A3825] text-[#F4F1EA]">
+                <FaTruckFast className="text-[#8B5A2B]" /> ORDER FULFILLMENT & LOGISTICS
               </span>
-              <span className="text-xs text-neutral-400">Effective from October 2026</span>
+              <span className="text-xs text-[#8C7364]">Effective from October 2026</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#111111] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-[#5A3825] tracking-tight">
               Shipping & Delivery Policy
             </h1>
-            <p className="text-xs sm:text-sm text-neutral-500 mt-2 max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#8C7364] mt-2 max-w-2xl leading-relaxed">
               We bring the authentic rural aura from remote Indian villages and cooperatives directly to your doorstep. Here is everything you need to know about how your orders are packaged, shipped, and delivered.
             </p>
           </div>
 
           {/* Quick Stats Highlights */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            <div className="bg-[#FAF7F2] p-4 rounded-2xl border border-neutral-200/80 text-center">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#E57A22] block mb-1">
+            <div className="bg-[#F4F1EA] p-4 rounded-2xl border border-[#E2D9CC] text-center">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B5A2B] block mb-1">
                 DISPATCH TIME
               </span>
-              <p className="text-sm font-extrabold text-neutral-900">24 – 48 Hours</p>
+              <p className="text-sm font-extrabold text-[#5A3825]">24 – 48 Hours</p>
               <p className="text-[11px] text-neutral-500 mt-0.5">Dispatched quickly from origin</p>
             </div>
 

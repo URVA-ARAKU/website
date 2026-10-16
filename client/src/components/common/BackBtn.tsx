@@ -41,9 +41,9 @@ const BackButton: React.FC<BackButtonProps> = ({ fallback = '/' }) => {
   return (
     <button
       onClick={handleBack}
-      className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none my-4 transition-colors duration-300"
+      className="inline-flex items-center gap-2 bg-[#FAF8F4] text-[#5A3825] border border-[#E2D9CC] px-4 py-2 rounded-xl hover:bg-[#F4F1EA] hover:border-[#8B5A2B] text-xs font-semibold focus:outline-none my-4 transition-all duration-200 shadow-2xs cursor-pointer"
     >
-      <FaArrowLeft className="mr-2" />
+      <FaArrowLeft className="text-[#8B5A2B]" size={12} />
       Back
     </button>
   );

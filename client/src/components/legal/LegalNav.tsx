@@ -34,11 +34,11 @@ export const LegalNav: React.FC<LegalNavProps> = ({ currentPath }) => {
               to={tab.path}
               className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap shadow-xs ${
                 isActive
-                  ? 'bg-[#111111] text-white shadow-sm scale-102'
-                  : 'bg-white text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 border border-neutral-200'
+                  ? 'bg-[#5A3825] text-[#F4F1EA] shadow-sm scale-102'
+                  : 'bg-[#FAF8F4] text-[#5A3825] hover:text-[#3F2618] hover:bg-[#EAE5D9] border border-[#E2D9CC]'
               }`}
             >
-              <Icon className={isActive ? 'text-[#E57A22]' : 'text-neutral-400'} />
+              <Icon className={isActive ? 'text-[#F4F1EA]' : 'text-[#8C7364]'} />
               <span>{tab.label}</span>
             </Link>
           );
@@ -50,16 +50,16 @@ export const LegalNav: React.FC<LegalNavProps> = ({ currentPath }) => {
 
 export const LegalContactCard: React.FC = () => {
   return (
-    <div className="mt-12 pt-8 border-t border-neutral-200 bg-[#FAF7F2] p-6 sm:p-8 rounded-2xl border">
+    <div className="mt-12 pt-8 border-t border-[#E2D9CC] bg-[#FAF8F4] p-6 sm:p-8 rounded-2xl border border-[#E2D9CC]">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#E57A22] block mb-1">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[#8B5A2B] block mb-1">
             GRIEVANCE & CUSTOMER CARE
           </span>
-          <h3 className="text-base font-bold text-neutral-900">
+          <h3 className="text-base font-serif font-bold text-[#5A3825]">
             Have questions about our policies or your order?
           </h3>
-          <p className="text-xs text-neutral-600 mt-1 max-w-xl leading-relaxed">
+          <p className="text-xs text-[#8C7364] mt-1 max-w-xl leading-relaxed">
             Our dedicated support team is available Monday to Saturday, 9:00 AM – 7:00 PM IST. We strive to address all customer inquiries and grievances within 24 business hours.
           </p>
         </div>
@@ -67,9 +67,9 @@ export const LegalContactCard: React.FC = () => {
         <div className="flex flex-wrap items-center gap-3">
           <a
             href="mailto:urvaaofficial@gmail.com"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-neutral-50 text-neutral-900 text-xs font-semibold border border-neutral-300 transition shadow-xs"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#F4F1EA] hover:bg-[#EAE5D9] text-[#5A3825] text-xs font-semibold border border-[#E2D9CC] transition shadow-xs"
           >
-            <FaEnvelope className="text-[#E57A22]" />
+            <FaEnvelope className="text-[#8B5A2B]" />
             <span>urvaaofficial@gmail.com</span>
           </a>
 

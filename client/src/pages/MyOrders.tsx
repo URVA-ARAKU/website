@@ -39,65 +39,77 @@ const MyOrders: React.FC = () => {
 
     if (!guestUserId) {
         return (
-            <div className="container mx-auto my-8 p-4 bg-white rounded-lg shadow-md text-center">
-                <BackButton fallback="/" />
-                <h2 className="text-2xl font-bold mb-6">My Orders</h2>
-                <p className="text-gray-500">No orders found. Place an order to see it here.</p>
+            <div className="min-h-screen bg-[#F4F1EA] py-8 px-4 flex justify-center">
+                <div className="max-w-xl w-full p-6 bg-[#FAF8F4] rounded-2xl border border-[#E2D9CC] shadow-sm text-center">
+                    <BackButton fallback="/" />
+                    <h2 className="text-2xl font-serif font-bold mb-4 text-[#5A3825]">My Orders</h2>
+                    <p className="text-[#8C7364] text-sm">No orders found. Place an order to see it here.</p>
+                </div>
             </div>
         );
     }
 
     if (isLoading) {
-        return <p className="text-center text-lg">Loading...</p>;
+        return (
+            <div className="min-h-screen bg-[#F4F1EA] flex items-center justify-center">
+                <p className="text-center text-lg text-[#5A3825]">Loading orders...</p>
+            </div>
+        );
     }
 
     if (isError || !data) {
-        return <p className="text-center text-lg text-red-500">Error loading orders</p>;
+        return (
+            <div className="min-h-screen bg-[#F4F1EA] flex items-center justify-center">
+                <p className="text-center text-lg text-red-600">Error loading orders</p>
+            </div>
+        );
     }
 
     return (
-        <div className="container mx-auto my-8 p-6 bg-white rounded-2xl border border-neutral-200 shadow-xs max-w-5xl">
-            <BackButton />
-            <h2 className="text-2xl font-sans font-semibold tracking-tight mb-6 text-center text-[#111111]">My Orders</h2>
-            {data.orders.length === 0 ? (
-                <p className="text-center text-sm text-neutral-500 py-8">No orders found</p>
-            ) : (
-                <div className="overflow-x-auto rounded-xl border border-neutral-200">
-                    <table className="w-full text-left border-collapse">
-                        <thead className="bg-neutral-50">
-                            <tr className="border-b border-neutral-200 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-                                <th className="p-4">Order ID</th>
-                                <th className="p-4">Date</th>
-                                <th className="p-4">Status</th>
-                                <th className="p-4">Total</th>
-                                <th className="p-4 text-right">Details</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-neutral-200 text-xs sm:text-sm">
-                            {data.orders.map((order) => (
-                                <tr className="hover:bg-neutral-50/50 transition-colors" key={order._id}>
-                                    <td className="p-4 font-mono text-xs text-neutral-700">{order._id}</td>
-                                    <td className="p-4 text-neutral-600">{new Date(order.createdAt).toLocaleDateString()}</td>
-                                    <td className="p-4">
-                                        <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-neutral-100 text-neutral-800 border border-neutral-200">
-                                            {order.status}
-                                        </span>
-                                    </td>
-                                    <td className="p-4 font-semibold text-[#111111]">₹ {order.total.toFixed(2)}</td>
-                                    <td className="p-4 text-right">
-                                        <button
-                                            className="bg-black text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-neutral-800 transition-colors"
-                                            onClick={() => navigate(`/order/${order._id}`)}
-                                        >
-                                            View Details
-                                        </button>
-                                    </td>
+        <div className="min-h-screen bg-[#F4F1EA] py-8 px-4">
+            <div className="container mx-auto p-6 bg-[#FAF8F4] rounded-2xl border border-[#E2D9CC] shadow-sm max-w-5xl">
+                <BackButton />
+                <h2 className="text-2xl font-serif font-bold tracking-tight mb-6 text-center text-[#5A3825]">My Orders</h2>
+                {data.orders.length === 0 ? (
+                    <p className="text-center text-sm text-[#8C7364] py-8">No orders found</p>
+                ) : (
+                    <div className="overflow-x-auto rounded-xl border border-[#E2D9CC]">
+                        <table className="w-full text-left border-collapse">
+                            <thead className="bg-[#EAE5D9]">
+                                <tr className="border-b border-[#E2D9CC] text-xs font-semibold text-[#5A3825] uppercase tracking-wider">
+                                    <th className="p-4">Order ID</th>
+                                    <th className="p-4">Date</th>
+                                    <th className="p-4">Status</th>
+                                    <th className="p-4">Total</th>
+                                    <th className="p-4 text-right">Details</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                            </thead>
+                            <tbody className="divide-y divide-[#E2D9CC] text-xs sm:text-sm">
+                                {data.orders.map((order) => (
+                                    <tr className="hover:bg-[#FAF8F4]/80 transition-colors" key={order._id}>
+                                        <td className="p-4 font-mono text-xs text-[#5A3825]">{order._id}</td>
+                                        <td className="p-4 text-[#8C7364]">{new Date(order.createdAt).toLocaleDateString()}</td>
+                                        <td className="p-4">
+                                            <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#F4F1EA] text-[#5A3825] border border-[#E2D9CC]">
+                                                {order.status}
+                                            </span>
+                                        </td>
+                                        <td className="p-4 font-bold text-[#5A3825]">₹ {order.total.toFixed(2)}</td>
+                                        <td className="p-4 text-right">
+                                            <button
+                                                className="bg-[#8B5A2B] text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-[#5A3825] transition-colors shadow-2xs"
+                                                onClick={() => navigate(`/order/${order._id}`)}
+                                            >
+                                                View Details
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

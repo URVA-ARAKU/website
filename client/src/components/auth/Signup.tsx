@@ -100,19 +100,19 @@ const SignupPage: React.FC = () => {
     }
   };
 
-  return (
+    return (
     <div className="flex flex-col items-center justify-center">
-      <div className="w-full max-w-md bg-white rounded-lg p-2">
-        <h5 className="text-xl font-bold text-center mb-6 text-[#111111] font-sans tracking-tight">Create Account</h5>
+      <div className="w-full max-w-md bg-[#FAF8F4] rounded-lg p-2">
+        <h5 className="text-xl font-bold text-center mb-6 text-[#5A3825] font-sans tracking-tight">Create Account</h5>
 
         <form onSubmit={handleSignUp} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold mb-1.5 text-neutral-700" htmlFor="name">Full Name</label>
+            <label className="block text-xs font-semibold mb-1.5 text-[#5A3825]" htmlFor="name">Full Name</label>
             <input
               type="text"
               id="name"
               placeholder="John Doe"
-              className="appearance-none border border-neutral-300 rounded-lg w-full py-2.5 px-3 text-[#111111] text-sm focus:outline-none focus:border-black transition-colors"
+              className="appearance-none border border-[#E2D9CC] bg-[#F4F1EA] rounded-lg w-full py-2.5 px-3 text-[#5A3825] text-sm focus:outline-none focus:border-[#5A3825] transition-colors"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -120,12 +120,12 @@ const SignupPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold mb-1.5 text-neutral-700" htmlFor="email">Email Address</label>
+            <label className="block text-xs font-semibold mb-1.5 text-[#5A3825]" htmlFor="email">Email Address</label>
             <input
               type="email"
               id="email"
               placeholder="name@example.com"
-              className="appearance-none border border-neutral-300 rounded-lg w-full py-2.5 px-3 text-[#111111] text-sm focus:outline-none focus:border-black transition-colors"
+              className="appearance-none border border-[#E2D9CC] bg-[#F4F1EA] rounded-lg w-full py-2.5 px-3 text-[#5A3825] text-sm focus:outline-none focus:border-[#5A3825] transition-colors"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -133,12 +133,12 @@ const SignupPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold mb-1.5 text-neutral-700" htmlFor="password">Password</label>
+            <label className="block text-xs font-semibold mb-1.5 text-[#5A3825]" htmlFor="password">Password</label>
             <input
               type={showPassword ? 'text' : 'password'}
               id="password"
               placeholder="••••••••"
-              className="appearance-none border border-neutral-300 rounded-lg w-full py-2.5 px-3 text-[#111111] text-sm leading-tight focus:outline-none focus:border-black transition-colors"
+              className="appearance-none border border-[#E2D9CC] bg-[#F4F1EA] rounded-lg w-full py-2.5 px-3 text-[#5A3825] text-sm leading-tight focus:outline-none focus:border-[#5A3825] transition-colors"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -146,12 +146,12 @@ const SignupPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold mb-1.5 text-neutral-700" htmlFor="confirmPassword">Confirm Password</label>
+            <label className="block text-xs font-semibold mb-1.5 text-[#5A3825]" htmlFor="confirmPassword">Confirm Password</label>
             <input
               type={showPassword ? 'text' : 'password'}
               id="confirmPassword"
               placeholder="••••••••"
-              className="appearance-none border border-neutral-300 rounded-lg w-full py-2.5 px-3 text-[#111111] text-sm leading-tight focus:outline-none focus:border-black transition-colors"
+              className="appearance-none border border-[#E2D9CC] bg-[#F4F1EA] rounded-lg w-full py-2.5 px-3 text-[#5A3825] text-sm leading-tight focus:outline-none focus:border-[#5A3825] transition-colors"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
@@ -164,30 +164,30 @@ const SignupPage: React.FC = () => {
               id="showPassword"
               checked={showPassword}
               onChange={() => setShowPassword(!showPassword)}
-              className="mr-2 cursor-pointer accent-black"
+              className="mr-2 cursor-pointer accent-[#8B5A2B]"
             />
-            <label htmlFor="showPassword" className="text-xs text-neutral-600">Show Password</label>
+            <label htmlFor="showPassword" className="text-xs text-[#5A3825]/70">Show Password</label>
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full bg-black hover:bg-neutral-800 text-white font-medium py-3 px-4 rounded-xl text-sm focus:outline-none transition-colors shadow-sm mt-2 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-[#FAF8F4] font-medium py-3 px-4 rounded-xl text-sm focus:outline-none transition-colors shadow-sm mt-2 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {isLoading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </form>
 
         <div className="mt-6 flex items-center justify-center">
-          <hr className="flex-grow border-t border-gray-200" />
-          <span className="mx-4 text-xs text-gray-400 font-semibold">OR</span>
-          <hr className="flex-grow border-t border-gray-200" />
+          <hr className="flex-grow border-t border-[#E2D9CC]" />
+          <span className="mx-4 text-xs text-[#8B5A2B] font-semibold">OR</span>
+          <hr className="flex-grow border-t border-[#E2D9CC]" />
         </div>
 
         <div className="mt-4">
           <button
             disabled={isLoading}
-            className={`flex items-center justify-center text-gray-700 font-bold py-2.5 px-4 rounded-xl shadow-sm bg-white hover:bg-gray-50 gap-2 w-full border border-gray-300 text-sm ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`flex items-center justify-center text-[#5A3825] font-semibold py-2.5 px-4 rounded-xl shadow-sm bg-[#F4F1EA] hover:bg-[#E2D9CC]/60 gap-2 w-full border border-[#E2D9CC] text-sm ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={handleGoogleSignUp}
           >
             <FcGoogle className='text-xl' />

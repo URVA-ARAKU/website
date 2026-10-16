@@ -13,37 +13,37 @@ const RefundPolicy: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] py-10 sm:py-16 px-4 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-[#F4F1EA] py-10 sm:py-16 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-4xl mx-auto">
         {/* Navigation Tabs */}
         <LegalNav currentPath="/refund-policy" />
 
         {/* Main Content Card */}
-        <div className="bg-white rounded-3xl p-6 sm:p-10 md:p-12 border border-neutral-200/80 shadow-xs">
+        <div className="bg-[#FAF8F4] rounded-3xl p-6 sm:p-10 md:p-12 border border-[#E2D9CC] shadow-sm">
           {/* Header Banner */}
-          <div className="border-b border-neutral-100 pb-8 mb-8">
+          <div className="border-b border-[#E2D9CC] pb-8 mb-8">
             <div className="flex items-center gap-2 mb-3">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-[#111111] text-white">
-                <FaArrowRotateLeft className="text-[#E57A22]" /> RETURNS & REFUND COMMITMENT
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-[#5A3825] text-[#F4F1EA]">
+                <FaArrowRotateLeft className="text-[#8B5A2B]" /> RETURNS & REFUND COMMITMENT
               </span>
-              <span className="text-xs text-neutral-400">Effective from October 2026</span>
+              <span className="text-xs text-[#8C7364]">Effective from October 2026</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#111111] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-[#5A3825] tracking-tight">
               Refund & Return Policy
             </h1>
-            <p className="text-xs sm:text-sm text-neutral-500 mt-2 max-w-2xl leading-relaxed">
-              At <strong>URVA</strong>, our mission is to deliver authentic rural traditions with uncompromising quality. We want you to experience complete satisfaction with every product delivered from our artisan and farmer cooperatives.
+            <p className="text-xs sm:text-sm text-[#8C7364] mt-2 max-w-2xl leading-relaxed">
+              At <strong className="text-[#5A3825]">URVA</strong>, our mission is to deliver authentic rural traditions with uncompromising quality. We want you to experience complete satisfaction with every product delivered from our artisan and farmer cooperatives.
             </p>
           </div>
 
           {/* Guarantee Highlights Banner */}
-          <div className="bg-[#FAF7F2] p-5 sm:p-6 rounded-2xl border border-neutral-200/80 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="bg-[#F4F1EA] p-5 sm:p-6 rounded-2xl border border-[#E2D9CC] mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center flex-shrink-0">
                 <FaCircleCheck className="text-lg" />
               </div>
               <div>
-                <h4 className="font-bold text-neutral-900 text-xs sm:text-sm">
+                <h4 className="font-bold text-[#5A3825] text-xs sm:text-sm">
                   7-Day Hassle-Free Resolution Guarantee
                 </h4>
                 <p className="text-xs text-neutral-600 mt-0.5">

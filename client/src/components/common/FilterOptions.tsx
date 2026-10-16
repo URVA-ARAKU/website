@@ -25,14 +25,14 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
     const [showCategories, setShowCategories] = useState(true);
 
     return (
-        <div className="p-4 bg-white rounded-xl border border-neutral-200 space-y-5 shadow-xs">
+        <div className="p-4 bg-[#FAF8F4] rounded-2xl border border-[#E2D9CC] space-y-5 shadow-xs font-sans">
             {/* Sort options */}
             <div>
-                <label className="block text-xs font-semibold text-[#111111] uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-[#5A3825] uppercase tracking-wider mb-1.5">
                     Sort By
                 </label>
                 <select
-                    className="w-full px-3 py-2 text-xs font-sans font-medium text-neutral-800 bg-[#FAFAFA] border border-neutral-200 focus:outline-none focus:border-black rounded-lg"
+                    className="w-full px-3 py-2 text-xs font-sans font-medium text-[#5A3825] bg-[#F4F1EA] border border-[#E2D9CC] focus:outline-none focus:border-[#5A3825] rounded-xl"
                     value={sort}
                     onChange={(e) => setSort(e.target.value as 'asc' | 'desc' | 'relevance')}
                 >
@@ -48,19 +48,19 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
                     className="flex items-center justify-between cursor-pointer py-1" 
                     onClick={() => setShowCategories(!showCategories)}
                 >
-                    <h3 className="text-xs font-semibold text-[#111111] uppercase tracking-wider">
+                    <h3 className="text-xs font-semibold text-[#5A3825] uppercase tracking-wider">
                         Categories
                     </h3>
-                    {showCategories ? <FaChevronUp className="h-3 w-3 text-neutral-500" /> : <FaChevronDown className="h-3 w-3 text-neutral-500" />}
+                    {showCategories ? <FaChevronUp className="h-3 w-3 text-[#8B5A2B]" /> : <FaChevronDown className="h-3 w-3 text-[#8B5A2B]" />}
                 </div>
 
                 {showCategories && (
                     <ul className="mt-2 space-y-1">
                         <li
-                            className={`cursor-pointer px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                            className={`cursor-pointer px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
                                 selectedCategory === ''
-                                    ? 'bg-black text-white'
-                                    : 'text-neutral-600 hover:bg-neutral-100 hover:text-black'
+                                    ? 'bg-[#8B5A2B] text-[#FAF8F4] font-semibold shadow-2xs'
+                                    : 'text-[#5A3825] hover:bg-[#F4F1EA]'
                             }`}
                             onClick={() => setSelectedCategory('')}
                         >
@@ -69,10 +69,10 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
                         {categories.map((category) => (
                             <li
                                 key={category}
-                                className={`cursor-pointer px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                                className={`cursor-pointer px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
                                     selectedCategory === category
-                                        ? 'bg-black text-white'
-                                        : 'text-neutral-600 hover:bg-neutral-100 hover:text-black'
+                                        ? 'bg-[#8B5A2B] text-[#FAF8F4] font-semibold shadow-2xs'
+                                        : 'text-[#5A3825] hover:bg-[#F4F1EA]'
                                 }`}
                                 onClick={() => setSelectedCategory(category)}
                             >
@@ -85,7 +85,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
 
             {/* Clear filters button */}
             <button
-                className="w-full bg-[#FAFAFA] text-neutral-800 border border-neutral-200 py-2 rounded-lg text-xs font-medium hover:bg-black hover:text-white transition-colors duration-200"
+                className="w-full bg-[#F4F1EA] text-[#5A3825] border border-[#E2D9CC] py-2 rounded-xl text-xs font-medium hover:bg-[#8B5A2B] hover:text-[#FAF8F4] hover:border-[#8B5A2B] transition-colors duration-200 cursor-pointer shadow-2xs"
                 onClick={clearFilters}
             >
                 Reset Filters

@@ -13,27 +13,27 @@ const TermsAndConditions: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] py-10 sm:py-16 px-4 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-[#F4F1EA] py-10 sm:py-16 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-4xl mx-auto">
         {/* Navigation Tabs */}
         <LegalNav currentPath="/terms" />
 
         {/* Main Content Card */}
-        <div className="bg-white rounded-3xl p-6 sm:p-10 md:p-12 border border-neutral-200/80 shadow-xs">
+        <div className="bg-[#FAF8F4] rounded-3xl p-6 sm:p-10 md:p-12 border border-[#E2D9CC] shadow-sm">
           {/* Header Banner */}
-          <div className="border-b border-neutral-100 pb-8 mb-8">
+          <div className="border-b border-[#E2D9CC] pb-8 mb-8">
             <div className="flex items-center gap-2 mb-3">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-[#111111] text-white">
-                <FaFileContract className="text-[#E57A22]" /> LEGAL & COMPLIANCE
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-[#5A3825] text-[#F4F1EA]">
+                <FaFileContract className="text-[#8B5A2B]" /> LEGAL & COMPLIANCE
               </span>
-              <span className="text-xs text-neutral-400">Effective from October 2026</span>
+              <span className="text-xs text-[#8C7364]">Effective from October 2026</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#111111] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-[#5A3825] tracking-tight">
               Terms & Conditions
             </h1>
-            <p className="text-xs sm:text-sm text-neutral-500 mt-2 max-w-2xl leading-relaxed">
-              These Terms and Conditions govern your access to and use of <strong>URVA</strong> (
-              <a href="https://urvaswadeshi.in" className="text-[#E57A22] font-semibold hover:underline">
+            <p className="text-xs sm:text-sm text-[#8C7364] mt-2 max-w-2xl leading-relaxed">
+              These Terms and Conditions govern your access to and use of <strong className="text-[#5A3825]">URVA</strong> (
+              <a href="https://urvaswadeshi.in" className="text-[#8B5A2B] font-semibold hover:underline">
                 https://urvaswadeshi.in
               </a>
               ), an authentic regional commerce platform connecting rural Indian cooperatives and artisans directly with customers.
@@ -41,7 +41,7 @@ const TermsAndConditions: React.FC = () => {
           </div>
 
           {/* Policy Sections */}
-          <div className="space-y-8 text-neutral-700 text-xs sm:text-sm leading-relaxed">
+          <div className="space-y-8 text-[#5A3825]/90 text-xs sm:text-sm leading-relaxed">
             {/* Section 1 */}
             <section className="space-y-3">
               <h2 className="text-base sm:text-lg font-bold text-neutral-900 flex items-center gap-2">

@@ -24,13 +24,13 @@ const FeaturedVariants: React.FC<Props> = ({ products }) => {
     <section className="py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-[0.2em] block mb-2">
+          <span className="text-[11px] font-semibold text-[#8C7364] uppercase tracking-[0.2em] block mb-2">
             SELECTED FINDS
           </span>
-          <h2 className="text-2xl sm:text-3xl font-sans font-semibold tracking-tight text-[#111111]">
+          <h2 className="text-2xl sm:text-3xl font-sans font-semibold tracking-tight text-[#5A3825]">
             Featured Products
           </h2>
-          <p className="text-xs md:text-sm text-neutral-500 mt-2 font-light leading-relaxed">
+          <p className="text-xs md:text-sm text-[#8C7364] mt-2 font-light leading-relaxed">
             Explore selected products and available options from the URVA collection.
           </p>
         </div>
@@ -46,7 +46,7 @@ const FeaturedVariants: React.FC<Props> = ({ products }) => {
                   if (!el) return;
                   el.scrollBy({ left: -Math.round(el.clientWidth * 0.8), behavior: 'smooth' });
                 }}
-                className="w-9 h-9 rounded-full bg-white border border-neutral-200 shadow-xs flex items-center justify-center text-neutral-800 hover:bg-neutral-100 hover:border-black transition-colors"
+                className="w-9 h-9 rounded-full bg-[#FAF8F4] border border-[#E2D9CC] shadow-xs flex items-center justify-center text-[#5A3825] hover:bg-[#8B5A2B] hover:text-white transition-colors"
               >
                 ‹
               </button>
@@ -57,7 +57,7 @@ const FeaturedVariants: React.FC<Props> = ({ products }) => {
                   if (!el) return;
                   el.scrollBy({ left: Math.round(el.clientWidth * 0.8), behavior: 'smooth' });
                 }}
-                className="w-9 h-9 rounded-full bg-white border border-neutral-200 shadow-xs flex items-center justify-center text-neutral-800 hover:bg-neutral-100 hover:border-black transition-colors"
+                className="w-9 h-9 rounded-full bg-[#FAF8F4] border border-[#E2D9CC] shadow-xs flex items-center justify-center text-[#5A3825] hover:bg-[#8B5A2B] hover:text-white transition-colors"
               >
                 ›
               </button>

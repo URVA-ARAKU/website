@@ -51,18 +51,18 @@ const PopularProducts: React.FC<PopularProductsProps> = ({ products = [] }) => {
   };
 
   return (
-    <section className="pt-2 pb-12 sm:pt-4 sm:pb-16 bg-[#FAFAFA] border-b border-neutral-200 font-sans">
+    <section className="pt-2 pb-12 sm:pt-4 sm:pb-16 bg-[#F4F1EA] border-b border-[#E2D9CC] font-sans">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-5 sm:mb-6 gap-3">
           <div className="text-center md:text-left">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-500 block mb-1">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C7364] block mb-1">
               CUSTOMER FAVORITES • TOP RATED
             </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#111111] tracking-tight font-sans">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#5A3825] tracking-tight font-sans">
               Our Best Sellers
             </h2>
-            <p className="mt-1 text-xs sm:text-sm text-neutral-600 font-normal max-w-xl">
+            <p className="mt-1 text-xs sm:text-sm text-[#8C7364] font-normal max-w-xl">
               Loved and cherished regional harvests, heritage foods, and handcrafted essentials.
             </p>
           </div>
@@ -71,7 +71,7 @@ const PopularProducts: React.FC<PopularProductsProps> = ({ products = [] }) => {
           <div className="flex items-center justify-center md:justify-end gap-3 shrink-0">
             <Link
               to="/products"
-              className="text-xs sm:text-sm font-medium text-neutral-800 hover:text-black underline-offset-4 hover:underline transition-colors mr-2"
+              className="text-xs sm:text-sm font-medium text-[#8B5A2B] hover:text-[#5A3825] underline-offset-4 hover:underline transition-colors mr-2"
             >
               Explore All Products &rarr;
             </Link>
@@ -81,7 +81,7 @@ const PopularProducts: React.FC<PopularProductsProps> = ({ products = [] }) => {
                 type="button"
                 onClick={() => handleScroll('left')}
                 aria-label="Previous best sellers"
-                className="w-8 h-8 rounded-full border border-neutral-200 bg-white text-neutral-800 hover:bg-black hover:text-white flex items-center justify-center transition-all duration-200 shadow-xs hover:shadow"
+                className="w-8 h-8 rounded-full border border-[#E2D9CC] bg-[#FAF8F4] text-[#5A3825] hover:bg-[#8B5A2B] hover:text-white flex items-center justify-center transition-all duration-200 shadow-xs hover:shadow"
               >
                 <FaChevronLeft className="text-xs" />
               </button>
@@ -89,7 +89,7 @@ const PopularProducts: React.FC<PopularProductsProps> = ({ products = [] }) => {
                 type="button"
                 onClick={() => handleScroll('right')}
                 aria-label="Next best sellers"
-                className="w-8 h-8 rounded-full border border-neutral-200 bg-white text-neutral-800 hover:bg-black hover:text-white flex items-center justify-center transition-all duration-200 shadow-xs hover:shadow"
+                className="w-8 h-8 rounded-full border border-[#E2D9CC] bg-[#FAF8F4] text-[#5A3825] hover:bg-[#8B5A2B] hover:text-white flex items-center justify-center transition-all duration-200 shadow-xs hover:shadow"
               >
                 <FaChevronRight className="text-xs" />
               </button>
@@ -108,8 +108,8 @@ const PopularProducts: React.FC<PopularProductsProps> = ({ products = [] }) => {
                 onClick={() => setActiveTab(tab)}
                 className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
                   isSelected
-                    ? 'bg-black text-white shadow-xs'
-                    : 'bg-white text-neutral-700 border border-neutral-200 hover:border-black hover:text-black'
+                    ? 'bg-[#5A3825] text-[#F4F1EA] shadow-xs'
+                    : 'bg-[#FAF8F4] text-[#5A3825] border border-[#E2D9CC] hover:border-[#8B5A2B] hover:text-[#8B5A2B]'
                 }`}
               >
                 {tab}

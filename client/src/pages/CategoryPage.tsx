@@ -81,55 +81,55 @@ const CategoryPage: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen bg-[#FAFAFA] px-4 py-6 sm:px-8 sm:py-10">
+    <main className="min-h-screen bg-[#F4F1EA] px-4 py-6 sm:px-8 sm:py-10">
       <div className="mx-auto max-w-7xl space-y-8">
-        <nav aria-label="Breadcrumb" className="text-xs text-neutral-500 font-medium">
-          <Link to="/" className="transition hover:text-black">Home</Link>
+        <nav aria-label="Breadcrumb" className="text-xs text-[#8C7364] font-medium">
+          <Link to="/" className="transition hover:text-[#5A3825]">Home</Link>
           <span aria-hidden="true" className="mx-2">/</span>
-          <Link to="/products" className="transition hover:text-black">Products</Link>
+          <Link to="/products" className="transition hover:text-[#5A3825]">Products</Link>
           <span aria-hidden="true" className="mx-2">/</span>
-          <span aria-current="page" className="font-semibold text-[#111111]">{category.title}</span>
+          <span aria-current="page" className="font-semibold text-[#5A3825]">{category.title}</span>
         </nav>
 
-        <header className="relative isolate flex min-h-64 items-end overflow-hidden rounded-2xl bg-[#111111] p-6 sm:min-h-80 sm:p-10 border border-neutral-800">
+        <header className="relative isolate flex min-h-64 items-end overflow-hidden rounded-2xl bg-[#5A3825] p-6 sm:min-h-80 sm:p-10 border border-[#3F2618] shadow-sm">
           <img
             src={category.image}
             alt=""
             aria-hidden="true"
             className="absolute inset-0 -z-20 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/90 via-black/60 to-black/30" />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/85 via-[#5A3825]/70 to-black/40" />
           <div className="max-w-2xl text-white">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-300">Discover the collection</p>
-            <h1 className="mt-2 font-sans text-3xl font-semibold sm:text-5xl text-white tracking-tight">{category.title}</h1>
-            <p className="mt-2.5 max-w-xl text-xs sm:text-sm leading-relaxed text-neutral-300">{category.description}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#CCA887]">Discover the collection</p>
+            <h1 className="mt-2 font-sans text-3xl font-semibold sm:text-5xl text-[#F4F1EA] tracking-tight">{category.title}</h1>
+            <p className="mt-2.5 max-w-xl text-xs sm:text-sm leading-relaxed text-[#E2D9CC]">{category.description}</p>
           </div>
         </header>
 
         <section
           aria-label={`${category.title} products and order information`}
-          className="grid gap-5 rounded-xl border border-neutral-200 bg-white p-5 sm:p-6 lg:grid-cols-[1.3fr_0.7fr] shadow-xs"
+          className="grid gap-5 rounded-xl border border-[#E2D9CC] bg-[#FAF8F4] p-5 sm:p-6 lg:grid-cols-[1.3fr_0.7fr] shadow-xs"
         >
           <div>
-            <h2 className="font-sans text-base font-semibold text-[#111111]">Available in this collection</h2>
-            <ul className="mt-3 grid gap-2 text-xs text-neutral-600 sm:grid-cols-2">
+            <h2 className="font-sans text-base font-semibold text-[#5A3825]">Available in this collection</h2>
+            <ul className="mt-3 grid gap-2 text-xs text-[#5A3825] sm:grid-cols-2">
               {category.products.map((product) => (
                 <li key={product} className="flex items-start gap-2">
-                  <span aria-hidden="true" className="mt-0.5 text-black">•</span>
+                  <span aria-hidden="true" className="mt-0.5 text-[#8B5A2B]">•</span>
                   <span>{product}</span>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="space-y-2 border-t border-neutral-200 pt-4 text-xs sm:pt-4 lg:border-l lg:border-t-0 lg:pl-5">
+          <div className="space-y-2 border-t border-[#E2D9CC] pt-4 text-xs sm:pt-4 lg:border-l lg:border-t-0 lg:pl-5">
             <p>
-              <span className="font-semibold text-[#111111]">Minimum order:</span>{' '}
-              <span className="text-neutral-600">{category.minimumOrder}</span>
+              <span className="font-semibold text-[#5A3825]">Minimum order:</span>{' '}
+              <span className="text-[#8C7364]">{category.minimumOrder}</span>
             </p>
             {'bulkPricing' in category && (
               <p>
-                <span className="font-semibold text-[#111111]">Bulk pricing:</span>{' '}
-                <span className="text-neutral-600">{category.bulkPricing}</span>
+                <span className="font-semibold text-[#5A3825]">Bulk pricing:</span>{' '}
+                <span className="text-[#8C7364]">{category.bulkPricing}</span>
               </p>
             )}
           </div>

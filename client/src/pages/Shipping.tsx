@@ -89,26 +89,26 @@ const Shipping: React.FC = () => {
         navigate('/checkout');
     };
 
-    const inputClass = "w-full px-4 py-2.5 border border-neutral-200 rounded-lg bg-white text-xs focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-neutral-400";
-    const labelClass = "block text-xs font-semibold text-[#111111] uppercase tracking-wider mb-1.5";
+    const inputClass = "w-full px-4 py-2.5 border border-[#E2D9CC] rounded-lg bg-[#F4F1EA] text-[#5A3825] text-xs focus:border-[#8B5A2B] focus:ring-1 focus:ring-[#8B5A2B] outline-none transition-all placeholder:text-[#8C7364]";
+    const labelClass = "block text-xs font-semibold text-[#5A3825] uppercase tracking-wider mb-1.5";
 
     return (
-        <div className="min-h-screen bg-[#FAFAFA] py-8 px-4">
+        <div className="min-h-screen bg-[#F4F1EA] py-8 px-4">
             <div className="max-w-2xl mx-auto">
                 <BackButton />
 
                 {/* Page Header */}
                 <div className="text-center mb-6">
-                    <h2 className="text-2xl sm:text-3xl font-sans font-semibold tracking-tight text-[#111111]">
+                    <h2 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight text-[#5A3825]">
                         Delivery Address
                     </h2>
-                    <p className="text-xs text-neutral-500 mt-1">
+                    <p className="text-xs text-[#8C7364] mt-1 font-normal">
                         Enter your shipping details for order delivery
                     </p>
                 </div>
 
                 {/* Main Form Box */}
-                <div className="bg-white rounded-2xl border border-neutral-200 p-6 shadow-xs">
+                <div className="bg-[#FAF8F4] rounded-2xl border border-[#E2D9CC] p-6 shadow-sm">
 
                     {/* Standard E-Commerce Address Form */}
                     <form onSubmit={submitHandler} className="space-y-4">
@@ -220,11 +220,11 @@ const Shipping: React.FC = () => {
                         </div>
 
                         {/* Security / Delivery Trust Info */}
-                        <div className="pt-2 flex items-center justify-between text-xs text-neutral-500 border-t border-neutral-200">
-                            <span className="flex items-center gap-1.5 text-neutral-800 font-medium">
+                        <div className="pt-2 flex items-center justify-between text-xs text-[#8C7364] border-t border-[#E2D9CC]">
+                            <span className="flex items-center gap-1.5 text-[#5A3825] font-semibold">
                                 <FaTruck /> Fast & Secure Pan-India Shipping
                             </span>
-                            <span className="flex items-center gap-1 text-emerald-700 font-medium">
+                            <span className="flex items-center gap-1 text-emerald-800 font-semibold">
                                 <FaShieldAlt /> Safe Checkout
                             </span>
                         </div>
@@ -232,7 +232,7 @@ const Shipping: React.FC = () => {
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            className="w-full bg-black hover:bg-neutral-800 text-white font-medium py-3.5 px-4 rounded-lg uppercase tracking-wider transition-colors shadow-xs text-xs mt-4 flex items-center justify-center gap-2"
+                            className="w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-semibold py-3.5 px-4 rounded-lg uppercase tracking-wider transition-colors shadow-sm text-xs mt-4 flex items-center justify-center gap-2"
                         >
                             <span>Proceed to Payment ➔</span>
                         </button>

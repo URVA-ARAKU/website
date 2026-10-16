@@ -158,7 +158,7 @@ const AdminOrders: React.FC = () => {
         </div>
         <button
           onClick={() => refetch()}
-          className="self-start sm:self-auto bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-semibold px-4 py-2 rounded-xl text-xs border border-neutral-200 transition"
+          className="self-start sm:self-auto bg-[#FAF8F4] hover:bg-[#EAE5D9] text-[#5A3825] font-semibold px-4 py-2 rounded-xl text-xs border border-[#E2D9CC] transition"
         >
           Refresh Orders
         </button>
@@ -166,68 +166,68 @@ const AdminOrders: React.FC = () => {
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-2xl border border-neutral-200 shadow-2xs">
+        <div className="bg-[#FAF8F4] p-4 rounded-2xl border border-[#E2D9CC] shadow-2xs">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Total Revenue</span>
-            <div className="w-8 h-8 rounded-lg bg-neutral-100 text-neutral-800 flex items-center justify-center text-sm font-bold">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C7364]">Total Revenue</span>
+            <div className="w-8 h-8 rounded-lg bg-[#F4F1EA] text-[#5A3825] flex items-center justify-center text-sm font-bold border border-[#E2D9CC]">
               <FaRupeeSign />
             </div>
           </div>
-          <p className="text-2xl font-bold text-neutral-900 mt-2 tracking-tight">
+          <p className="text-2xl font-serif font-bold text-[#5A3825] mt-2 tracking-tight">
             ₹{metrics.totalRevenue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
           </p>
-          <p className="text-[11px] text-neutral-500 mt-0.5">From all {metrics.total} orders</p>
+          <p className="text-[11px] text-[#8C7364] mt-0.5">From all {metrics.total} orders</p>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-neutral-200 shadow-2xs">
+        <div className="bg-[#FAF8F4] p-4 rounded-2xl border border-[#E2D9CC] shadow-2xs">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Total Orders</span>
-            <div className="w-8 h-8 rounded-lg bg-neutral-100 text-neutral-800 flex items-center justify-center text-sm">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C7364]">Total Orders</span>
+            <div className="w-8 h-8 rounded-lg bg-[#F4F1EA] text-[#5A3825] flex items-center justify-center text-sm border border-[#E2D9CC]">
               <FaShoppingBag />
             </div>
           </div>
-          <p className="text-2xl font-bold text-neutral-900 mt-2 tracking-tight">{metrics.total}</p>
-          <p className="text-[11px] text-neutral-500 mt-0.5">Lifetime orders count</p>
+          <p className="text-2xl font-serif font-bold text-[#5A3825] mt-2 tracking-tight">{metrics.total}</p>
+          <p className="text-[11px] text-[#8C7364] mt-0.5">Lifetime orders count</p>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-neutral-200 shadow-2xs">
+        <div className="bg-[#FAF8F4] p-4 rounded-2xl border border-[#E2D9CC] shadow-2xs">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Action Required</span>
-            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center text-sm">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C7364]">Action Required</span>
+            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-800 flex items-center justify-center text-sm border border-amber-200">
               <FaClock />
             </div>
           </div>
-          <p className="text-2xl font-bold text-amber-700 mt-2 tracking-tight">{metrics.pendingProcessing}</p>
-          <p className="text-[11px] text-amber-600 font-medium mt-0.5">Pending or Processing</p>
+          <p className="text-2xl font-serif font-bold text-amber-800 mt-2 tracking-tight">{metrics.pendingProcessing}</p>
+          <p className="text-[11px] text-amber-700 font-medium mt-0.5">Pending or Processing</p>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-neutral-200 shadow-2xs">
+        <div className="bg-[#FAF8F4] p-4 rounded-2xl border border-[#E2D9CC] shadow-2xs">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Delivered</span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center text-sm">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C7364]">Delivered</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center text-sm border border-emerald-200">
               <FaTruck />
             </div>
           </div>
-          <p className="text-2xl font-bold text-emerald-700 mt-2 tracking-tight">{metrics.delivered}</p>
-          <p className="text-[11px] text-emerald-600 font-medium mt-0.5">Successfully fulfilled</p>
+          <p className="text-2xl font-serif font-bold text-emerald-800 mt-2 tracking-tight">{metrics.delivered}</p>
+          <p className="text-[11px] text-emerald-700 font-medium mt-0.5">Successfully fulfilled</p>
         </div>
       </div>
 
       {/* Filter and Search */}
-      <div className="bg-white p-5 rounded-2xl border border-neutral-200 shadow-2xs space-y-4">
+      <div className="bg-[#FAF8F4] p-5 rounded-2xl border border-[#E2D9CC] shadow-2xs space-y-4">
         <div className="relative">
-          <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 text-xs" />
+          <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8C7364] text-xs" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by Order ID, customer name, phone number or city..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-200 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10 bg-neutral-50 focus:bg-white placeholder-neutral-400 transition text-neutral-900"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#E2D9CC] text-sm focus:outline-none focus:ring-2 focus:ring-[#8B5A2B]/10 bg-[#F4F1EA] focus:bg-white placeholder-[#8C7364] transition text-[#5A3825]"
           />
           {searchQuery && (
             <button 
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-neutral-400 hover:text-neutral-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#8C7364] hover:text-[#5A3825]"
             >
               Clear
             </button>
@@ -247,13 +247,13 @@ const AdminOrders: React.FC = () => {
                 onClick={() => setSelectedStatus(st)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition whitespace-nowrap flex items-center gap-1.5 ${
                   selectedStatus === st
-                    ? 'bg-[#111111] text-white shadow-2xs font-semibold'
-                    : 'bg-neutral-50 text-neutral-600 hover:bg-neutral-100 border border-neutral-200'
+                    ? 'bg-[#5A3825] text-[#F4F1EA] shadow-2xs font-semibold'
+                    : 'bg-[#F4F1EA] text-[#5A3825] hover:bg-[#EAE5D9] border border-[#E2D9CC]'
                 }`}
               >
                 <span>{st}</span>
                 <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                  selectedStatus === st ? 'bg-white/20 text-white' : 'bg-neutral-200 text-neutral-700'
+                  selectedStatus === st ? 'bg-white/20 text-white' : 'bg-[#EAE5D9] text-[#5A3825]'
                 }`}>
                   {count}
                 </span>
@@ -264,15 +264,15 @@ const AdminOrders: React.FC = () => {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white rounded-3xl border border-neutral-200 shadow-2xs overflow-hidden">
-        <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
-          <h2 className="font-bold text-neutral-900 text-sm tracking-tight">
+      <div className="bg-[#FAF8F4] rounded-3xl border border-[#E2D9CC] shadow-2xs overflow-hidden">
+        <div className="p-5 border-b border-[#E2D9CC] flex items-center justify-between">
+          <h2 className="font-serif font-bold text-[#5A3825] text-sm tracking-tight">
             Orders ({filteredOrders.length})
           </h2>
           {(searchQuery || selectedStatus !== 'All') && (
             <button
               onClick={() => { setSearchQuery(''); setSelectedStatus('All'); }}
-              className="text-xs font-semibold text-neutral-600 hover:text-neutral-900 hover:underline"
+              className="text-xs font-semibold text-[#8B5A2B] hover:text-[#5A3825] hover:underline"
             >
               Reset Filters
             </button>
@@ -281,18 +281,18 @@ const AdminOrders: React.FC = () => {
 
         {filteredOrders.length === 0 ? (
           <div className="text-center py-16 px-4">
-            <div className="w-14 h-14 rounded-2xl bg-neutral-100 text-neutral-400 text-xl flex items-center justify-center mx-auto mb-3">
+            <div className="w-14 h-14 rounded-2xl bg-[#F4F1EA] text-[#8C7364] text-xl flex items-center justify-center mx-auto mb-3 border border-[#E2D9CC]">
               <FaClipboardList />
             </div>
-            <p className="text-neutral-900 font-semibold mb-1 text-sm">No orders found</p>
-            <p className="text-xs text-neutral-500 max-w-sm mx-auto">
+            <p className="text-[#5A3825] font-semibold mb-1 text-sm">No orders found</p>
+            <p className="text-xs text-[#8C7364] max-w-sm mx-auto">
               No orders matched your filter criteria or search query.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-neutral-100 text-left text-xs">
-              <thead className="bg-neutral-50 text-neutral-500 font-semibold uppercase tracking-wider text-[10px]">
+            <table className="min-w-full divide-y divide-[#E2D9CC] text-left text-xs">
+              <thead className="bg-[#EAE5D9] text-[#5A3825] font-semibold uppercase tracking-wider text-[10px]">
                 <tr>
                   <th className="px-5 py-3.5">Order ID & Date</th>
                   <th className="px-5 py-3.5">Customer</th>
@@ -302,7 +302,7 @@ const AdminOrders: React.FC = () => {
                   <th className="px-5 py-3.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-100 bg-white">
+              <tbody className="divide-y divide-[#E2D9CC] bg-[#FAF8F4]">
                 {filteredOrders.map((order) => {
                   const customer = getCustomerInfo(order);
                   const items = Array.isArray(order.orderItems) ? order.orderItems : [];

@@ -80,14 +80,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <div
       onClick={() => navigate(`/product/${product._id}`)}
-      className="bg-white rounded-2xl p-4 sm:p-5 border border-neutral-200 hover:border-black/30 hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full group relative cursor-pointer font-sans"
+      className="bg-[#FAF8F4] rounded-2xl p-4 sm:p-5 border border-[#E2D9CC] hover:border-[#8B5A2B] hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full group relative cursor-pointer font-sans"
     >
       {/* Top Image Container */}
-      <div className="relative bg-[#F9F9F9] rounded-xl flex items-center justify-center aspect-square mb-4 overflow-hidden group-hover:bg-[#F4F4F4] transition-colors border border-neutral-100">
+      <div className="relative bg-[#F4F1EA] rounded-xl flex items-center justify-center aspect-square mb-4 overflow-hidden group-hover:bg-[#EAE5D9] transition-colors border border-[#E2D9CC]/60">
         {/* Out of Stock Overlay */}
         {isOutOfStock && (
-          <div className="absolute inset-0 bg-white/80 z-20 flex items-center justify-center rounded-xl">
-            <span className="bg-neutral-100 text-neutral-800 text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full border border-neutral-200">
+          <div className="absolute inset-0 bg-[#FAF8F4]/85 z-20 flex items-center justify-center rounded-xl">
+            <span className="bg-[#EAE5D9] text-[#5A3825] text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full border border-[#E2D9CC]">
               Out of Stock
             </span>
           </div>
@@ -102,20 +102,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         />
       </div>
 
-      {/* Product Information Section (Matches Reference Screenshot) */}
+      {/* Product Information Section */}
       <div className="flex flex-col flex-1">
         {/* Title + Price Row */}
         <div className="flex items-start justify-between gap-3 mb-2">
-          <h3 className="text-sm sm:text-base font-semibold text-[#111111] leading-snug line-clamp-2 group-hover:text-neutral-700 transition-colors flex-1">
+          <h3 className="text-sm sm:text-base font-semibold text-[#5A3825] leading-snug line-clamp-2 group-hover:text-[#8B5A2B] transition-colors flex-1">
             {product.name}
           </h3>
-          <span className="text-sm sm:text-base font-semibold text-[#111111] whitespace-nowrap">
+          <span className="text-sm sm:text-base font-semibold text-[#5A3825] whitespace-nowrap">
             {formattedPrice}
           </span>
         </div>
 
         {/* Short Subtitle / Description */}
-        <p className="text-xs text-neutral-500 font-normal leading-relaxed line-clamp-2 mb-4">
+        <p className="text-xs text-[#8C7364] font-normal leading-relaxed line-clamp-2 mb-4">
           {product.description || 'Authentic single-origin harvest, hand-crafted with traditional methods.'}
         </p>
 
@@ -123,21 +123,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="mt-auto pt-2">
           {!hasVariants && cartItem ? (
             <div className="flex flex-col gap-2" onClick={(e) => e.stopPropagation()}>
-              <div className="flex items-center justify-between bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-1.5">
+              <div className="flex items-center justify-between bg-[#F4F1EA] border border-[#E2D9CC] rounded-lg px-3 py-1.5">
                 <button
                   type="button"
                   onClick={handleDecrement}
-                  className="w-6 h-6 rounded-md bg-white border border-neutral-200 text-neutral-800 font-bold flex items-center justify-center hover:bg-neutral-100 transition-colors text-xs"
+                  className="w-6 h-6 rounded-md bg-[#FAF8F4] border border-[#E2D9CC] text-[#5A3825] font-bold flex items-center justify-center hover:bg-[#EAE5D9] transition-colors text-xs"
                 >
                   −
                 </button>
-                <span className="text-xs font-semibold text-[#111111]">
+                <span className="text-xs font-semibold text-[#5A3825]">
                   {cartItem.quantity} in Cart
                 </span>
                 <button
                   type="button"
                   onClick={handleIncrement}
-                  className="w-6 h-6 rounded-md bg-white border border-neutral-200 text-neutral-800 font-bold flex items-center justify-center hover:bg-neutral-100 transition-colors text-xs"
+                  className="w-6 h-6 rounded-md bg-[#FAF8F4] border border-[#E2D9CC] text-[#5A3825] font-bold flex items-center justify-center hover:bg-[#EAE5D9] transition-colors text-xs"
                 >
                   +
                 </button>
@@ -145,7 +145,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <button
                 type="button"
                 onClick={handleGoToCart}
-                className="w-full bg-black hover:bg-neutral-800 text-white font-medium text-xs py-2.5 rounded-lg uppercase tracking-wider transition-colors"
+                className="w-full bg-[#5A3825] hover:bg-[#3F2618] text-white font-medium text-xs py-2.5 rounded-lg uppercase tracking-wider transition-colors shadow-xs"
               >
                 Go to Cart
               </button>
@@ -157,8 +157,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               disabled={isOutOfStock}
               className={`w-full font-medium text-xs py-3 rounded-lg transition-all flex items-center justify-center tracking-widest uppercase ${
                 isOutOfStock
-                  ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed'
-                  : 'bg-black hover:bg-neutral-800 text-white shadow-xs'
+                  ? 'bg-[#EAE5D9] text-[#8C7364] cursor-not-allowed'
+                  : 'bg-[#8B5A2B] hover:bg-[#5A3825] text-white shadow-xs'
               }`}
             >
               <span>
@@ -173,7 +173,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
           {/* Clean 'More details →' Link */}
           <div className="mt-3 text-center">
-            <span className="inline-flex items-center gap-1 text-xs font-medium text-neutral-800 group-hover:text-black group-hover:underline underline-offset-4 transition-colors">
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-[#8B5A2B] group-hover:text-[#5A3825] group-hover:underline underline-offset-4 transition-colors">
               More details &rarr;
             </span>
           </div>

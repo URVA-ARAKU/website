@@ -219,16 +219,16 @@ const AdminBanners: React.FC = () => {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12 font-sans">
       {/* Header Banner */}
-      <div className="bg-[#111111] text-white p-6 sm:p-8 rounded-3xl border border-neutral-800 shadow-xl relative overflow-hidden">
+      <div className="bg-[#5A3825] text-white p-6 sm:p-8 rounded-3xl border border-[#3F2618] shadow-md relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-2">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-white/10 text-neutral-300 border border-white/10">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-[#3F2618]/60 text-[#F4F1EA] border border-[#8B5A2B]">
               STOREFRONT CUSTOMIZER
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight">
               Banners & Festival Campaigns
             </h1>
-            <p className="text-xs sm:text-sm text-neutral-400 max-w-xl">
+            <p className="text-xs sm:text-sm text-[#F4F1EA]/85 max-w-xl">
               Control hero carousels, festive seasonal announcements, bottom showcases, and top alerts instantly without altering code.
             </p>
           </div>
@@ -236,7 +236,7 @@ const AdminBanners: React.FC = () => {
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={() => handleOpenAddModal('hero')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-neutral-100 text-[#111111] text-xs font-bold tracking-wide transition shadow-sm hover:scale-105"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#8B5A2B] hover:bg-[#70441E] text-white text-xs font-bold tracking-wide transition shadow-sm hover:scale-105"
             >
               <FaPlus />
               <span>Create Campaign</span>
@@ -244,7 +244,7 @@ const AdminBanners: React.FC = () => {
             <button
               onClick={handleSeedDefaults}
               disabled={isSeeding}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-300 text-xs font-semibold border border-neutral-700 transition"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#3F2618] hover:bg-[#2E1C13] text-[#F4F1EA] text-xs font-semibold border border-[#8B5A2B] transition"
               title="Restore standard URVA templates"
             >
               <FaRedo className={isSeeding ? 'animate-spin' : ''} />
@@ -254,7 +254,7 @@ const AdminBanners: React.FC = () => {
               href="/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-300 text-xs font-semibold border border-neutral-700 transition"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#3F2618] hover:bg-[#2E1C13] text-[#F4F1EA] text-xs font-semibold border border-[#8B5A2B] transition"
             >
               <FaEye />
               <span>Preview Store</span>
@@ -269,8 +269,8 @@ const AdminBanners: React.FC = () => {
           onClick={() => setSelectedTypeFilter('all')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
             selectedTypeFilter === 'all'
-              ? 'bg-[#111111] text-white shadow-sm'
-              : 'bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200'
+              ? 'bg-[#5A3825] text-[#F4F1EA] shadow-sm'
+              : 'bg-[#FAF8F4] text-[#5A3825] hover:bg-[#EAE5D9] border border-[#E2D9CC]'
           }`}
         >
           All ({banners.length})
@@ -285,13 +285,13 @@ const AdminBanners: React.FC = () => {
               onClick={() => setSelectedTypeFilter(t.type)}
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
                 isActiveTab
-                  ? 'bg-[#111111] text-white shadow-sm'
-                  : 'bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200'
+                  ? 'bg-[#5A3825] text-[#F4F1EA] shadow-sm'
+                  : 'bg-[#FAF8F4] text-[#5A3825] hover:bg-[#EAE5D9] border border-[#E2D9CC]'
               }`}
             >
               <Icon className="text-xs" />
               <span>{t.label}</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isActiveTab ? 'bg-white/20 text-white' : 'bg-neutral-100 text-neutral-500'}`}>
+              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isActiveTab ? 'bg-white/20 text-white' : 'bg-[#EAE5D9] text-[#5A3825]'}`}>
                 {count}
               </span>
             </button>
@@ -301,22 +301,22 @@ const AdminBanners: React.FC = () => {
 
       {/* Main Campaign Grid */}
       {isLoading ? (
-        <div className="py-20 text-center text-neutral-400 text-sm">
+        <div className="py-20 text-center text-[#8C7364] text-sm">
           Loading storefront campaigns...
         </div>
       ) : filteredBanners.length === 0 ? (
-        <div className="bg-white rounded-3xl p-12 text-center border border-neutral-200 space-y-4">
-          <div className="w-16 h-16 rounded-full bg-neutral-100 mx-auto flex items-center justify-center text-neutral-400">
+        <div className="bg-[#FAF8F4] rounded-3xl p-12 text-center border border-[#E2D9CC] space-y-4">
+          <div className="w-16 h-16 rounded-full bg-[#F4F1EA] mx-auto flex items-center justify-center text-[#8C7364] border border-[#E2D9CC]">
             <FaImage size={24} />
           </div>
-          <h3 className="text-base font-bold text-neutral-900">No campaigns found in this view</h3>
-          <p className="text-xs text-neutral-500 max-w-sm mx-auto">
+          <h3 className="text-base font-serif font-bold text-[#5A3825]">No campaigns found in this view</h3>
+          <p className="text-xs text-[#8C7364] max-w-sm mx-auto">
             You can create a new campaign or click "Reset Defaults" to restore curated sample banners.
           </p>
           <div className="flex justify-center gap-3 pt-2">
             <button
               onClick={() => handleOpenAddModal('hero')}
-              className="px-5 py-2.5 rounded-xl bg-[#111111] text-white text-xs font-semibold hover:bg-[#E57A22] transition"
+              className="px-5 py-2.5 rounded-xl bg-[#8B5A2B] text-white text-xs font-semibold hover:bg-[#5A3825] transition"
             >
               Create Banner
             </button>

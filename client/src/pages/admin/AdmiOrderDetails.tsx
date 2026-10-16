@@ -129,15 +129,15 @@ const AdminOrderDetails: React.FC = () => {
             <div className="flex items-center justify-between">
                 <BackButton fallback="/admin/orders" />
                 <div>
-                    <span className="text-xs text-neutral-400 font-mono">ID: {data?.order?._id}</span>
+                    <span className="text-xs text-[#8B5A2B] font-mono">ID: {data?.order?._id}</span>
                 </div>
             </div>
 
-            <div className="bg-white p-6 md:p-8 rounded-3xl border border-neutral-200 shadow-2xs space-y-6">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-neutral-100 pb-4 gap-4">
+            <div className="bg-[#FAF8F4] p-6 md:p-8 rounded-3xl border border-[#E2D9CC] shadow-2xs space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-[#E2D9CC] pb-4 gap-4">
                     <div>
-                        <h2 className="text-xl font-bold text-neutral-900 tracking-tight">Order Information</h2>
-                        <p className="text-xs text-neutral-500 mt-0.5">Review client information, total purchase value, and items list.</p>
+                        <h2 className="text-xl font-bold text-[#5A3825] tracking-tight">Order Information</h2>
+                        <p className="text-xs text-[#5A3825]/70 mt-0.5">Review client information, total purchase value, and items list.</p>
                     </div>
                     <div>
                         <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${getStatusBadge(data?.order?.status || '')}`}>
@@ -147,35 +147,35 @@ const AdminOrderDetails: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-                    <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-200/70">
-                        <strong className="block text-[10px] uppercase text-neutral-400 mb-1 tracking-wider font-semibold">Customer Details</strong>
-                        <span className="text-neutral-900 font-semibold block text-sm">
+                    <div className="p-4 rounded-2xl bg-[#F4F1EA] border border-[#E2D9CC]">
+                        <strong className="block text-[10px] uppercase text-[#8B5A2B] mb-1 tracking-wider font-semibold">Customer Details</strong>
+                        <span className="text-[#5A3825] font-semibold block text-sm">
                             {data?.order?.shippingInfo?.name || (typeof data?.order?.user === 'object' ? (data?.order?.user as any)?.name : '') || data?.order?.shippingInfo?.email?.split('@')[0] || 'Customer'}
                         </span>
-                        <span className="text-neutral-500 text-xs block font-mono mt-0.5">
+                        <span className="text-[#5A3825]/70 text-xs block font-mono mt-0.5">
                             {data?.order?.shippingInfo?.email || (typeof data?.order?.user === 'object' ? (data?.order?.user as any)?.email : '') || 'N/A'}
                         </span>
                     </div>
-                    <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-200/70">
-                        <strong className="block text-[10px] uppercase text-neutral-400 mb-1 tracking-wider font-semibold">Total Value</strong>
-                        <span className="text-neutral-900 font-bold text-lg block">₹{data?.order?.total.toFixed(2)}</span>
-                        <span className="text-neutral-500 text-[11px] block mt-0.5">Inclusive of taxes & delivery</span>
+                    <div className="p-4 rounded-2xl bg-[#F4F1EA] border border-[#E2D9CC]">
+                        <strong className="block text-[10px] uppercase text-[#8B5A2B] mb-1 tracking-wider font-semibold">Total Value</strong>
+                        <span className="text-[#5A3825] font-bold text-lg block">₹{data?.order?.total.toFixed(2)}</span>
+                        <span className="text-[#5A3825]/70 text-[11px] block mt-0.5">Inclusive of taxes & delivery</span>
                     </div>
-                    <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-200/70">
-                        <strong className="block text-[10px] uppercase text-neutral-400 mb-1 tracking-wider font-semibold">Shipping Details</strong>
-                        <span className="text-neutral-900 block font-medium text-xs leading-relaxed">
+                    <div className="p-4 rounded-2xl bg-[#F4F1EA] border border-[#E2D9CC]">
+                        <strong className="block text-[10px] uppercase text-[#8B5A2B] mb-1 tracking-wider font-semibold">Shipping Details</strong>
+                        <span className="text-[#5A3825] block font-medium text-xs leading-relaxed">
                             {data?.order?.shippingInfo?.address || 'N/A'}, {data?.order?.shippingInfo?.city || 'N/A'}
                         </span>
-                        <span className="text-neutral-500 text-[11px] block mt-1">
+                        <span className="text-[#5A3825]/70 text-[11px] block mt-1">
                             PIN: {data?.order?.shippingInfo?.pinCode || 'N/A'} | Mob: {data?.order?.shippingInfo?.phone || 'N/A'}
                         </span>
 
                         {/* GPS Coordinates & Google Maps Link */}
                         {data?.order?.shippingInfo?.latitude && data?.order?.shippingInfo?.longitude ? (
-                            <div className="mt-3 pt-2 border-t border-neutral-200 space-y-1">
-                                <div className="flex items-center gap-1.5 text-xs text-neutral-800 font-semibold">
+                            <div className="mt-3 pt-2 border-t border-[#E2D9CC] space-y-1">
+                                <div className="flex items-center gap-1.5 text-xs text-[#5A3825] font-semibold">
                                     <span>📍 GPS:</span>
-                                    <span className="font-mono text-neutral-600 text-[11px]">
+                                    <span className="font-mono text-[#5A3825]/80 text-[11px]">
                                         {data.order.shippingInfo.latitude.toFixed(5)}, {data.order.shippingInfo.longitude.toFixed(5)}
                                     </span>
                                 </div>
@@ -183,13 +183,13 @@ const AdminOrderDetails: React.FC = () => {
                                     href={`https://www.google.com/maps?q=${data.order.shippingInfo.latitude},${data.order.shippingInfo.longitude}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 text-xs font-semibold text-neutral-900 hover:underline mt-1"
+                                    className="inline-flex items-center gap-1 text-xs font-semibold text-[#8B5A2B] hover:text-[#5A3825] hover:underline mt-1"
                                 >
                                     🗺️ Open on Google Maps ➔
                                 </a>
                             </div>
                         ) : data?.order?.shippingInfo?.landmark ? (
-                            <span className="text-xs text-neutral-500 block mt-1">
+                            <span className="text-xs text-[#5A3825]/70 block mt-1">
                                 Landmark: {data.order.shippingInfo.landmark}
                             </span>
                         ) : null}
@@ -197,10 +197,10 @@ const AdminOrderDetails: React.FC = () => {
                 </div>
 
                 <div>
-                    <h3 className="text-sm font-bold text-neutral-900 mb-3">Order Items</h3>
-                    <div className="overflow-x-auto rounded-2xl border border-neutral-200">
-                        <table className="min-w-full divide-y divide-neutral-100 text-left">
-                            <thead className="bg-neutral-50 text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">
+                    <h3 className="text-sm font-bold text-[#5A3825] mb-3">Order Items</h3>
+                    <div className="overflow-x-auto rounded-2xl border border-[#E2D9CC]">
+                        <table className="min-w-full divide-y divide-[#E2D9CC] text-left">
+                            <thead className="bg-[#F4F1EA] text-[10px] font-semibold text-[#5A3825] uppercase tracking-wider">
                                 <tr>
                                     <th className="px-5 py-3">Product</th>
                                     <th className="px-5 py-3">Quantity</th>
@@ -208,13 +208,13 @@ const AdminOrderDetails: React.FC = () => {
                                     <th className="px-5 py-3">Total</th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-neutral-100 text-xs">
+                            <tbody className="bg-[#FAF8F4] divide-y divide-[#E2D9CC] text-xs">
                                 {data?.order.orderItems.map((item) => (
-                                    <tr key={item.productId} className="hover:bg-neutral-50/70 transition-colors">
-                                        <td className="px-5 py-3.5 font-semibold text-neutral-900">{item.name}</td>
-                                        <td className="px-5 py-3.5 text-neutral-700 font-medium">{item.quantity} units</td>
-                                        <td className="px-5 py-3.5 text-neutral-500">₹{item.price.toFixed(2)}</td>
-                                        <td className="px-5 py-3.5 font-bold text-neutral-900">₹{(item.quantity * item.price).toFixed(2)}</td>
+                                    <tr key={item.productId} className="hover:bg-[#F4F1EA]/60 transition-colors">
+                                        <td className="px-5 py-3.5 font-semibold text-[#5A3825]">{item.name}</td>
+                                        <td className="px-5 py-3.5 text-[#5A3825] font-medium">{item.quantity} units</td>
+                                        <td className="px-5 py-3.5 text-[#5A3825]/70">₹{item.price.toFixed(2)}</td>
+                                        <td className="px-5 py-3.5 font-bold text-[#5A3825]">₹{(item.quantity * item.price).toFixed(2)}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -222,11 +222,11 @@ const AdminOrderDetails: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="mt-6 pt-6 border-t border-neutral-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="mt-6 pt-6 border-t border-[#E2D9CC] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center gap-3">
-                        <label className="text-xs font-semibold uppercase text-neutral-400 tracking-wider">Update Status:</label>
+                        <label className="text-xs font-semibold uppercase text-[#8B5A2B] tracking-wider">Update Status:</label>
                         <select
-                            className="border border-neutral-200 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900/10 focus:outline-none rounded-xl p-2.5 bg-white text-xs font-semibold text-neutral-900 cursor-pointer"
+                            className="border border-[#E2D9CC] focus:border-[#5A3825] focus:ring-1 focus:ring-[#5A3825]/20 focus:outline-none rounded-xl p-2.5 bg-[#F4F1EA] text-xs font-semibold text-[#5A3825] cursor-pointer"
                             value={data?.order?.status}
                             onChange={(e) => handleStatusChange(e.target.value)}
                         >
@@ -239,7 +239,7 @@ const AdminOrderDetails: React.FC = () => {
                     </div>
                     <button
                         onClick={handleDeleteOrder}
-                        className="inline-flex items-center gap-2 text-rose-600 border border-rose-200 hover:bg-rose-50 px-4 py-2 rounded-xl font-semibold text-xs transition"
+                        className="inline-flex items-center gap-2 text-rose-700 border border-rose-200 hover:bg-rose-50 px-4 py-2 rounded-xl font-semibold text-xs transition"
                     >
                         <FaTrash size={11} /> Delete Order Record
                     </button>
@@ -247,20 +247,20 @@ const AdminOrderDetails: React.FC = () => {
 
                 {/* Display Tracking Info if Available */}
                 {data?.order?.awbNumber && (
-                    <div className="mt-4 p-4 rounded-2xl bg-neutral-50 border border-neutral-200">
-                        <h4 className="text-xs font-bold text-neutral-900 mb-2">📦 Shipment Tracking Details</h4>
+                    <div className="mt-4 p-4 rounded-2xl bg-[#F4F1EA] border border-[#E2D9CC]">
+                        <h4 className="text-xs font-bold text-[#5A3825] mb-2">📦 Shipment Tracking Details</h4>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                             <div>
-                                <span className="text-neutral-500 font-medium text-[11px]">AWB Number:</span>
-                                <p className="text-neutral-900 font-mono font-semibold mt-0.5">{data.order.awbNumber}</p>
+                                <span className="text-[#8B5A2B] font-medium text-[11px]">AWB Number:</span>
+                                <p className="text-[#5A3825] font-mono font-semibold mt-0.5">{data.order.awbNumber}</p>
                             </div>
                             <div>
-                                <span className="text-neutral-500 font-medium text-[11px]">Sender Mobile:</span>
-                                <p className="text-neutral-900 font-mono font-semibold mt-0.5">{data.order.senderMobile}</p>
+                                <span className="text-[#8B5A2B] font-medium text-[11px]">Sender Mobile:</span>
+                                <p className="text-[#5A3825] font-mono font-semibold mt-0.5">{data.order.senderMobile}</p>
                             </div>
                             <div>
-                                <span className="text-neutral-500 font-medium text-[11px]">Receiver Mobile:</span>
-                                <p className="text-neutral-900 font-mono font-semibold mt-0.5">{data.order.receiverMobile}</p>
+                                <span className="text-[#8B5A2B] font-medium text-[11px]">Receiver Mobile:</span>
+                                <p className="text-[#5A3825] font-mono font-semibold mt-0.5">{data.order.receiverMobile}</p>
                             </div>
                         </div>
                         {data.order.trackingUrl && (
@@ -268,7 +268,7 @@ const AdminOrderDetails: React.FC = () => {
                                 href={data.order.trackingUrl} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
-                                className="inline-block mt-3 text-neutral-900 hover:underline text-xs font-semibold"
+                                className="inline-block mt-3 text-[#8B5A2B] hover:text-[#5A3825] hover:underline text-xs font-semibold"
                             >
                                 🔗 Track Shipment Online
                             </a>
@@ -279,25 +279,25 @@ const AdminOrderDetails: React.FC = () => {
 
             {/* Tracking Modal */}
             {showTrackingModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 font-sans">
-                    <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 border border-neutral-200">
-                        <div className="flex items-center justify-between mb-4 border-b border-neutral-100 pb-3">
-                            <h3 className="text-base font-bold text-neutral-900">📦 Enter Shipment Tracking Details</h3>
+                <div className="fixed inset-0 bg-[#3F2618]/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 font-sans">
+                    <div className="bg-[#FAF8F4] rounded-3xl shadow-2xl max-w-md w-full p-6 border border-[#E2D9CC]">
+                        <div className="flex items-center justify-between mb-4 border-b border-[#E2D9CC] pb-3">
+                            <h3 className="text-base font-bold text-[#5A3825]">📦 Enter Shipment Tracking Details</h3>
                             <button
                                 onClick={() => setShowTrackingModal(false)}
-                                className="text-neutral-400 hover:text-neutral-600 transition"
+                                className="text-[#8B5A2B] hover:text-[#5A3825] transition"
                             >
                                 <FaTimes size={16} />
                             </button>
                         </div>
                         
-                        <p className="text-xs text-neutral-500 mb-4">
+                        <p className="text-xs text-[#5A3825]/70 mb-4">
                             Provide the carrier AWB number and mobile numbers to enable live shipment tracking.
                         </p>
 
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-[10px] font-semibold text-neutral-600 mb-1 uppercase tracking-wider">
+                                <label className="block text-[10px] font-semibold text-[#8B5A2B] mb-1 uppercase tracking-wider">
                                     AWB Number *
                                 </label>
                                 <input
@@ -305,12 +305,12 @@ const AdminOrderDetails: React.FC = () => {
                                     placeholder="e.g., 79732207"
                                     value={awbNumber}
                                     onChange={(e) => setAwbNumber(e.target.value)}
-                                    className="w-full border border-neutral-200 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900/10 focus:outline-none rounded-xl p-2.5 text-xs font-mono bg-neutral-50 focus:bg-white text-neutral-900"
+                                    className="w-full border border-[#E2D9CC] focus:border-[#5A3825] focus:ring-1 focus:ring-[#5A3825]/20 focus:outline-none rounded-xl p-2.5 text-xs font-mono bg-[#F4F1EA] focus:bg-[#FAF8F4] text-[#5A3825]"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-[10px] font-semibold text-neutral-600 mb-1 uppercase tracking-wider">
+                                <label className="block text-[10px] font-semibold text-[#8B5A2B] mb-1 uppercase tracking-wider">
                                     Sender Mobile Number *
                                 </label>
                                 <input
@@ -319,12 +319,12 @@ const AdminOrderDetails: React.FC = () => {
                                     maxLength={10}
                                     value={senderMobile}
                                     onChange={(e) => setSenderMobile(e.target.value.replace(/\D/g, ''))}
-                                    className="w-full border border-neutral-200 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900/10 focus:outline-none rounded-xl p-2.5 text-xs font-mono bg-neutral-50 focus:bg-white text-neutral-900"
+                                    className="w-full border border-[#E2D9CC] focus:border-[#5A3825] focus:ring-1 focus:ring-[#5A3825]/20 focus:outline-none rounded-xl p-2.5 text-xs font-mono bg-[#F4F1EA] focus:bg-[#FAF8F4] text-[#5A3825]"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-[10px] font-semibold text-neutral-600 mb-1 uppercase tracking-wider">
+                                <label className="block text-[10px] font-semibold text-[#8B5A2B] mb-1 uppercase tracking-wider">
                                     Receiver Mobile Number *
                                 </label>
                                 <input
@@ -333,22 +333,22 @@ const AdminOrderDetails: React.FC = () => {
                                     maxLength={10}
                                     value={receiverMobile}
                                     onChange={(e) => setReceiverMobile(e.target.value.replace(/\D/g, ''))}
-                                    className="w-full border border-neutral-200 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900/10 focus:outline-none rounded-xl p-2.5 text-xs font-mono bg-neutral-50 focus:bg-white text-neutral-900"
+                                    className="w-full border border-[#E2D9CC] focus:border-[#5A3825] focus:ring-1 focus:ring-[#5A3825]/20 focus:outline-none rounded-xl p-2.5 text-xs font-mono bg-[#F4F1EA] focus:bg-[#FAF8F4] text-[#5A3825]"
                                 />
-                                <p className="text-[10px] text-neutral-400 mt-1">Pre-filled from order details</p>
+                                <p className="text-[10px] text-[#8B5A2B] mt-1">Pre-filled from order details</p>
                             </div>
                         </div>
 
                         <div className="flex gap-3 mt-6">
                             <button
                                 onClick={() => setShowTrackingModal(false)}
-                                className="flex-1 border border-neutral-200 text-neutral-700 hover:bg-neutral-50 px-4 py-2.5 rounded-xl font-semibold text-xs transition"
+                                className="flex-1 border border-[#E2D9CC] text-[#5A3825] hover:bg-[#F4F1EA] px-4 py-2.5 rounded-xl font-semibold text-xs transition"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleTrackingSubmit}
-                                className="flex-1 bg-[#111111] text-white hover:bg-neutral-800 px-4 py-2.5 rounded-xl font-semibold text-xs transition shadow-xs"
+                                className="flex-1 bg-[#8B5A2B] text-[#FAF8F4] hover:bg-[#5A3825] px-4 py-2.5 rounded-xl font-semibold text-xs transition shadow-xs"
                             >
                                 Save & Dispatch
                             </button>

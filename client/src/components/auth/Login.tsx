@@ -103,33 +103,33 @@ const LoginPage: React.FC = () => {
 
     return (
         <div className="flex flex-col items-center justify-center">
-            <div className="w-full max-w-md bg-white rounded-lg p-2">
-                <h4 className="text-xl font-sans font-semibold text-center mb-4 text-[#111111]">Sign In</h4>
+            <div className="w-full max-w-md bg-[#FAF8F4] rounded-lg p-2">
+                <h4 className="text-xl font-sans font-semibold text-center mb-4 text-[#5A3825]">Sign In</h4>
 
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div>
-                        <label className="block text-xs font-semibold mb-1.5 text-neutral-700" htmlFor="email">
+                        <label className="block text-xs font-semibold mb-1.5 text-[#5A3825]" htmlFor="email">
                             Email Address
                         </label>
                         <input
                             type="email"
                             id="email"
                             placeholder="name@example.com"
-                            className="appearance-none border border-neutral-200 rounded-lg w-full py-2 px-3 text-neutral-800 text-xs focus:outline-none focus:border-black"
+                            className="appearance-none border border-[#E2D9CC] bg-[#F4F1EA] rounded-lg w-full py-2 px-3 text-[#5A3825] text-xs focus:outline-none focus:border-[#5A3825]"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
                     </div>
                     <div>
-                        <label className="block text-xs font-semibold mb-1.5 text-neutral-700" htmlFor="password">
+                        <label className="block text-xs font-semibold mb-1.5 text-[#5A3825]" htmlFor="password">
                             Password
                         </label>
                         <input
                             type={showPassword ? 'text' : 'password'}
                             id="password"
                             placeholder="••••••••"
-                            className="appearance-none border border-neutral-200 rounded-lg w-full py-2 px-3 text-neutral-800 text-xs leading-tight focus:outline-none focus:border-black"
+                            className="appearance-none border border-[#E2D9CC] bg-[#F4F1EA] rounded-lg w-full py-2 px-3 text-[#5A3825] text-xs leading-tight focus:outline-none focus:border-[#5A3825]"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
@@ -140,30 +140,30 @@ const LoginPage: React.FC = () => {
                                 id="showPassword"
                                 checked={showPassword}
                                 onChange={() => setShowPassword(!showPassword)}
-                                className="mr-2 cursor-pointer accent-black"
+                                className="mr-2 cursor-pointer accent-[#8B5A2B]"
                             />
-                            <label htmlFor="showPassword" className="text-xs text-neutral-500">Show Password</label>
+                            <label htmlFor="showPassword" className="text-xs text-[#5A3825]/70">Show Password</label>
                         </div>
                     </div>
 
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className={`w-full bg-black hover:bg-neutral-800 text-white font-medium py-3 px-4 rounded-lg text-xs uppercase tracking-wider focus:outline-none transition-colors shadow-xs mt-2 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-[#FAF8F4] font-medium py-3 px-4 rounded-lg text-xs uppercase tracking-wider focus:outline-none transition-colors shadow-xs mt-2 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                         {isLoading ? 'Signing In...' : 'Sign In'}
                     </button>
                 </form>
 
                 <div className="mt-6 flex items-center justify-center">
-                    <hr className="flex-grow border-t border-neutral-200" />
-                    <span className="mx-4 text-xs text-neutral-400 font-semibold">OR</span>
-                    <hr className="flex-grow border-t border-neutral-200" />
+                    <hr className="flex-grow border-t border-[#E2D9CC]" />
+                    <span className="mx-4 text-xs text-[#8B5A2B] font-semibold">OR</span>
+                    <hr className="flex-grow border-t border-[#E2D9CC]" />
                 </div>
 
                 <div className="mt-4">
                     <button
-                        className={`flex items-center justify-center text-neutral-700 font-medium py-2.5 px-4 rounded-lg shadow-2xs bg-white hover:bg-neutral-50 gap-2 w-full border border-neutral-200 text-xs ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`flex items-center justify-center text-[#5A3825] font-medium py-2.5 px-4 rounded-lg shadow-2xs bg-[#F4F1EA] hover:bg-[#E2D9CC]/60 gap-2 w-full border border-[#E2D9CC] text-xs ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={handleGoogleLogin}
                         disabled={isLoading}
                     >

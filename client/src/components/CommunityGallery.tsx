@@ -21,15 +21,15 @@ const communityImages = [
 ];
 
 const CommunityGallery: React.FC = () => (
-  <section aria-labelledby="community-gallery-heading" className="overflow-hidden bg-[#FAFAFA] border-t border-neutral-200 py-10 md:py-14">
+  <section aria-labelledby="community-gallery-heading" className="overflow-hidden bg-[#F4F1EA] border-t border-[#E2D9CC] py-10 md:py-14">
     <div className="mx-auto mb-8 max-w-7xl px-4 text-center sm:mb-10 sm:px-6">
-      <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-400 block mb-1.5">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C7364] block mb-1.5">
         ARTISANS & TRADITIONS
       </span>
-      <h2 id="community-gallery-heading" className="font-sans text-2xl font-semibold tracking-tight text-[#111111] sm:text-3xl lg:text-4xl">
+      <h2 id="community-gallery-heading" className="font-sans text-2xl font-semibold tracking-tight text-[#5A3825] sm:text-3xl lg:text-4xl">
         Life Across India's Villages
       </h2>
-      <p className="mt-2 text-xs md:text-sm text-neutral-500 max-w-lg mx-auto">
+      <p className="mt-2 text-xs md:text-sm text-[#8C7364] max-w-lg mx-auto">
         A glimpse into the hands, fields, and workshops making every product authentic.
       </p>
     </div>
@@ -45,7 +45,7 @@ const CommunityGallery: React.FC = () => (
             {communityImages.map((image, idx) => (
               <div
                 key={`${copy}-${idx}`}
-                className="h-52 w-40 shrink-0 overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-xs sm:h-64 sm:w-52"
+                className="h-52 w-40 shrink-0 overflow-hidden rounded-xl border border-[#E2D9CC] bg-[#FAF8F4] shadow-xs sm:h-64 sm:w-52"
               >
                 <img
                   src={optimizeCloudinaryUrl(image.url, 320)}

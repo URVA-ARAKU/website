@@ -71,23 +71,23 @@ const Cart: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] py-6 sm:py-10 px-4">
+    <div className="min-h-screen bg-[#F4F1EA] py-6 sm:py-10 px-4">
       <div className="max-w-6xl mx-auto space-y-6">
         <BackButton fallback="/products" />
 
-        <div className="bg-white rounded-2xl p-5 sm:p-8 shadow-xs border border-neutral-200">
-          <h1 className="text-2xl sm:text-3xl font-sans font-semibold tracking-tight text-[#111111] mb-6">My Rural Basket</h1>
+        <div className="bg-[#FAF8F4] rounded-2xl p-5 sm:p-8 shadow-sm border border-[#E2D9CC]">
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight text-[#5A3825] mb-6">My Rural Basket</h1>
 
           {cartItems.length === 0 ? (
             <div className="py-12 text-center space-y-4">
               <p className="text-5xl">🧺</p>
-              <h2 className="text-xl font-sans font-semibold text-[#111111]">Your basket is currently empty</h2>
-              <p className="text-xs sm:text-sm text-neutral-500 max-w-sm mx-auto font-light">
+              <h2 className="text-xl font-serif font-bold text-[#5A3825]">Your basket is currently empty</h2>
+              <p className="text-xs sm:text-sm text-[#8C7364] max-w-sm mx-auto font-normal">
                 Your basket is waiting for something worth discovering.
               </p>
               <Link
                 to="/products"
-                className="inline-block bg-black hover:bg-neutral-800 text-white font-medium px-6 py-3 rounded-lg text-xs uppercase tracking-wider transition-colors shadow-xs mt-2"
+                className="inline-block bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-semibold px-6 py-3 rounded-lg text-xs uppercase tracking-wider transition-colors shadow-sm mt-2"
               >
                 Browse All Products ➔
               </Link>
@@ -100,7 +100,7 @@ const Cart: React.FC = () => {
                 {/* Mobile Cards (Visible below md) */}
                 <div className="md:hidden space-y-3">
                   {cartItems.map((item) => (
-                    <div key={item.productId} className="bg-[#FAFAFA] p-4 rounded-xl border border-neutral-200 flex flex-col gap-3">
+                    <div key={item.productId} className="bg-[#F4F1EA]/70 p-4 rounded-xl border border-[#E2D9CC] flex flex-col gap-3">
                       <div className="flex items-center gap-3">
                         <Link
                           to={item.productId.startsWith('demo-') ? '/products' : `/product/${item.productId}`}
@@ -109,7 +109,7 @@ const Cart: React.FC = () => {
                           <img
                             src={getPhotoUrl(item.photo)}
                             alt={item.name}
-                            className="h-16 w-16 object-contain rounded-lg bg-white p-1 border border-neutral-200"
+                            className="h-16 w-16 object-contain rounded-lg bg-white p-1 border border-[#E2D9CC]"
                             onError={(e) => {
                               (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png';
                             }}
@@ -117,33 +117,33 @@ const Cart: React.FC = () => {
                         </Link>
                         <div className="flex-1 min-w-0">
                           <Link to={item.productId.startsWith('demo-') ? '/products' : `/product/${item.productId}`}>
-                            <h3 className="font-semibold text-sm text-[#111111] truncate">{item.name}</h3>
+                            <h3 className="font-semibold text-sm text-[#5A3825] truncate">{item.name}</h3>
                           </Link>
-                          <p className="text-xs text-neutral-500">₹ {item.price.toFixed(2)} per unit</p>
-                          <p className="text-xs font-semibold text-neutral-900 mt-0.5">Subtotal: ₹ {(item.price * item.quantity).toFixed(2)}</p>
+                          <p className="text-xs text-[#8C7364]">₹ {item.price.toFixed(2)} per unit</p>
+                          <p className="text-xs font-semibold text-[#5A3825] mt-0.5">Subtotal: ₹ {(item.price * item.quantity).toFixed(2)}</p>
                         </div>
                         <button
                           onClick={() => handleRemove(item.productId)}
-                          className="text-neutral-400 hover:text-red-600 p-1 text-xs font-bold"
+                          className="text-[#8C7364] hover:text-red-600 p-1 text-xs font-bold"
                           title="Remove item"
                         >
                           ✕
                         </button>
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-neutral-200">
-                        <span className="text-xs text-neutral-500 font-medium">Quantity:</span>
-                        <div className="flex items-center gap-2 bg-white border border-neutral-200 rounded-lg px-2.5 py-1">
+                      <div className="flex items-center justify-between pt-2 border-t border-[#E2D9CC]">
+                        <span className="text-xs text-[#8C7364] font-medium">Quantity:</span>
+                        <div className="flex items-center gap-2 bg-[#FAF8F4] border border-[#E2D9CC] rounded-lg px-2.5 py-1">
                           <button
                             onClick={() => handleDecrement(item.productId)}
-                            className="w-6 h-6 rounded-md bg-neutral-100 text-neutral-800 font-bold text-xs flex items-center justify-center hover:bg-neutral-200"
+                            className="w-6 h-6 rounded-md bg-[#F4F1EA] text-[#5A3825] font-bold text-xs flex items-center justify-center hover:bg-[#EAE5D9]"
                           >
                             −
                           </button>
-                          <span className="text-xs font-semibold text-neutral-900 w-6 text-center">{item.quantity}</span>
+                          <span className="text-xs font-semibold text-[#5A3825] w-6 text-center">{item.quantity}</span>
                           <button
                             onClick={() => handleIncrement(item.productId)}
-                            className="w-6 h-6 rounded-md bg-neutral-100 text-neutral-800 font-bold text-xs flex items-center justify-center hover:bg-neutral-200"
+                            className="w-6 h-6 rounded-md bg-[#F4F1EA] text-[#5A3825] font-bold text-xs flex items-center justify-center hover:bg-[#EAE5D9]"
                           >
                             +
                           </button>
@@ -154,10 +154,10 @@ const Cart: React.FC = () => {
                 </div>
 
                 {/* Desktop Table (Hidden below md) */}
-                <div className="hidden md:block overflow-x-auto rounded-xl border border-neutral-200">
+                <div className="hidden md:block overflow-x-auto rounded-xl border border-[#E2D9CC]">
                   <table className="w-full text-left border-collapse">
-                    <thead className="bg-neutral-50">
-                      <tr className="border-b border-neutral-200 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+                    <thead className="bg-[#EAE5D9]">
+                      <tr className="border-b border-[#E2D9CC] text-xs font-semibold text-[#5A3825] uppercase tracking-wider">
                         <th className="p-4">Product</th>
                         <th className="p-4">Price</th>
                         <th className="p-4">Quantity</th>
@@ -165,9 +165,9 @@ const Cart: React.FC = () => {
                         <th className="p-4 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-neutral-200 text-sm">
+                    <tbody className="divide-y divide-[#E2D9CC] text-sm">
                       {cartItems.map((item) => (
-                        <tr className="hover:bg-neutral-50/50 transition-colors" key={item.productId}>
+                        <tr className="hover:bg-[#FAF8F4]/80 transition-colors" key={item.productId}>
                           <td className="p-4">
                             <Link
                               to={item.productId.startsWith('demo-') ? '/products' : `/product/${item.productId}`}
@@ -176,37 +176,37 @@ const Cart: React.FC = () => {
                               <img
                                 src={getPhotoUrl(item.photo)}
                                 alt={item.name}
-                                className="h-14 w-14 object-contain rounded-lg bg-white p-1 border border-neutral-200"
+                                className="h-14 w-14 object-contain rounded-lg bg-white p-1 border border-[#E2D9CC]"
                                 onError={(e) => {
                                   (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png';
                                 }}
                               />
-                              <span className="font-semibold text-sm text-[#111111] group-hover:underline">{item.name}</span>
+                              <span className="font-semibold text-sm text-[#5A3825] group-hover:text-[#8B5A2B]">{item.name}</span>
                             </Link>
                           </td>
-                          <td className="p-4 text-sm font-medium text-neutral-600">₹ {item.price.toFixed(2)}</td>
+                          <td className="p-4 text-sm font-medium text-[#5A3825]">₹ {item.price.toFixed(2)}</td>
                           <td className="p-4">
-                            <div className="flex items-center space-x-2 bg-neutral-50 border border-neutral-200 rounded-lg px-2 py-1 w-max">
+                            <div className="flex items-center space-x-2 bg-[#FAF8F4] border border-[#E2D9CC] rounded-lg px-2 py-1 w-max">
                               <button
                                 onClick={() => handleDecrement(item.productId)}
-                                className="w-6 h-6 rounded-md bg-white text-neutral-800 font-bold text-xs flex items-center justify-center border border-neutral-200 hover:bg-neutral-100"
+                                className="w-6 h-6 rounded-md bg-[#F4F1EA] text-[#5A3825] font-bold text-xs flex items-center justify-center border border-[#E2D9CC] hover:bg-[#EAE5D9]"
                               >
                                 −
                               </button>
-                              <span className="text-xs font-semibold text-neutral-900 w-6 text-center">{item.quantity}</span>
+                              <span className="text-xs font-semibold text-[#5A3825] w-6 text-center">{item.quantity}</span>
                               <button
                                 onClick={() => handleIncrement(item.productId)}
-                                className="w-6 h-6 rounded-md bg-white text-neutral-800 font-bold text-xs flex items-center justify-center border border-neutral-200 hover:bg-neutral-100"
+                                className="w-6 h-6 rounded-md bg-[#F4F1EA] text-[#5A3825] font-bold text-xs flex items-center justify-center border border-[#E2D9CC] hover:bg-[#EAE5D9]"
                               >
                                 +
                               </button>
                             </div>
                           </td>
-                          <td className="p-4 text-sm font-semibold text-[#111111]">₹ {(item.price * item.quantity).toFixed(2)}</td>
+                          <td className="p-4 text-sm font-semibold text-[#5A3825]">₹ {(item.price * item.quantity).toFixed(2)}</td>
                           <td className="p-4 text-right">
                             <button
                               onClick={() => handleRemove(item.productId)}
-                              className="text-neutral-400 hover:text-red-600 text-xs font-medium hover:underline transition-colors"
+                              className="text-[#8C7364] hover:text-red-600 text-xs font-medium hover:underline transition-colors"
                             >
                               Remove
                             </button>
@@ -221,13 +221,13 @@ const Cart: React.FC = () => {
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2">
                   <Link
                     to="/products"
-                    className="w-full sm:w-auto text-center border border-neutral-300 text-neutral-800 font-medium px-5 py-2.5 rounded-lg text-xs hover:bg-neutral-100 transition-colors"
+                    className="w-full sm:w-auto text-center border border-[#E2D9CC] bg-[#FAF8F4] text-[#5A3825] font-medium px-5 py-2.5 rounded-lg text-xs hover:bg-[#EAE5D9] transition-colors"
                   >
                     ← Continue Shopping
                   </Link>
                   <button
                     onClick={handleClearCart}
-                    className="w-full sm:w-auto text-center text-neutral-500 hover:text-red-600 font-medium text-xs py-2 px-4 underline"
+                    className="w-full sm:w-auto text-center text-[#8C7364] hover:text-red-600 font-medium text-xs py-2 px-4 underline"
                   >
                     Clear Cart
                   </button>
@@ -235,41 +235,41 @@ const Cart: React.FC = () => {
               </div>
 
               {/* Right Column - Cart Summary */}
-              <div className="bg-neutral-50 p-5 sm:p-6 rounded-xl border border-neutral-200 shadow-xs space-y-4">
-                <h2 className="font-sans font-semibold text-base text-[#111111] pb-3 border-b border-neutral-200">Order Summary</h2>
+              <div className="bg-[#FAF8F4] p-5 sm:p-6 rounded-xl border border-[#E2D9CC] shadow-sm space-y-4">
+                <h2 className="font-serif font-bold text-base text-[#5A3825] pb-3 border-b border-[#E2D9CC]">Order Summary</h2>
 
                 <div className="space-y-2.5 text-xs sm:text-sm">
-                  <div className="flex justify-between text-neutral-600">
+                  <div className="flex justify-between text-[#8C7364]">
                     <span>Subtotal</span>
-                    <span className="font-semibold text-neutral-900">₹ {subTotal.toFixed(2)}</span>
+                    <span className="font-semibold text-[#5A3825]">₹ {subTotal.toFixed(2)}</span>
                   </div>
 
                   {discount > 0 && (
-                    <div className="flex justify-between text-neutral-800 font-semibold">
+                    <div className="flex justify-between text-[#8B5A2B] font-semibold">
                       <span>Discount Coupon</span>
                       <span>-₹ {discount.toFixed(2)}</span>
                     </div>
                   )}
 
-                  <div className="flex justify-between text-neutral-600">
+                  <div className="flex justify-between text-[#8C7364]">
                     <span>Shipping Charges</span>
-                    <span className="text-neutral-700 font-medium">Calculated at Checkout</span>
+                    <span className="text-[#5A3825] font-medium">Calculated at Checkout</span>
                   </div>
 
-                  <div className="pt-3 border-t border-neutral-200 flex justify-between items-baseline font-bold text-base text-[#111111]">
+                  <div className="pt-3 border-t border-[#E2D9CC] flex justify-between items-baseline font-bold text-base text-[#5A3825]">
                     <span>Total Amount</span>
-                    <span className="text-xl sm:text-2xl font-extrabold">₹ {(total - discount).toFixed(2)}</span>
+                    <span className="text-xl sm:text-2xl font-extrabold text-[#5A3825]">₹ {(total - discount).toFixed(2)}</span>
                   </div>
                 </div>
 
                 {/* Coupon Code Input */}
                 <div className="pt-2">
-                  <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">Have a Coupon?</label>
+                  <label className="block text-xs font-semibold text-[#5A3825] uppercase tracking-wider mb-1">Have a Coupon?</label>
                   <div className="flex gap-2">
                     <input
                       type="text"
                       placeholder="Enter coupon code"
-                      className="flex-grow px-3 py-2 rounded-lg border border-neutral-200 text-xs uppercase font-mono focus:outline-none focus:border-black"
+                      className="flex-grow px-3 py-2 rounded-lg border border-[#E2D9CC] bg-[#F4F1EA] text-xs uppercase font-mono text-[#5A3825] placeholder:text-[#8C7364] focus:outline-none focus:border-[#8B5A2B]"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
                       disabled={!!appliedCoupon}
@@ -285,7 +285,7 @@ const Cart: React.FC = () => {
                       <button
                         onClick={handleApplyCoupon}
                         disabled={isApplyingCoupon}
-                        className="bg-black text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-neutral-800 transition-colors"
+                        className="bg-[#8B5A2B] hover:bg-[#5A3825] text-white px-4 py-2 rounded-lg text-xs font-semibold transition-colors"
                       >
                         Apply
                       </button>
@@ -295,14 +295,14 @@ const Cart: React.FC = () => {
 
                 {/* Proceed Button */}
                 {hasDemoItems && (
-                  <p className="mt-4 rounded-lg border border-neutral-200 bg-white p-3 text-xs leading-relaxed text-neutral-600">
+                  <p className="mt-4 rounded-lg border border-[#E2D9CC] bg-[#F4F1EA] p-3 text-xs leading-relaxed text-[#8C7364]">
                     Sample products are for preview only and are not available to order yet. Remove them from your basket to continue to checkout.
                   </p>
                 )}
                 <button
                   onClick={() => navigate('/shipping')}
                   disabled={hasDemoItems}
-                  className="w-full bg-black hover:bg-neutral-800 text-white font-medium py-3.5 px-4 rounded-lg text-xs uppercase tracking-widest transition-colors shadow-xs text-center block mt-4 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-semibold py-3.5 px-4 rounded-lg text-xs uppercase tracking-widest transition-colors shadow-sm text-center block mt-4 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {hasDemoItems ? 'Remove Sample Items to Checkout' : 'Proceed to Checkout ➔'}
                 </button>

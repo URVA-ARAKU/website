@@ -113,7 +113,7 @@ export function ShopByCategory({
     <section
       aria-label="Shop by Category"
       className={cn(
-        'w-full bg-[#FAFAFA] border-t border-neutral-200 pt-6 pb-3 sm:pt-8 sm:pb-4',
+        'w-full bg-[#F4F1EA] border-t border-[#E2D9CC] pt-6 pb-3 sm:pt-8 sm:pb-4',
         className
       )}
     >
@@ -121,14 +121,14 @@ export function ShopByCategory({
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-4 sm:mb-5 gap-3">
           <div className="text-center md:text-left">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-500 block mb-1">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C7364] block mb-1">
               {eyebrow}
             </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#111111] tracking-tight font-sans">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#5A3825] tracking-tight font-sans">
               {heading}
             </h2>
             {subheading && (
-              <p className="mt-1 text-xs sm:text-sm text-neutral-600 max-w-xl font-normal leading-relaxed">
+              <p className="mt-1 text-xs sm:text-sm text-[#8C7364] max-w-xl font-normal leading-relaxed">
                 {subheading}
               </p>
             )}
@@ -138,7 +138,7 @@ export function ShopByCategory({
           <div className="flex items-center justify-center md:justify-end gap-3 shrink-0">
             <Link
               to="/products"
-              className="text-xs sm:text-sm font-medium text-neutral-800 hover:text-black underline-offset-4 hover:underline transition-colors mr-2"
+              className="text-xs sm:text-sm font-medium text-[#8B5A2B] hover:text-[#5A3825] underline-offset-4 hover:underline transition-colors mr-2"
             >
               View All Products &rarr;
             </Link>
@@ -148,7 +148,7 @@ export function ShopByCategory({
                 type="button"
                 onClick={() => handleScroll('left')}
                 aria-label="Scroll categories left"
-                className="w-8 h-8 rounded-full border border-neutral-200 bg-white text-neutral-800 hover:bg-black hover:text-white flex items-center justify-center transition-all duration-200 shadow-xs hover:shadow"
+                className="w-8 h-8 rounded-full border border-[#E2D9CC] bg-[#FAF8F4] text-[#5A3825] hover:bg-[#8B5A2B] hover:text-white flex items-center justify-center transition-all duration-200 shadow-xs hover:shadow"
               >
                 <FaChevronLeft className="text-xs" />
               </button>
@@ -156,7 +156,7 @@ export function ShopByCategory({
                 type="button"
                 onClick={() => handleScroll('right')}
                 aria-label="Scroll categories right"
-                className="w-8 h-8 rounded-full border border-neutral-200 bg-white text-neutral-800 hover:bg-black hover:text-white flex items-center justify-center transition-all duration-200 shadow-xs hover:shadow"
+                className="w-8 h-8 rounded-full border border-[#E2D9CC] bg-[#FAF8F4] text-[#5A3825] hover:bg-[#8B5A2B] hover:text-white flex items-center justify-center transition-all duration-200 shadow-xs hover:shadow"
               >
                 <FaChevronRight className="text-xs" />
               </button>
@@ -174,23 +174,23 @@ export function ShopByCategory({
               <Link
                 key={category.id}
                 to={category.link}
-                className="group flex flex-col items-center shrink-0 snap-center text-center transition-transform duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-black rounded-2xl p-1"
+                className="group flex flex-col items-center shrink-0 snap-center text-center transition-transform duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8B5A2B] rounded-2xl p-1"
                 style={{ width: 'clamp(96px, 14vw, 136px)' }}
               >
                 {/* Round Avatar Circle Container */}
                 <div className="relative mb-3">
-                  {/* Outer Ring with Minimal Hover Accent */}
+                  {/* Outer Ring with Terracotta Hover Accent */}
                   <div
                     className={cn(
                       'relative p-[3px] rounded-full transition-all duration-300 shadow-xs group-hover:shadow-md group-hover:-translate-y-1',
                       category.id === 'shop-all'
-                        ? 'bg-gradient-to-tr from-neutral-900 via-neutral-600 to-neutral-900'
-                        : 'bg-gradient-to-tr from-neutral-200 via-neutral-100 to-neutral-200 group-hover:from-neutral-900 group-hover:via-neutral-700 group-hover:to-neutral-900'
+                        ? 'bg-gradient-to-tr from-[#5A3825] via-[#8B5A2B] to-[#5A3825]'
+                        : 'bg-gradient-to-tr from-[#E2D9CC] via-[#F4F1EA] to-[#E2D9CC] group-hover:from-[#8B5A2B] group-hover:via-[#5A3825] group-hover:to-[#8B5A2B]'
                     )}
                   >
                     {/* Inner Circle Wrapper */}
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full overflow-hidden bg-white p-[2px]">
-                      <div className="w-full h-full rounded-full overflow-hidden relative bg-neutral-100">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full overflow-hidden bg-[#FAF8F4] p-[2px]">
+                      <div className="w-full h-full rounded-full overflow-hidden relative bg-[#EAE5D9]">
                         <img
                           src={optimizeCloudinaryUrl(category.image, 240)}
                           alt={category.imageAlt || category.name}
@@ -205,7 +205,7 @@ export function ShopByCategory({
                   {/* Optional Pill Badge on the circle */}
                   {category.badge && (
                     <span
-                      className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] sm:text-[10px] font-semibold px-2 py-0.5 rounded-full shadow-xs border border-white uppercase tracking-wider bg-black text-white"
+                      className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] sm:text-[10px] font-semibold px-2 py-0.5 rounded-full shadow-xs border border-white uppercase tracking-wider bg-[#5A3825] text-[#F4F1EA]"
                     >
                       {category.badge}
                     </span>
@@ -213,13 +213,13 @@ export function ShopByCategory({
                 </div>
 
                 {/* Category Name Label */}
-                <h3 className="text-xs sm:text-sm font-semibold text-[#111111] group-hover:text-black transition-colors leading-snug line-clamp-2 max-w-[120px] font-sans">
+                <h3 className="text-xs sm:text-sm font-semibold text-[#5A3825] group-hover:text-[#8B5A2B] transition-colors leading-snug line-clamp-2 max-w-[120px] font-sans">
                   {category.name}
                 </h3>
 
                 {/* Subtitle / Micro Hint */}
                 {category.subtitle && (
-                  <span className="text-[10px] sm:text-[11px] text-neutral-500 font-normal mt-0.5 line-clamp-1 max-w-[110px] group-hover:text-neutral-700">
+                  <span className="text-[10px] sm:text-[11px] text-[#8C7364] font-normal mt-0.5 line-clamp-1 max-w-[110px] group-hover:text-[#5A3825]">
                     {category.subtitle}
                   </span>
                 )}
@@ -229,7 +229,7 @@ export function ShopByCategory({
         </div>
 
         {/* Mobile Swipe Hint */}
-        <div className="mt-2 flex sm:hidden justify-center items-center gap-1.5 text-[11px] text-gray-400 font-light">
+        <div className="mt-2 flex sm:hidden justify-center items-center gap-1.5 text-[11px] text-[#8C7364] font-light">
           <span>&larr; Swipe to explore categories &rarr;</span>
         </div>
       </div>

@@ -172,23 +172,23 @@ const AdminProducts: React.FC = () => {
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">Product Catalog</h1>
-          <p className="text-xs text-neutral-500 mt-0.5">
+          <h1 className="text-2xl font-serif font-bold text-[#5A3825] tracking-tight">Product Catalog</h1>
+          <p className="text-xs text-[#8C7364] mt-0.5">
             Manage your store's inventory, variants, regional pricing, and live availability.
           </p>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/admin/products/new')}
-            className="flex items-center gap-2 bg-[#111111] hover:bg-neutral-800 text-white px-5 py-2.5 rounded-xl font-semibold text-xs transition shadow-xs"
+            className="flex items-center gap-2 bg-[#8B5A2B] hover:bg-[#5A3825] text-white px-5 py-2.5 rounded-xl font-semibold text-xs transition shadow-sm"
           >
             <FaPlus className="text-xs" /> Add Product
           </button>
           <button
             onClick={exportToCSV}
-            className="flex items-center gap-2 bg-white hover:bg-neutral-50 text-neutral-800 font-semibold px-4 py-2.5 rounded-xl text-xs transition border border-neutral-200 shadow-2xs"
+            className="flex items-center gap-2 bg-[#FAF8F4] hover:bg-[#EAE5D9] text-[#5A3825] font-semibold px-4 py-2.5 rounded-xl text-xs transition border border-[#E2D9CC] shadow-2xs"
           >
-            <FaFileCsv className="text-sm text-neutral-500" /> Export CSV
+            <FaFileCsv className="text-sm text-[#8B5A2B]" /> Export CSV
           </button>
         </div>
       </div>
@@ -197,88 +197,88 @@ const AdminProducts: React.FC = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div 
           onClick={() => { setSelectedStockFilter('All'); setSelectedCategory('All'); }}
-          className={`cursor-pointer bg-white p-4 rounded-2xl border transition-all duration-200 shadow-2xs hover:shadow-xs ${
-            selectedStockFilter === 'All' && selectedCategory === 'All' ? 'border-neutral-900 ring-2 ring-neutral-900/10' : 'border-neutral-200'
+          className={`cursor-pointer bg-[#FAF8F4] p-4 rounded-2xl border transition-all duration-200 shadow-2xs hover:shadow-xs ${
+            selectedStockFilter === 'All' && selectedCategory === 'All' ? 'border-[#5A3825] ring-2 ring-[#5A3825]/10' : 'border-[#E2D9CC]'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Total Products</span>
-            <div className="w-8 h-8 rounded-lg bg-neutral-100 text-neutral-800 flex items-center justify-center text-sm">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C7364]">Total Products</span>
+            <div className="w-8 h-8 rounded-lg bg-[#F4F1EA] text-[#5A3825] flex items-center justify-center text-sm border border-[#E2D9CC]">
               <FaBoxes />
             </div>
           </div>
-          <p className="text-2xl font-bold text-neutral-900 mt-2 tracking-tight">{stats.total}</p>
-          <p className="text-[11px] text-neutral-500 mt-0.5">Across {categories.length - 1} categories</p>
+          <p className="text-2xl font-serif font-bold text-[#5A3825] mt-2 tracking-tight">{stats.total}</p>
+          <p className="text-[11px] text-[#8C7364] mt-0.5">Across {categories.length - 1} categories</p>
         </div>
 
         <div 
           onClick={() => setSelectedStockFilter('in_stock')}
-          className={`cursor-pointer bg-white p-4 rounded-2xl border transition-all duration-200 shadow-2xs hover:shadow-xs ${
-            selectedStockFilter === 'in_stock' ? 'border-emerald-600 ring-2 ring-emerald-600/10' : 'border-neutral-200'
+          className={`cursor-pointer bg-[#FAF8F4] p-4 rounded-2xl border transition-all duration-200 shadow-2xs hover:shadow-xs ${
+            selectedStockFilter === 'in_stock' ? 'border-emerald-700 ring-2 ring-emerald-700/10' : 'border-[#E2D9CC]'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">In Stock</span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center text-sm">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C7364]">In Stock</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center text-sm border border-emerald-200">
               <FaCheckCircle />
             </div>
           </div>
-          <p className="text-2xl font-bold text-emerald-700 mt-2 tracking-tight">
+          <p className="text-2xl font-serif font-bold text-emerald-800 mt-2 tracking-tight">
             {products.filter(p => Number(p.stock || 0) >= 10 && p.isActive !== false).length}
           </p>
-          <p className="text-[11px] text-emerald-600 font-medium mt-0.5">Available products in stock</p>
+          <p className="text-[11px] text-emerald-700 font-medium mt-0.5">Available products in stock</p>
         </div>
 
         <div 
           onClick={() => setSelectedStockFilter('low_stock')}
-          className={`cursor-pointer bg-white p-4 rounded-2xl border transition-all duration-200 shadow-2xs hover:shadow-xs ${
-            selectedStockFilter === 'low_stock' ? 'border-amber-600 ring-2 ring-amber-600/10' : 'border-neutral-200'
+          className={`cursor-pointer bg-[#FAF8F4] p-4 rounded-2xl border transition-all duration-200 shadow-2xs hover:shadow-xs ${
+            selectedStockFilter === 'low_stock' ? 'border-amber-700 ring-2 ring-amber-700/10' : 'border-[#E2D9CC]'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Low Stock Alert</span>
-            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center text-sm">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C7364]">Low Stock Alert</span>
+            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-800 flex items-center justify-center text-sm border border-amber-200">
               <FaExclamationTriangle />
             </div>
           </div>
-          <p className="text-2xl font-bold text-amber-700 mt-2 tracking-tight">{stats.lowStock}</p>
-          <p className="text-[11px] text-amber-600 font-medium mt-0.5">Less than 10 units left</p>
+          <p className="text-2xl font-serif font-bold text-amber-800 mt-2 tracking-tight">{stats.lowStock}</p>
+          <p className="text-[11px] text-amber-700 font-medium mt-0.5">Less than 10 units left</p>
         </div>
 
         <div 
           onClick={() => setSelectedStockFilter('out_of_stock')}
-          className={`cursor-pointer bg-white p-4 rounded-2xl border transition-all duration-200 shadow-2xs hover:shadow-xs ${
-            selectedStockFilter === 'out_of_stock' ? 'border-rose-600 ring-2 ring-rose-600/10' : 'border-neutral-200'
+          className={`cursor-pointer bg-[#FAF8F4] p-4 rounded-2xl border transition-all duration-200 shadow-2xs hover:shadow-xs ${
+            selectedStockFilter === 'out_of_stock' ? 'border-rose-700 ring-2 ring-rose-700/10' : 'border-[#E2D9CC]'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Out of Stock</span>
-            <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-700 flex items-center justify-center text-sm">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C7364]">Out of Stock</span>
+            <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-800 flex items-center justify-center text-sm border border-rose-200">
               <FaTimesCircle />
             </div>
           </div>
-          <p className="text-2xl font-bold text-rose-700 mt-2 tracking-tight">{stats.outOfStock}</p>
-          <p className="text-[11px] text-rose-600 font-medium mt-0.5">Restock required</p>
+          <p className="text-2xl font-serif font-bold text-rose-800 mt-2 tracking-tight">{stats.outOfStock}</p>
+          <p className="text-[11px] text-rose-700 font-medium mt-0.5">Restock required</p>
         </div>
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="bg-white p-5 rounded-2xl border border-neutral-200 shadow-2xs space-y-4">
+      <div className="bg-[#FAF8F4] p-5 rounded-2xl border border-[#E2D9CC] shadow-2xs space-y-4">
         <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
           {/* Search Input */}
           <div className="relative flex-1">
-            <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 text-xs" />
+            <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8C7364] text-xs" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products by name, category, or ingredients..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-200 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10 bg-neutral-50 focus:bg-white placeholder-neutral-400 transition text-neutral-900"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#E2D9CC] text-sm focus:outline-none focus:ring-2 focus:ring-[#8B5A2B]/10 bg-[#F4F1EA] focus:bg-white placeholder-[#8C7364] transition text-[#5A3825]"
             />
             {searchQuery && (
               <button 
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-neutral-400 hover:text-neutral-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#8C7364] hover:text-[#5A3825]"
               >
                 Clear
               </button>
@@ -290,7 +290,7 @@ const AdminProducts: React.FC = () => {
             <select
               value={selectedStockFilter}
               onChange={(e) => setSelectedStockFilter(e.target.value as any)}
-              className="px-3.5 py-2.5 rounded-xl border border-neutral-200 text-xs font-semibold bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
+              className="px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] text-xs font-semibold bg-[#F4F1EA] text-[#5A3825] focus:outline-none focus:ring-2 focus:ring-[#8B5A2B]/10"
             >
               <option value="All">All Stock Levels</option>
               <option value="in_stock">In Stock (10+)</option>
@@ -303,7 +303,7 @@ const AdminProducts: React.FC = () => {
 
         {/* Category Pill Filters */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar text-xs">
-          <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-1.5 shrink-0 pr-1">
+          <span className="text-[10px] font-bold text-[#8C7364] uppercase tracking-wider flex items-center gap-1.5 shrink-0 pr-1">
             <FaLayerGroup className="text-xs" /> Category:
           </span>
           {categories.map((cat) => (
@@ -312,8 +312,8 @@ const AdminProducts: React.FC = () => {
               onClick={() => setSelectedCategory(cat)}
               className={`px-3 py-1.5 rounded-full text-xs transition whitespace-nowrap shrink-0 ${
                 selectedCategory === cat
-                  ? 'bg-[#111111] text-white shadow-2xs font-semibold'
-                  : 'bg-neutral-50 text-neutral-600 hover:bg-neutral-100 border border-neutral-200 font-medium'
+                  ? 'bg-[#5A3825] text-[#F4F1EA] shadow-2xs font-semibold'
+                  : 'bg-[#F4F1EA] text-[#5A3825] hover:bg-[#EAE5D9] border border-[#E2D9CC] font-medium'
               }`}
             >
               {cat}
@@ -323,9 +323,9 @@ const AdminProducts: React.FC = () => {
       </div>
 
       {/* Products Table */}
-      <div className="bg-white rounded-3xl border border-neutral-200 shadow-2xs overflow-hidden">
-        <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
-          <h2 className="font-bold text-neutral-900 text-sm tracking-tight">
+      <div className="bg-[#FAF8F4] rounded-3xl border border-[#E2D9CC] shadow-2xs overflow-hidden">
+        <div className="p-5 border-b border-[#E2D9CC] flex items-center justify-between">
+          <h2 className="font-serif font-bold text-[#5A3825] text-sm tracking-tight">
             Catalog Items ({filteredProducts.length})
           </h2>
           {(searchQuery || selectedCategory !== 'All' || selectedStockFilter !== 'All') && (
@@ -335,7 +335,7 @@ const AdminProducts: React.FC = () => {
                 setSelectedCategory('All');
                 setSelectedStockFilter('All');
               }}
-              className="text-xs font-semibold text-neutral-600 hover:text-neutral-900 hover:underline"
+              className="text-xs font-semibold text-[#8B5A2B] hover:text-[#5A3825] hover:underline"
             >
               Reset Filters
             </button>
@@ -344,18 +344,18 @@ const AdminProducts: React.FC = () => {
 
         {filteredProducts.length === 0 ? (
           <div className="text-center py-16 px-4">
-            <div className="w-14 h-14 rounded-2xl bg-neutral-100 text-neutral-400 text-xl flex items-center justify-center mx-auto mb-3">
+            <div className="w-14 h-14 rounded-2xl bg-[#F4F1EA] text-[#8C7364] text-xl flex items-center justify-center mx-auto mb-3 border border-[#E2D9CC]">
               <FaBoxes />
             </div>
-            <p className="text-neutral-900 font-semibold mb-1 text-sm">No matching products found</p>
-            <p className="text-xs text-neutral-500 max-w-sm mx-auto">
+            <p className="text-[#5A3825] font-semibold mb-1 text-sm">No matching products found</p>
+            <p className="text-xs text-[#8C7364] max-w-sm mx-auto">
               Try adjusting your search terms or category filter to view products.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-neutral-100 text-left text-xs">
-              <thead className="bg-neutral-50 text-neutral-500 font-semibold uppercase tracking-wider text-[10px]">
+            <table className="min-w-full divide-y divide-[#E2D9CC] text-left text-xs">
+              <thead className="bg-[#EAE5D9] text-[#5A3825] font-semibold uppercase tracking-wider text-[10px]">
                 <tr>
                   <th className="px-5 py-3.5">Product</th>
                   <th className="px-5 py-3.5">Category</th>
@@ -365,7 +365,7 @@ const AdminProducts: React.FC = () => {
                   <th className="px-5 py-3.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-100 bg-white">
+              <tbody className="divide-y divide-[#E2D9CC] bg-[#FAF8F4]">
                 {filteredProducts.map((p) => {
                   const hasVariants = p.variants && Array.isArray(p.variants) && p.variants.length > 0;
                   const isActive = p.isActive !== false;
