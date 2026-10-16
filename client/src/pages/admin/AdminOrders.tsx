@@ -99,12 +99,14 @@ const AdminOrders: React.FC = () => {
       const q = searchQuery.toLowerCase().trim();
       const customer = getCustomerInfo(order);
 
+      const transactionId = (order.shippingInfo as any)?.transactionId || '';
       const matchesSearch = !q || 
         order._id?.toLowerCase().includes(q) ||
         customer.name.toLowerCase().includes(q) ||
         customer.phone.toLowerCase().includes(q) ||
         customer.city.toLowerCase().includes(q) ||
-        customer.email?.toLowerCase().includes(q);
+        customer.email?.toLowerCase().includes(q) ||
+        transactionId.toLowerCase().includes(q);
 
       const matchesStatus = selectedStatus === 'All' || order.status?.toLowerCase() === selectedStatus.toLowerCase();
 
@@ -371,15 +373,32 @@ const AdminOrders: React.FC = () => {
                         )}
                       </td>
 
-                      {/* Total Amount */}
+                      {/* Total Amount & Payment Info */}
                       <td className="px-5 py-3.5">
-                        <span className="font-bold text-neutral-900 text-xs block">
+                        <span className="font-bold text-[#5A3825] text-xs block">
                           ₹{Number(order.total || 0).toFixed(2)}
                         </span>
                         {Number(order.discount || 0) > 0 && (
                           <span className="text-[10px] text-rose-600 block">
                             -₹{Number(order.discount).toFixed(2)} off
                           </span>
+                        )}
+                        {order.shippingInfo?.transactionId ? (
+                          <div className="mt-1 flex items-center gap-1 flex-wrap">
+                            <span 
+                              className="inline-flex items-center gap-1 text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#F4F1EA] text-[#5A3825] border border-[#E2D9CC]"
+                              title={`UPI UTR: ${order.shippingInfo.transactionId}`}
+                            >
+                              UPI: {order.shippingInfo.transactionId.length > 9 ? `${order.shippingInfo.transactionId.slice(0, 9)}...` : order.shippingInfo.transactionId}
+                            </span>
+                            {order.shippingInfo?.paymentScreenshot && (
+                              <span className="text-[9px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-1 py-0.2 rounded font-semibold" title="Proof screenshot uploaded">
+                                Proof
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-[10px] text-[#8C7364] block mt-0.5">UPI Pending</span>
                         )}
                       </td>
 

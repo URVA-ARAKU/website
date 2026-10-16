@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import BackButton from '../components/common/BackBtn';
 import { useOrderDetailsQuery } from '../redux/api/order.api';
 import { usePageSEO } from '../hooks/usePageSEO';
+import { FaTimes, FaCheck, FaCopy } from 'react-icons/fa';
 
 const OrderDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
+    const [showProofModal, setShowProofModal] = useState(false);
+    const [copiedTxn, setCopiedTxn] = useState(false);
+
     usePageSEO({
         title: `Order #${id || ''} | URVA`,
         description: 'View order details and status.',
@@ -17,10 +21,10 @@ const OrderDetails: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center min-h-[60vh] bg-[#FAFAFA]">
+            <div className="flex items-center justify-center min-h-[60vh] bg-[#F4F1EA]">
                 <div className="flex flex-col items-center gap-3">
-                    <div className="w-8 h-8 border-2 border-neutral-200 border-t-black rounded-full animate-spin"></div>
-                    <p className="text-xs text-neutral-500 font-sans">Loading order invoice...</p>
+                    <div className="w-8 h-8 border-2 border-[#E2D9CC] border-t-[#5A3825] rounded-full animate-spin"></div>
+                    <p className="text-xs text-[#8C7364] font-sans">Loading order invoice...</p>
                 </div>
             </div>
         );
@@ -28,16 +32,25 @@ const OrderDetails: React.FC = () => {
 
     if (isError || !data) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] bg-[#FAFAFA] p-4 text-center">
+            <div className="flex flex-col items-center justify-center min-h-[60vh] bg-[#F4F1EA] p-4 text-center">
                 <BackButton fallback="/my-orders" />
                 <p className="text-4xl mb-3">📄</p>
-                <h2 className="text-xl font-sans font-semibold text-[#111111] mb-2">Order Not Found</h2>
-                <p className="text-xs text-neutral-500 max-w-sm mb-4">Could not find order details for ID: {id}</p>
+                <h2 className="text-xl font-sans font-semibold text-[#5A3825] mb-2">Order Not Found</h2>
+                <p className="text-xs text-[#8C7364] max-w-sm mb-4">Could not find order details for ID: {id}</p>
             </div>
         );
     }
 
     const { order } = data;
+    const paymentScreenshot = order.paymentScreenshot || (order.shippingInfo as any)?.paymentScreenshot;
+    const txnId = order.transactionId || (order.shippingInfo as any)?.transactionId || (order.shippingInfo as any)?.razorpayPaymentId;
+
+    const copyTxn = () => {
+        if (!txnId) return;
+        navigator.clipboard.writeText(txnId);
+        setCopiedTxn(true);
+        setTimeout(() => setCopiedTxn(false), 2000);
+    };
 
     const getStatusBadge = (status: string) => {
         switch (status.toLowerCase()) {
@@ -83,6 +96,61 @@ const OrderDetails: React.FC = () => {
                         <div>
                             <h3 className="font-semibold text-[#5A3825] text-xs uppercase tracking-wider mb-2">Customer Details</h3>
                             <p className="text-[#8C7364]">Phone: <span className="font-semibold text-[#5A3825]">{order.shippingInfo.phone}</span></p>
+                            <p className="text-[#8C7364] mt-1">Recipient: <span className="font-semibold text-[#5A3825]">{order.shippingInfo.name || 'Customer'}</span></p>
+                        </div>
+                    </div>
+
+                    {/* UPI Payment Verification Details */}
+                    <div className="bg-[#F4F1EA] p-4 sm:p-5 rounded-2xl border border-[#E2D9CC] space-y-3">
+                        <div className="flex items-center justify-between border-b border-[#E2D9CC] pb-2.5">
+                            <h3 className="font-semibold text-[#5A3825] text-xs uppercase tracking-wider flex items-center gap-2">
+                                💳 Payment & Verification Details
+                            </h3>
+                            <span className="text-[11px] font-semibold text-[#8B5A2B] bg-[#FAF8F4] px-2.5 py-0.5 rounded-full border border-[#E2D9CC]">
+                                {order.shippingInfo.paymentMethod === 'UPI_QR' || !order.shippingInfo.paymentMethod ? 'UPI QR Payment' : order.shippingInfo.paymentMethod}
+                            </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+                            <div>
+                                <span className="text-[#8C7364] block text-[11px] uppercase font-bold tracking-wider">UPI Transaction ID / UTR</span>
+                                <div className="flex items-center gap-2 mt-1.5">
+                                    <span className="font-mono font-bold text-xs sm:text-sm text-[#5A3825] bg-[#FAF8F4] px-3 py-1.5 rounded-xl border border-[#E2D9CC] select-all">
+                                        {txnId || 'Pending Verification'}
+                                    </span>
+                                    {txnId && (
+                                        <button
+                                            type="button"
+                                            onClick={copyTxn}
+                                            className="p-2 rounded-lg bg-[#FAF8F4] hover:bg-[#E2D9CC] border border-[#E2D9CC] text-[#5A3825] transition cursor-pointer text-xs"
+                                            title="Copy Transaction ID"
+                                        >
+                                            {copiedTxn ? <FaCheck className="text-emerald-700" /> : <FaCopy />}
+                                        </button>
+                                    )}
+                                </div>
+                                <p className="text-[11px] text-[#8C7364] mt-1.5">
+                                    {order.status.toLowerCase() === 'delivered' ? '✓ Payment verified and order delivered' : 'Our team verifies this payment reference before dispatching your items.'}
+                                </p>
+                            </div>
+
+                            {paymentScreenshot && (
+                                <div>
+                                    <span className="text-[#8C7364] block text-[11px] uppercase font-bold tracking-wider mb-1.5">Payment Screenshot Proof</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowProofModal(true)}
+                                        className="inline-flex items-center gap-2 p-1.5 pr-3 rounded-xl bg-[#FAF8F4] border border-[#E2D9CC] hover:border-[#8B5A2B] text-xs font-semibold text-[#5A3825] transition cursor-pointer shadow-2xs"
+                                    >
+                                        <img
+                                            src={paymentScreenshot}
+                                            alt="Payment screenshot proof"
+                                            className="w-12 h-12 object-cover rounded-lg border border-[#E2D9CC]"
+                                        />
+                                        <span>View Screenshot Proof 🔍</span>
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -166,6 +234,50 @@ const OrderDetails: React.FC = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Payment Proof Modal */}
+            {showProofModal && paymentScreenshot && (
+                <div
+                    className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4"
+                    onClick={() => setShowProofModal(false)}
+                >
+                    <div
+                        className="bg-[#FAF8F4] rounded-2xl max-w-lg w-full p-4 border border-[#E2D9CC] shadow-2xl relative"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between pb-3 border-b border-[#E2D9CC] mb-3">
+                            <div>
+                                <h3 className="font-bold text-sm text-[#5A3825]">Payment Proof Screenshot</h3>
+                                <p className="text-[11px] text-[#8C7364] font-mono">Ref: {txnId || 'N/A'}</p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setShowProofModal(false)}
+                                className="p-1.5 rounded-lg hover:bg-[#F4F1EA] text-[#5A3825] transition cursor-pointer"
+                            >
+                                <FaTimes size={16} />
+                            </button>
+                        </div>
+                        <div className="max-h-[75vh] overflow-auto rounded-xl bg-black/5 flex items-center justify-center p-2">
+                            <img
+                                src={paymentScreenshot}
+                                alt="Payment proof full preview"
+                                className="max-w-full max-h-[70vh] object-contain rounded-lg"
+                            />
+                        </div>
+                        <div className="mt-3 flex justify-end">
+                            <a
+                                href={paymentScreenshot}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs font-semibold text-[#8B5A2B] hover:text-[#5A3825] underline"
+                            >
+                                Open original image in new tab ↗
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

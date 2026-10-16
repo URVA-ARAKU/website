@@ -159,6 +159,10 @@ export type ShippingInfo = {
     latitude?: number;
     longitude?: number;
     deliveryType?: 'current_location' | 'nearest_landmark';
+    paymentMethod?: string;
+    transactionId?: string;
+    paymentScreenshot?: string;
+    paidAmount?: number;
 }
 
 // Order Item
@@ -186,6 +190,9 @@ export type Order = {
     senderMobile?: string;
     receiverMobile?: string;
     trackingUrl?: string;
+    paymentMethod?: string;
+    transactionId?: string;
+    paymentScreenshot?: string;
 }
 
 // All Orders

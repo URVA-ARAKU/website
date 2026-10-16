@@ -433,11 +433,12 @@ function safeJSONParse(value, fallback = {}) {
 // Map Supabase row → order object
 function mapOrder(row) {
   if (!row) return null;
+  const sInfo = safeJSONParse(row.shipping_info, {});
   return {
     _id: row.id,
     id: row.id,
     user: row.user_uid || row.user_id,
-    shippingInfo: safeJSONParse(row.shipping_info, {}),
+    shippingInfo: sInfo,
     orderItems: safeJSONParse(row.order_items, []),
     subtotal: Number(row.subtotal),
     tax: Number(row.tax),
@@ -451,6 +452,9 @@ function mapOrder(row) {
     senderMobile: row.sender_mobile || undefined,
     receiverMobile: row.receiver_mobile || undefined,
     trackingUrl: row.tracking_url || undefined,
+    paymentMethod: sInfo.paymentMethod || (sInfo.razorpayPaymentId ? 'Razorpay' : 'UPI_QR'),
+    transactionId: sInfo.transactionId || sInfo.razorpayPaymentId || undefined,
+    paymentScreenshot: sInfo.paymentScreenshot || undefined,
   };
 }
 

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import BackButton from '../../components/common/BackBtn';
 import { useDeleteOrderMutation, useOrderDetailsQuery, useUpdateOrderStatusMutation } from '../../redux/api/order.api';
 import { notify } from '../../utils/util';
-import { FaTrash, FaTimes } from 'react-icons/fa';
+import { FaTrash, FaTimes, FaCheck, FaCopy, FaExternalLinkAlt } from 'react-icons/fa';
 
 const AdminOrderDetails: React.FC = () => {
     const { orderId } = useParams<{ orderId: string }>();
@@ -11,6 +11,10 @@ const AdminOrderDetails: React.FC = () => {
     const [updateOrderStatus] = useUpdateOrderStatusMutation();
     const [deleteOrder] = useDeleteOrderMutation();
     const navigate = useNavigate();
+
+    // Payment Proof Modal State
+    const [showProofModal, setShowProofModal] = useState(false);
+    const [copiedTxn, setCopiedTxn] = useState(false);
 
     // Tracking Modal State
     const [showTrackingModal, setShowTrackingModal] = useState(false);
@@ -196,6 +200,107 @@ const AdminOrderDetails: React.FC = () => {
                     </div>
                 </div>
 
+                {/* 💳 Payment & UTR Verification Card */}
+                {(() => {
+                    const paymentScreenshot = data?.order?.paymentScreenshot || (data?.order?.shippingInfo as any)?.paymentScreenshot;
+                    const txnId = data?.order?.transactionId || (data?.order?.shippingInfo as any)?.transactionId || (data?.order?.shippingInfo as any)?.razorpayPaymentId;
+                    const paymentMethod = data?.order?.paymentMethod || (data?.order?.shippingInfo as any)?.paymentMethod || 'UPI_QR';
+
+                    const copyTxn = () => {
+                        if (!txnId) return;
+                        navigator.clipboard.writeText(txnId);
+                        setCopiedTxn(true);
+                        notify('Transaction ID copied!', 'info');
+                        setTimeout(() => setCopiedTxn(false), 2000);
+                    };
+
+                    return (
+                        <div className="p-5 rounded-2xl bg-[#F4F1EA] border border-[#E2D9CC] space-y-4">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-[#E2D9CC] pb-3 gap-2">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-base">💳</span>
+                                    <h3 className="font-bold text-xs uppercase tracking-wider text-[#5A3825]">
+                                        Payment & Transaction Verification
+                                    </h3>
+                                </div>
+                                <span className="inline-flex self-start sm:self-auto px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#FAF8F4] text-[#8B5A2B] border border-[#E2D9CC]">
+                                    {paymentMethod === 'UPI_QR' ? 'UPI QR Code / PhonePe' : paymentMethod}
+                                </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                                <div>
+                                    <span className="text-[10px] uppercase font-bold text-[#8B5A2B] block tracking-wider mb-1">
+                                        UPI Transaction ID / UTR
+                                    </span>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <span className="font-mono font-bold text-sm text-[#5A3825] bg-[#FAF8F4] px-3 py-1.5 rounded-xl border border-[#E2D9CC] select-all">
+                                            {txnId || 'No UTR Entered'}
+                                        </span>
+                                        {txnId && (
+                                            <button
+                                                type="button"
+                                                onClick={copyTxn}
+                                                className="p-2 rounded-lg bg-[#FAF8F4] hover:bg-[#E2D9CC] border border-[#E2D9CC] text-[#5A3825] transition cursor-pointer text-xs"
+                                                title="Copy UTR / Transaction ID"
+                                            >
+                                                {copiedTxn ? <FaCheck className="text-emerald-700" /> : <FaCopy />}
+                                            </button>
+                                        )}
+                                    </div>
+                                    <span className="text-[10px] text-[#8C7364] block mt-1">
+                                        Amount: ₹{data?.order?.total.toFixed(2)} to 9346422451@ybl
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <span className="text-[10px] uppercase font-bold text-[#8B5A2B] block tracking-wider mb-1">
+                                        Payment Screenshot Proof
+                                    </span>
+                                    {paymentScreenshot ? (
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowProofModal(true)}
+                                            className="flex items-center gap-2.5 p-1.5 pr-3 rounded-xl bg-[#FAF8F4] border border-[#E2D9CC] hover:border-[#8B5A2B] text-xs font-semibold text-[#5A3825] transition cursor-pointer shadow-2xs group"
+                                        >
+                                            <img
+                                                src={paymentScreenshot}
+                                                alt="Payment proof screenshot"
+                                                className="w-12 h-12 object-cover rounded-lg border border-[#E2D9CC] group-hover:scale-105 transition-transform"
+                                            />
+                                            <div className="text-left">
+                                                <span className="block font-bold text-[#5A3825]">Screenshot Attached</span>
+                                                <span className="text-[10px] text-[#8B5A2B] underline">Click to view full size 🔍</span>
+                                            </div>
+                                        </button>
+                                    ) : (
+                                        <span className="text-xs text-[#8C7364] italic block mt-1.5">No screenshot uploaded by customer</span>
+                                    )}
+                                </div>
+
+                                <div className="flex flex-col justify-between">
+                                    <span className="text-[10px] uppercase font-bold text-[#8B5A2B] block tracking-wider mb-1">
+                                        Verification Action
+                                    </span>
+                                    {data?.order?.status === 'Pending' ? (
+                                        <button
+                                            type="button"
+                                            onClick={() => handleStatusChange('Processing')}
+                                            className="w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-white py-2 px-3 rounded-xl text-xs font-bold transition shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer"
+                                        >
+                                            <FaCheck size={11} /> Confirm Payment & Process
+                                        </button>
+                                    ) : (
+                                        <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl text-center block">
+                                            ✓ Verified & Status: {data?.order?.status}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })()}
+
                 <div>
                     <h3 className="text-sm font-bold text-[#5A3825] mb-3">Order Items</h3>
                     <div className="overflow-x-auto rounded-2xl border border-[#E2D9CC]">
@@ -352,6 +457,65 @@ const AdminOrderDetails: React.FC = () => {
                             >
                                 Save & Dispatch
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Payment Proof Zoom Modal */}
+            {showProofModal && (data?.order?.paymentScreenshot || (data?.order?.shippingInfo as any)?.paymentScreenshot) && (
+                <div
+                    className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 font-sans"
+                    onClick={() => setShowProofModal(false)}
+                >
+                    <div
+                        className="bg-[#FAF8F4] rounded-3xl max-w-xl w-full p-5 border border-[#E2D9CC] shadow-2xl relative"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between pb-3 border-b border-[#E2D9CC] mb-3">
+                            <div>
+                                <h3 className="font-bold text-sm text-[#5A3825]">Customer Payment Screenshot</h3>
+                                <p className="text-[11px] text-[#8C7364] font-mono">
+                                    UTR: {data?.order?.transactionId || (data?.order?.shippingInfo as any)?.transactionId || 'N/A'} • ₹{data?.order?.total.toFixed(2)}
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setShowProofModal(false)}
+                                className="p-1.5 rounded-xl hover:bg-[#F4F1EA] text-[#5A3825] transition cursor-pointer"
+                            >
+                                <FaTimes size={16} />
+                            </button>
+                        </div>
+                        <div className="max-h-[75vh] overflow-auto rounded-2xl bg-black/5 flex items-center justify-center p-2">
+                            <img
+                                src={data?.order?.paymentScreenshot || (data?.order?.shippingInfo as any)?.paymentScreenshot}
+                                alt="Payment proof preview"
+                                className="max-w-full max-h-[70vh] object-contain rounded-xl"
+                            />
+                        </div>
+                        <div className="mt-4 flex items-center justify-between gap-3 pt-2 border-t border-[#E2D9CC]">
+                            <a
+                                href={data?.order?.paymentScreenshot || (data?.order?.shippingInfo as any)?.paymentScreenshot}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs font-semibold text-[#8B5A2B] hover:text-[#5A3825] underline inline-flex items-center gap-1.5"
+                            >
+                                <span>Open Full Resolution Image</span>
+                                <FaExternalLinkAlt size={10} />
+                            </a>
+                            {data?.order?.status === 'Pending' && (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        handleStatusChange('Processing');
+                                        setShowProofModal(false);
+                                    }}
+                                    className="bg-[#8B5A2B] hover:bg-[#5A3825] text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-xs flex items-center gap-1.5"
+                                >
+                                    <FaCheck size={11} /> Confirm & Mark Processing
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

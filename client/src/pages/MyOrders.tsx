@@ -24,8 +24,8 @@ const MyOrders: React.FC = () => {
     useEffect(() => {
         const paymentStatus = searchParams.get('payment');
         const orderId = searchParams.get('orderId');
-        if (paymentStatus === 'success') {
-            notify('Payment successful! Your order has been placed.', 'success');
+        if (paymentStatus === 'submitted' || paymentStatus === 'success') {
+            notify('Order & UPI verification submitted successfully!', 'success');
             if (orderId) {
                 navigate(`/order/${orderId}`, { replace: true });
             } else {
@@ -87,7 +87,14 @@ const MyOrders: React.FC = () => {
                             <tbody className="divide-y divide-[#E2D9CC] text-xs sm:text-sm">
                                 {data.orders.map((order) => (
                                     <tr className="hover:bg-[#FAF8F4]/80 transition-colors" key={order._id}>
-                                        <td className="p-4 font-mono text-xs text-[#5A3825]">{order._id}</td>
+                                        <td className="p-4">
+                                            <span className="font-mono text-xs font-semibold text-[#5A3825] block">#{order._id?.slice(0, 8)}...</span>
+                                            {order.shippingInfo?.transactionId && (
+                                                <span className="text-[10px] text-[#8C7364] font-mono block mt-0.5">
+                                                    UTR: {order.shippingInfo.transactionId}
+                                                </span>
+                                            )}
+                                        </td>
                                         <td className="p-4 text-[#8C7364]">{new Date(order.createdAt).toLocaleDateString()}</td>
                                         <td className="p-4">
                                             <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#F4F1EA] text-[#5A3825] border border-[#E2D9CC]">
