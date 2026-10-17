@@ -1,0 +1,40 @@
+{
+  "storeName": "URVA Swadeshi",
+  "tagline": "Delivering the Authentic Rural Aura",
+  "description": "Authentic regional specialties, tribal Araku coffee, pure honey, Godavari sweets, eco-friendly goods, and handlooms delivered directly to your doorstep.",
+  "supportEmail": "sales@urvaswadeshi.in",
+  "supportPhone": "+91 9494957576",
+  "whatsappNumber": "+919494957576",
+  "officeAddress": "Near Araku Tribal Museum, Araku Valley, Alluri Sitharama Raju District, Andhra Pradesh - 531149",
+  
+  "upiId": "9346422451@ybl",
+  "upiPayeeName": "URVA Rural Aura",
+  "qrCodeUrl": "/qr.jpeg",
+  "enableCod": true,
+  "codMaxAmount": 5000,
+  
+  "freeShippingThreshold": 999,
+  "standardShippingFee": 49,
+  "expressShippingFee": 99,
+  "shippingPartner": "APSRTC Cargo & India Post",
+  
+  "youtubeChannelUrl": "https://www.youtube.com/@urvaswadeshi",
+  "youtubeChannelName": "URVA Rural Heritage",
+  "featuredYoutubeVideoId": "aN2sDNVf-Js",
+  "youtubeVideos": [
+    { "id": "aN2sDNVf-Js", "title": "Pure Honey Harvested by Araku Tribes", "subtitle": "Araku Valley, AP" },
+    { "id": "BeNpZc_SULs", "title": "Sorting Fresh Native Harvest", "subtitle": "Godavari Delta" },
+    { "id": "vwImmm2jPWU", "title": "Delta Farming Traditions", "subtitle": "East Godavari" },
+    { "id": "bgq_DG7ptsE", "title": "From Village Artisans to Your Home", "subtitle": "Rural Crafts" }
+  ],
+  
+  "instagramUrl": "https://instagram.com/urvaswadeshi",
+  "facebookUrl": "https://facebook.com/urvaswadeshi",
+  
+  "metaTitle": "URVA — Authentic Rural Specialties & Handlooms",
+  "metaDescription": "Direct from tribal valleys and rural artisans of Andhra Pradesh. Explore Araku coffee, Godavari sweets, organic honey, and swadesi handlooms.",
+  
+  "orderAutoConfirm": true,
+  "maintenanceMode": false,
+  "updatedAt": "2026-10-17T10:00:00.000Z"
+}

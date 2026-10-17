@@ -552,6 +552,69 @@ function saveLocalFallbackBanners(banners) {
   }
 }
 
+// ─── Local JSON Cache Readers & Writers ───
+function readLocalJsonFile(filename, fallback) {
+  try {
+    const candidatePaths = [
+      path.resolve(__dirname, `data/${filename}`),
+      path.resolve(process.cwd(), `api/data/${filename}`),
+      path.resolve(process.cwd(), `../api/data/${filename}`),
+      path.resolve(process.cwd(), `client/src/data/${filename}`),
+      path.resolve(process.cwd(), `scratch/${filename}`),
+    ];
+    for (const p of candidatePaths) {
+      if (fs.existsSync(p)) {
+        const raw = fs.readFileSync(p, 'utf8');
+        return JSON.parse(raw);
+      }
+    }
+  } catch (e) {
+    console.warn(`Local JSON read error for ${filename}:`, e.message);
+  }
+  return fallback;
+}
+
+function writeLocalJsonFile(filename, data) {
+  try {
+    const candidateDirs = [
+      path.resolve(__dirname, 'data'),
+      path.resolve(process.cwd(), 'api/data'),
+      path.resolve(process.cwd(), '../api/data'),
+      path.resolve(process.cwd(), 'client/src/data'),
+    ];
+    for (const dir of candidateDirs) {
+      try {
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+        const filePath = path.join(dir, filename);
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+      } catch (inner) {}
+    }
+  } catch (e) {
+    console.warn(`Local JSON write error for ${filename}:`, e.message);
+  }
+}
+
+function getLocalCategories() {
+  return readLocalJsonFile('store_categories.json', []);
+}
+function saveLocalCategories(cats) {
+  writeLocalJsonFile('store_categories.json', cats);
+}
+
+function getLocalSettings() {
+  return readLocalJsonFile('store_settings.json', {});
+}
+function saveLocalSettings(settings) {
+  writeLocalJsonFile('store_settings.json', settings);
+}
+
+function getLocalReviews() {
+  return readLocalJsonFile('product_reviews.json', []);
+}
+function saveLocalReviews(revs) {
+  writeLocalJsonFile('product_reviews.json', revs);
+}
+
 export default async function handler(req, res) {
   const url = req.url || '';
 
@@ -1625,19 +1688,46 @@ export default async function handler(req, res) {
       return res.status(200).json(resBody);
     }
 
-    // ─── PRODUCTS: Get Categories ───
+    // ─── PRODUCTS: Get Categories (Dynamic String Array for Redux & Dropdowns) ───
     if (url.includes('/api/v1/products/categories')) {
-      const categories = [
-        'Tribal Araku Products',
-        'Mana Godavari Foods',
-        'Eco-Friendly Products',
-        'Swadesi Handlooms',
-        'Kadiyam Plants'
-      ];
+      let catList = [];
+      try {
+        const { data, error } = await supabase.from('store_categories').select('title, name').neq('is_active', false);
+        if (!error && data && data.length > 0) {
+          catList = data.map(c => c.title || c.name);
+        }
+      } catch (e) {}
+
+      if (catList.length === 0) {
+        const local = getLocalCategories();
+        catList = local.filter(c => c.isActive !== false).map(c => c.title || c.name);
+      }
+
+      // Also get any distinct category names from products
+      try {
+        const { data: prodCats } = await supabase.from('products').select('category');
+        if (prodCats) {
+          prodCats.forEach(p => {
+            if (p.category && !catList.includes(p.category)) {
+              catList.push(p.category);
+            }
+          });
+        }
+      } catch (e) {}
+
+      if (catList.length === 0) {
+        catList = [
+          'Tribal Araku Products',
+          'Mana Godavari Foods',
+          'Eco-Friendly Products',
+          'Swadesi Handlooms',
+          'Kadiyam Plants'
+        ];
+      }
 
       const resBody = {
         success: true,
-        categories,
+        categories: Array.from(new Set(catList)),
       };
       if (global.fastApiCache) global.fastApiCache.set(url, { body: resBody, timestamp: Date.now() });
 
@@ -2400,6 +2490,269 @@ export default async function handler(req, res) {
 
       if (global.fastApiCache) global.fastApiCache.clear();
       return res.status(200).json({ success: true, message: 'Campaign banner deleted successfully' });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // ─── CATEGORIES API (Full Object Management for Storefront & Admin) ───
+    // ═══════════════════════════════════════════════════════════════════════
+
+    // ─── GET: All Categories ───
+    if ((url === '/api/v1/categories' || url.startsWith('/api/v1/categories?') || url === '/api/v1/admin/categories' || url.startsWith('/api/v1/admin/categories?')) && req.method === 'GET') {
+      let categories = [];
+      try {
+        const { data, error } = await supabase.from('store_categories').select('*').order('display_order', { ascending: true });
+        if (!error && data && data.length > 0) {
+          categories = data.map(c => ({
+            id: c.id || c.slug,
+            slug: c.slug || c.id,
+            name: c.name || c.title,
+            title: c.title || c.name,
+            image: c.image || c.image_url,
+            description: c.description || '',
+            minimumOrder: c.minimum_order || c.minimumOrder,
+            bulkPricing: c.bulk_pricing || c.bulkPricing,
+            isActive: c.is_active !== false,
+            displayOrder: Number(c.display_order || 0),
+            createdAt: c.created_at,
+          }));
+        }
+      } catch (e) {}
+
+      if (categories.length === 0) {
+        categories = getLocalCategories();
+      }
+
+      const isAdmin = url.includes('/admin/');
+      const resultList = isAdmin ? categories : categories.filter(c => c.isActive !== false);
+
+      const resBody = { success: true, categories: resultList };
+      if (!isAdmin && global.fastApiCache) global.fastApiCache.set(url, { body: resBody, timestamp: Date.now() });
+      return res.status(200).json(resBody);
+    }
+
+    // ─── POST: Admin Create Category ───
+    if (url.match(/\/api\/v1\/admin\/categories(\?.*)?$/) && req.method === 'POST') {
+      const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+      const rawTitle = (body.title || body.name || '').trim();
+      if (!rawTitle) {
+        return res.status(400).json({ success: false, message: 'Category title/name is required' });
+      }
+
+      const rawSlug = (body.slug || rawTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')).trim();
+      const newCategory = {
+        id: rawSlug,
+        slug: rawSlug,
+        name: rawTitle,
+        title: rawTitle,
+        image: body.image || body.imageUrl || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904994/urvaa/images/categories/tribal-araku.jpg',
+        description: body.description || '',
+        minimumOrder: body.minimumOrder || '',
+        bulkPricing: body.bulkPricing || '',
+        isActive: body.isActive !== false,
+        displayOrder: Number(body.displayOrder || 0),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      try {
+        await supabase.from('store_categories').insert({
+          id: newCategory.id,
+          slug: newCategory.slug,
+          name: newCategory.name,
+          title: newCategory.title,
+          image: newCategory.image,
+          description: newCategory.description,
+          minimum_order: newCategory.minimumOrder,
+          bulk_pricing: newCategory.bulkPricing,
+          is_active: newCategory.isActive,
+          display_order: newCategory.displayOrder,
+        });
+      } catch (e) {}
+
+      const localList = getLocalCategories();
+      const existingIdx = localList.findIndex(c => c.id === newCategory.id || c.slug === newCategory.slug);
+      if (existingIdx !== -1) {
+        localList[existingIdx] = newCategory;
+      } else {
+        localList.push(newCategory);
+      }
+      saveLocalCategories(localList);
+
+      if (global.fastApiCache) global.fastApiCache.clear();
+      return res.status(201).json({ success: true, category: newCategory, message: 'Category added successfully' });
+    }
+
+    // ─── PUT: Admin Update Category ───
+    if (url.match(/\/api\/v1\/admin\/categories\/[^/]+$/) && req.method === 'PUT') {
+      const catId = url.split('/').pop().split('?')[0];
+      const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+
+      try {
+        await supabase.from('store_categories').update({
+          name: body.title || body.name,
+          title: body.title || body.name,
+          slug: body.slug || catId,
+          image: body.image || body.imageUrl,
+          description: body.description,
+          minimum_order: body.minimumOrder,
+          bulk_pricing: body.bulkPricing,
+          is_active: body.isActive !== false,
+          display_order: Number(body.displayOrder || 0),
+          updated_at: new Date().toISOString(),
+        }).or(`id.eq.${catId},slug.eq.${catId}`);
+      } catch (e) {}
+
+      const localList = getLocalCategories();
+      const idx = localList.findIndex(c => c.id === catId || c.slug === catId);
+      let updatedCat = null;
+      if (idx !== -1) {
+        localList[idx] = {
+          ...localList[idx],
+          ...body,
+          name: body.title || body.name || localList[idx].name,
+          title: body.title || body.name || localList[idx].title,
+          updatedAt: new Date().toISOString(),
+        };
+        saveLocalCategories(localList);
+        updatedCat = localList[idx];
+      }
+
+      if (global.fastApiCache) global.fastApiCache.clear();
+      return res.status(200).json({ success: true, category: updatedCat, message: 'Category updated successfully' });
+    }
+
+    // ─── DELETE: Admin Delete Category ───
+    if (url.match(/\/api\/v1\/admin\/categories\/[^/]+$/) && req.method === 'DELETE') {
+      const catId = url.split('/').pop().split('?')[0];
+
+      try {
+        await supabase.from('store_categories').delete().or(`id.eq.${catId},slug.eq.${catId}`);
+      } catch (e) {}
+
+      let localList = getLocalCategories();
+      localList = localList.filter(c => c.id !== catId && c.slug !== catId);
+      saveLocalCategories(localList);
+
+      if (global.fastApiCache) global.fastApiCache.clear();
+      return res.status(200).json({ success: true, message: 'Category deleted successfully' });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // ─── REVIEWS & FEEDBACK API (Product Ratings, Reviews, Suggestions) ───
+    // ═══════════════════════════════════════════════════════════════════════
+
+    // ─── GET: Reviews (filtered by product or all) ───
+    if ((url.includes('/api/v1/reviews') || url.includes('/reviews')) && req.method === 'GET') {
+      const urlObj = new URL(url, 'http://localhost');
+      const productId = urlObj.searchParams.get('productId') || url.split('/products/')[1]?.split('/')[0] || '';
+
+      let allReviews = [];
+      try {
+        const { data, error } = await supabase.from('product_reviews').select('*').order('created_at', { ascending: false });
+        if (!error && data && data.length > 0) {
+          allReviews = data;
+        }
+      } catch (e) {}
+
+      if (allReviews.length === 0) {
+        allReviews = getLocalReviews();
+      }
+
+      const reviews = productId
+        ? allReviews.filter(r => r.productId === productId || r.productId === 'all')
+        : allReviews;
+
+      return res.status(200).json({ success: true, reviews });
+    }
+
+    // ─── POST: Submit Customer Review & Feedback ───
+    if ((url.includes('/api/v1/reviews') || url.includes('/reviews')) && req.method === 'POST') {
+      const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+      const newReview = {
+        id: `rev_${Date.now()}`,
+        productId: body.productId || 'all',
+        productName: body.productName || 'URVA Specialty',
+        authorName: (body.authorName || body.name || 'Verified Buyer').trim(),
+        authorLocation: (body.authorLocation || body.location || body.city || 'India').trim(),
+        rating: Math.min(5, Math.max(1, Number(body.rating) || 5)),
+        title: (body.title || 'Great Product & Experience!').trim(),
+        comment: (body.comment || body.review || '').trim(),
+        suggestion: (body.suggestion || '').trim(),
+        verifiedPurchase: true,
+        helpfulCount: 1,
+        createdAt: new Date().toISOString(),
+      };
+
+      if (!newReview.comment) {
+        return res.status(400).json({ success: false, message: 'Review feedback comment is required' });
+      }
+
+      try {
+        await supabase.from('product_reviews').insert({
+          id: newReview.id,
+          product_id: newReview.productId,
+          product_name: newReview.productName,
+          author_name: newReview.authorName,
+          author_location: newReview.authorLocation,
+          rating: newReview.rating,
+          title: newReview.title,
+          comment: newReview.comment,
+          suggestion: newReview.suggestion,
+          verified_purchase: true,
+          helpful_count: 1,
+        });
+      } catch (e) {}
+
+      const localRevs = getLocalReviews();
+      localRevs.unshift(newReview);
+      saveLocalReviews(localRevs);
+
+      return res.status(201).json({
+        success: true,
+        review: newReview,
+        message: 'Thank you for your valuable review & feedback! It has been posted.',
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // ─── STORE SETTINGS & CONFIGURATION API ───
+    // ═══════════════════════════════════════════════════════════════════════
+
+    // ─── GET: Store Settings ───
+    if ((url.includes('/api/v1/store/settings') || url.includes('/api/v1/admin/settings')) && req.method === 'GET') {
+      let settings = {};
+      try {
+        const { data, error } = await supabase.from('store_settings').select('settings').single();
+        if (!error && data?.settings) {
+          settings = data.settings;
+        }
+      } catch (e) {}
+
+      if (!settings || Object.keys(settings).length === 0) {
+        settings = getLocalSettings();
+      }
+
+      return res.status(200).json({ success: true, settings });
+    }
+
+    // ─── PUT: Update Store Settings (Admin) ───
+    if (url.includes('/api/v1/admin/settings') && req.method === 'PUT') {
+      const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+      const current = getLocalSettings();
+      const updated = {
+        ...current,
+        ...body,
+        updatedAt: new Date().toISOString(),
+      };
+
+      try {
+        await supabase.from('store_settings').upsert({ id: 'primary_settings', settings: updated });
+      } catch (e) {}
+
+      saveLocalSettings(updated);
+      if (global.fastApiCache) global.fastApiCache.clear();
+
+      return res.status(200).json({ success: true, settings: updated, message: 'Store preferences and administrative controls saved successfully' });
     }
 
     // ─── Fallback: Return all products ───

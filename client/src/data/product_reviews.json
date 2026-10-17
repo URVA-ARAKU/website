@@ -1,0 +1,72 @@
+[
+  {
+    "id": "rev_001",
+    "productId": "all",
+    "productName": "Urvaa Araku Arabica Coffee Powder",
+    "authorName": "Suresh V.",
+    "authorLocation": "Hyderabad, Telangana",
+    "rating": 5,
+    "title": "Unmatched aroma and authentic Araku taste!",
+    "comment": "The aroma fills the entire kitchen as soon as you open the pouch. Filter coffee made with this brings the authentic Araku hilltop vibe. Freshly ground and wonderfully balanced acidity. Highly recommended!",
+    "suggestion": "Would love an 80:20 chicory blend variant as well for traditional South Indian morning filter coffee lovers.",
+    "verifiedPurchase": true,
+    "helpfulCount": 24,
+    "createdAt": "2026-09-12T08:30:00.000Z"
+  },
+  {
+    "id": "rev_002",
+    "productId": "all",
+    "productName": "Urvaa Unpasteurized Raw Honey",
+    "authorName": "Dr. Lakshmi Priya",
+    "authorLocation": "Visakhapatnam, AP",
+    "rating": 5,
+    "title": "Genuine raw forest honey — no sugar syrup adulteration",
+    "comment": "Tested this with warm water and on a flame; this is 100% genuine raw multi-flora forest honey. You can even taste the mild floral wild notes from Araku's forest flora. Kudos to URVA for empowering tribal collectors.",
+    "suggestion": "Please introduce 1kg glass jar packing option alongside the 500g bottle.",
+    "verifiedPurchase": true,
+    "helpfulCount": 19,
+    "createdAt": "2026-09-18T14:15:00.000Z"
+  },
+  {
+    "id": "rev_003",
+    "productId": "all",
+    "productName": "Thati Bellam (Palm Jaggery)",
+    "authorName": "Ramesh Kumar K.",
+    "authorLocation": "Bengaluru, Karnataka",
+    "rating": 5,
+    "title": "Pure Godavari traditional Thati Bellam!",
+    "comment": "It's so hard to find authentic Palm Jaggery without chemical clarifiers in Bangalore. This has the authentic dark hue, melt-in-the-mouth texture, and rich mineral flavor. Perfect for our daily morning chai.",
+    "suggestion": "A powdered palm jaggery option would make it even more convenient for baking and daily tea.",
+    "verifiedPurchase": true,
+    "helpfulCount": 15,
+    "createdAt": "2026-09-28T11:45:00.000Z"
+  },
+  {
+    "id": "rev_004",
+    "productId": "all",
+    "productName": "Siali and Modugu Leaf Plates (12-inch)",
+    "authorName": "Anand Mohan P.",
+    "authorLocation": "Vijayawada, AP",
+    "rating": 5,
+    "title": "Sturdy, eco-friendly, and naturally stitched",
+    "comment": "Ordered 200 plates for a traditional family puja. The leaves are sturdy, clean, and didn't leak hot sambar or rasam at all. Everyone appreciated using eco-friendly natural plates instead of plastic.",
+    "suggestion": "Bundle leaf bowls (donnas) with the 12-inch plates as a complete festive banquet set.",
+    "verifiedPurchase": true,
+    "helpfulCount": 31,
+    "createdAt": "2026-10-02T16:20:00.000Z"
+  },
+  {
+    "id": "rev_005",
+    "productId": "all",
+    "productName": "Organic Turmeric (High Curcumin)",
+    "authorName": "Praneetha Rao",
+    "authorLocation": "Chennai, Tamil Nadu",
+    "rating": 5,
+    "title": "Rich color and noticeably high curcumin content",
+    "comment": "Just a small pinch gives a deep golden color and distinct earthy fragrance. This is clearly unadulterated high-grade organic turmeric. Superb quality and swift delivery by APSRTC Cargo.",
+    "suggestion": "Keep the airtight zip-lock seal pouch packaging as it preserves potency very well.",
+    "verifiedPurchase": true,
+    "helpfulCount": 12,
+    "createdAt": "2026-10-08T09:10:00.000Z"
+  }
+]

@@ -12,7 +12,9 @@ import {
   FaImage,
   FaChevronLeft,
   FaChevronRight,
-  FaQrcode
+  FaQrcode,
+  FaTags,
+  FaCog
 } from 'react-icons/fa';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 
@@ -41,11 +43,13 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
     { to: '/admin/dashboard', label: 'Dashboard', icon: FaTachometerAlt },
     { to: '/admin/banners', label: 'Banners & Campaigns', icon: FaImage },
     { to: '/admin/products', label: 'Products Catalog', icon: FaBox },
+    { to: '/admin/categories', label: 'Categories Management', icon: FaTags },
     { to: '/admin/featured', label: 'Featured Items', icon: FaStar },
     { to: '/admin/orders', label: 'Orders', icon: FaClipboardList },
     { to: '/admin/transactions', label: 'UPI Payments & Proofs', icon: FaQrcode },
     { to: '/admin/customers', label: 'Customers', icon: FaUsers },
     { to: '/admin/coupons', label: 'Coupons & Promos', icon: FaMoneyCheckAlt },
+    { to: '/admin/settings', label: 'Store Settings', icon: FaCog },
   ];
 
   return (

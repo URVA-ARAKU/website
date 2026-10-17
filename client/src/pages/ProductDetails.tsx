@@ -18,7 +18,9 @@ import {
   FaArrowLeft,
   FaTimes,
   FaShoppingBag,
+  FaBolt,
 } from 'react-icons/fa';
+import ProductReviews from '../components/ProductReviews';
 import { useProductDetailsQuery } from '../redux/api/product.api';
 import { addToCart, decrementCartItem, incrementCartItem } from '../redux/reducers/cart.reducer';
 import { RootState } from '../redux/store';
@@ -196,7 +198,7 @@ const ProductDetails: React.FC = () => {
     if (!resolvedProduct) return;
     e.preventDefault();
     handleAddToCart(undefined, quantity);
-    navigate('/cart');
+    navigate('/shipping');
   };
 
   const handleShare = () => {
@@ -669,17 +671,17 @@ const ProductDetails: React.FC = () => {
                   )}
                 </div>
 
-                {/* Primary CTA Buttons */}
-                <div className="space-y-2 pt-1">
+                {/* Primary CTA Buttons - Directly Next to Each Other */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="w-full bg-[#5A3825] hover:bg-[#3F2618] text-[#F4F1EA] font-semibold text-xs py-3.5 rounded-lg uppercase tracking-wider shadow-sm hover:shadow transition-all flex items-center justify-center gap-2"
+                    className="w-full bg-[#FAF8F4] hover:bg-[#EFEAE1] text-[#5A3825] border-2 border-[#5A3825] font-bold text-xs py-3.5 px-3 rounded-xl uppercase tracking-wider shadow-sm hover:shadow transition-all flex items-center justify-center gap-2"
                   >
-                    <FaShoppingBag className="text-xs" />
+                    <FaShoppingBag className="text-sm text-[#5A3825]" />
                     <span>
                       {existingCartItem
-                        ? `Add Another (${selectedVariety?.label})`
+                        ? `Add More`
                         : `Add To Cart • ₹${price * quantity}`}
                     </span>
                   </button>
@@ -687,9 +689,10 @@ const ProductDetails: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleBuyNow}
-                    className="w-full bg-[#8B5A2B] hover:bg-[#70441E] text-white font-semibold text-xs py-3.5 rounded-lg uppercase tracking-wider shadow-sm hover:shadow transition-all flex items-center justify-center gap-2"
+                    className="w-full bg-[#8B5A2B] hover:bg-[#70441E] text-white font-bold text-xs py-3.5 px-3 rounded-xl uppercase tracking-wider shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 group"
                   >
-                    <span>BUY NOW WITH FAST CHECKOUT</span>
+                    <FaBolt className="text-sm text-amber-300 group-hover:scale-110 transition-transform" />
+                    <span>Buy Now</span>
                   </button>
                 </div>
 
@@ -768,6 +771,12 @@ const ProductDetails: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Customer Reviews & Feedback Section */}
+        <ProductReviews
+          productId={resolvedProduct?._id}
+          productName={resolvedProduct?.name}
+        />
       </div>
 
       {/* ─── Lightbox Fullscreen Modal ─── */}

@@ -36,6 +36,8 @@ const AdminFeaturedProducts = lazy(() => import('./pages/admin/FeaturedProduct')
 const AdminBanners = lazy(() => import('./pages/admin/AdminBanners'));
 const AdminManageProduct = lazy(() => import('./components/admin/ManageProduct'));
 const AdminOrderDetails = lazy(() => import('./pages/admin/AdmiOrderDetails'));
+const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'));
+const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'));
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
 
 // Other pages
@@ -83,6 +85,7 @@ const App: React.FC = () => {
                                 <Route path="dashboard" element={<AdminDashboard />} />
                                 <Route path="banners" element={<AdminBanners />} />
                                 <Route path="products" element={<AdminProducts />} />
+                                <Route path="categories" element={<AdminCategories />} />
                                 <Route path="featured" element={<AdminFeaturedProducts />} />
                                 <Route path="products/new" element={<AdminAddProduct />} />
                                 <Route path="products/:productId" element={<AdminManageProduct />} />
@@ -91,6 +94,7 @@ const App: React.FC = () => {
                                 <Route path="coupons" element={<AdminCoupons />} />
                                 <Route path="orders" element={<AdminOrders />} />
                                 <Route path="orders/:orderId" element={<AdminOrderDetails />} />
+                                <Route path="settings" element={<AdminSettings />} />
                             </Route>
 
                             {/* Fallback route */}

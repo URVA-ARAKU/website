@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { 
+  useCategoriesQuery,
   useDeleteProductMutation, 
   useFeatureProductMutation, 
   useProductDetailsQuery, 
@@ -51,6 +52,17 @@ const AdminManageProduct: React.FC = () => {
   };
 
   const [nameUpdate, setNameUpdate] = useState<string>('');
+  const { data: categoriesData } = useCategoriesQuery('');
+  const availableCategories = categoriesData?.categories && categoriesData.categories.length > 0 
+    ? categoriesData.categories 
+    : [
+        'Tribal Araku Products',
+        'Mana Godavari Foods',
+        'Eco-Friendly Products',
+        'Swadesi Handlooms',
+        'Kadiyam Plants'
+      ];
+
   const [categoryUpdate, setCategoryUpdate] = useState<string>('');
   const [priceUpdate, setPriceUpdate] = useState<number>(0);
   const [stockUpdate, setStockUpdate] = useState<number>(0);
@@ -366,11 +378,9 @@ const AdminManageProduct: React.FC = () => {
                     className="w-full px-4 py-2.5 rounded-xl border border-neutral-200 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10 bg-neutral-50 focus:bg-white font-medium text-neutral-900"
                     required
                   >
-                    <option value="Tribal Araku Products">Tribal Araku Products</option>
-                    <option value="Mana Godavari Foods">Mana Godavari Foods</option>
-                    <option value="Eco-Friendly Products">Eco-Friendly Products</option>
-                    <option value="Swadesi Handlooms">Swadesi Handlooms</option>
-                    <option value="Kadiyam Plants">Kadiyam Plants</option>
+                    {availableCategories.map((c: string) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
                   </select>
                 </div>
 

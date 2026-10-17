@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useNewProductMutation } from '../../redux/api/product.api';
+import { useCategoriesQuery, useNewProductMutation } from '../../redux/api/product.api';
 import { notify } from '../../utils/util';
 import { CustomError } from '../../types/api-types';
 import BackButton from '../common/BackBtn';
@@ -33,6 +33,17 @@ export type CandleVariantItem = ProductVariantItem;
 
 const AdminAddProduct: React.FC = () => {
   const navigate = useNavigate();
+  const { data: categoriesData } = useCategoriesQuery('');
+  const availableCategories = categoriesData?.categories && categoriesData.categories.length > 0 
+    ? categoriesData.categories 
+    : [
+        'Tribal Araku Products',
+        'Mana Godavari Foods',
+        'Eco-Friendly Products',
+        'Swadesi Handlooms',
+        'Kadiyam Plants'
+      ];
+
   const [formData, setFormData] = useState({
     name: '',
     category: 'Tribal Araku Products',
@@ -246,11 +257,9 @@ const AdminAddProduct: React.FC = () => {
                 className="w-full px-4 py-2.5 rounded-xl border border-neutral-200 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10 bg-neutral-50 focus:bg-white font-medium text-neutral-900"
                 required
               >
-                <option value="Tribal Araku Products">Tribal Araku Products</option>
-                <option value="Mana Godavari Foods">Mana Godavari Foods</option>
-                <option value="Eco-Friendly Products">Eco-Friendly Products</option>
-                <option value="Swadesi Handlooms">Swadesi Handlooms</option>
-                <option value="Kadiyam Plants">Kadiyam Plants</option>
+                {availableCategories.map((c: string) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
               </select>
             </div>
 

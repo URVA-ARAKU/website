@@ -10,6 +10,9 @@ import { statsApi } from "./api/stats.api";
 import { adminApi } from "./api/admin.api";
 import { razorpayApi } from "./api/razorpay.api";
 import { bannerApi } from "./api/banner.api";
+import { categoryApi } from "./api/category.api";
+import { reviewApi } from "./api/review.api";
+import { settingsApi } from "./api/settings.api";
 
 const store = configureStore({
     reducer: {
@@ -24,6 +27,9 @@ const store = configureStore({
         [adminApi.reducerPath]: adminApi.reducer,
         [razorpayApi.reducerPath]: razorpayApi.reducer,
         [bannerApi.reducerPath]: bannerApi.reducer,
+        [categoryApi.reducerPath]: categoryApi.reducer,
+        [reviewApi.reducerPath]: reviewApi.reducer,
+        [settingsApi.reducerPath]: settingsApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(
@@ -35,7 +41,10 @@ const store = configureStore({
             statsApi.middleware,
             adminApi.middleware,
             razorpayApi.middleware,
-            bannerApi.middleware
+            bannerApi.middleware,
+            categoryApi.middleware,
+            reviewApi.middleware,
+            settingsApi.middleware
         )
 });
 

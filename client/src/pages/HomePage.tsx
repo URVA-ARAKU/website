@@ -5,6 +5,7 @@ import ShopByCategory from '../components/ShopByCategory';
 import PopularProducts from '../components/PopularProduct';
 import CommunityGallery from '../components/CommunityGallery';
 import CommunityVideos from '../components/CommunityVideos';
+import YouTubeSection from '../components/YouTubeSection';
 import CustomerTestimonials from '../components/CustomerTestimonials';
 import ExploreProducts from '../components/ExploreProducts';
 import { useLatestProductsQuery } from '../redux/api/product.api';
@@ -95,12 +96,17 @@ const HomePage: React.FC = () => {
         <CommunityVideos />
       </div>
 
-      {/* ─── 9. Customer Testimonials ─── */}
+      {/* ─── 9. Official YouTube Channel & Documentaries Showcase ─── */}
+      <div className="content-auto">
+        <YouTubeSection />
+      </div>
+
+      {/* ─── 10. Customer Testimonials ─── */}
       <div className="content-auto">
         <CustomerTestimonials />
       </div>
 
-      {/* ─── 10. Frequently Asked Questions (FAQ Section) ─── */}
+      {/* ─── 11. Frequently Asked Questions (FAQ Section) ─── */}
       <div className="content-auto">
         <FAQSection />
       </div>

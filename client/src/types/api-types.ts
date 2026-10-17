@@ -357,3 +357,117 @@ export interface BannerResponse {
     message?: string;
 }
 
+// ─── Categories Management ───
+export interface CategoryItem {
+    id: string;
+    slug: string;
+    name: string;
+    title: string;
+    image?: string;
+    description?: string;
+    minimumOrder?: string;
+    bulkPricing?: string;
+    isActive: boolean;
+    displayOrder?: number;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface CategoriesListResponse {
+    success: boolean;
+    categories: CategoryItem[];
+}
+
+export interface CategoryResponse {
+    success: boolean;
+    category: CategoryItem;
+    message?: string;
+}
+
+// ─── Customer Reviews & Feedback ───
+export interface ProductReview {
+    id: string;
+    productId: string;
+    productName: string;
+    authorName: string;
+    authorLocation?: string;
+    rating: number;
+    title: string;
+    comment: string;
+    suggestion?: string;
+    verifiedPurchase: boolean;
+    helpfulCount?: number;
+    createdAt: string;
+}
+
+export interface ReviewsResponse {
+    success: boolean;
+    reviews: ProductReview[];
+}
+
+export interface ReviewResponse {
+    success: boolean;
+    review: ProductReview;
+    message?: string;
+}
+
+export interface NewReviewRequest {
+    productId?: string;
+    productName?: string;
+    authorName: string;
+    authorLocation?: string;
+    rating: number;
+    title: string;
+    comment: string;
+    suggestion?: string;
+}
+
+// ─── Store Settings & Preferences ───
+export interface YouTubeVideoItem {
+    id: string;
+    title: string;
+    subtitle?: string;
+}
+
+export interface StoreSettings {
+    storeName: string;
+    tagline: string;
+    description?: string;
+    supportEmail: string;
+    supportPhone: string;
+    whatsappNumber: string;
+    officeAddress: string;
+    
+    upiId: string;
+    upiPayeeName: string;
+    qrCodeUrl: string;
+    enableCod: boolean;
+    codMaxAmount?: number;
+    
+    freeShippingThreshold: number;
+    standardShippingFee: number;
+    expressShippingFee?: number;
+    shippingPartner?: string;
+    
+    youtubeChannelUrl: string;
+    youtubeChannelName?: string;
+    featuredYoutubeVideoId: string;
+    youtubeVideos?: YouTubeVideoItem[];
+    
+    instagramUrl?: string;
+    facebookUrl?: string;
+    
+    metaTitle?: string;
+    metaDescription?: string;
+    
+    orderAutoConfirm?: boolean;
+    maintenanceMode?: boolean;
+    updatedAt?: string;
+}
+
+export interface StoreSettingsResponse {
+    success: boolean;
+    settings: StoreSettings;
+    message?: string;
+}
+
