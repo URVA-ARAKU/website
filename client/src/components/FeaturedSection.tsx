@@ -61,7 +61,7 @@ const FeaturedSection: React.FC = () => {
 
   return (
     <section
-      className="relative h-[clamp(20rem,55vw,44rem)] w-full overflow-hidden bg-[#111111] group"
+      className="relative w-full overflow-hidden bg-[#111111] group aspect-[2/1] sm:aspect-[2.2/1] md:aspect-auto md:h-[clamp(20rem,55vw,44rem)]"
       role="region"
       aria-label="URVA stories from rural India"
       aria-roledescription="carousel"
