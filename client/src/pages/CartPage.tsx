@@ -102,7 +102,7 @@ const Cart: React.FC = () => {
                     <div key={item.productId} className="bg-[#F4F1EA]/70 p-4 rounded-xl border border-[#E2D9CC] flex flex-col gap-3">
                       <div className="flex items-center gap-3">
                         <Link
-                          to={`/product/${item.productId}`}
+                          to={`/product/${item.productId.split('_')[0]}`}
                           className="flex-shrink-0"
                         >
                           <img
@@ -115,7 +115,7 @@ const Cart: React.FC = () => {
                           />
                         </Link>
                         <div className="flex-1 min-w-0">
-                          <Link to={`/product/${item.productId}`}>
+                          <Link to={`/product/${item.productId.split('_')[0]}`}>
                             <h3 className="font-semibold text-sm text-[#5A3825] truncate">{item.name}</h3>
                           </Link>
                           <p className="text-xs text-[#8C7364]">₹ {item.price.toFixed(2)} per unit</p>
@@ -169,7 +169,7 @@ const Cart: React.FC = () => {
                         <tr className="hover:bg-[#FAF8F4]/80 transition-colors" key={item.productId}>
                           <td className="p-4">
                             <Link
-                              to={`/product/${item.productId}`}
+                              to={`/product/${item.productId.split('_')[0]}`}
                               className="flex items-center space-x-3 group"
                             >
                               <img

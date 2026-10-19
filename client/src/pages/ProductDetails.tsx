@@ -45,14 +45,16 @@ const ProductDetails: React.FC = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
 
+  const baseProductId = productId ? productId.split('_')[0] : '';
+
   // API query directly from Database
-  const { data, isLoading, isError } = useProductDetailsQuery(productId || '', {
-    skip: !productId,
+  const { data, isLoading, isError } = useProductDetailsQuery(baseProductId, {
+    skip: !baseProductId,
   });
 
   // Resolve Product Data strictly from Database
   const resolvedProduct = data?.product;
-  const currentProductId = productId || (resolvedProduct as any)?.id || resolvedProduct?._id || '';
+  const currentProductId = baseProductId || (resolvedProduct as any)?.id || resolvedProduct?._id || '';
 
   // Customer reviews strictly from database / live store
   const { data: reviewsData } = useGetReviewsQuery(currentProductId, {
@@ -325,12 +327,12 @@ const ProductDetails: React.FC = () => {
                 <FaExpand className="text-xs" />
               </button>
 
-              {/* Large Image Canvas */}
-              <div className="relative aspect-4/3 sm:aspect-square w-full rounded-xl overflow-hidden bg-neutral-50 flex items-center justify-center">
+              {/* Large Image Canvas — 1:1 square ratio matching 1024x1024 images */}
+              <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-neutral-50 flex items-center justify-center">
                 <img
                   src={activeImage || resolvedProduct.photo}
                   alt={resolvedProduct.name}
-                  className="w-full h-full object-contain p-2 sm:p-4 transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-opacity duration-300"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png';
                   }}

@@ -54,23 +54,23 @@ const PopularProducts: React.FC<PopularProductsProps> = ({ products = [] }) => {
     <section className="pt-2 pb-12 sm:pt-4 sm:pb-16 bg-[#F4F1EA] border-b border-[#E2D9CC] font-sans">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-5 sm:mb-6 gap-3">
-          <div className="text-center md:text-left">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#5A3825] tracking-tight font-sans">
+        <div className="flex flex-row items-center justify-between mb-4 sm:mb-6 gap-2">
+          <div className="text-left">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#5A3825] tracking-tight font-sans text-left">
               Our Best Sellers
             </h2>
           </div>
 
-          {/* Navigation Controls & View All Link */}
-          <div className="flex items-center justify-center md:justify-end gap-3 shrink-0">
+          {/* Navigation Controls & Explore All Link */}
+          <div className="flex items-center justify-end gap-2 shrink-0">
             <Link
               to="/products"
-              className="text-xs sm:text-sm font-medium text-[#8B5A2B] hover:text-[#5A3825] underline-offset-4 hover:underline transition-colors mr-2"
+              className="text-[11px] sm:text-xs font-medium text-[#8B5A2B] hover:text-[#5A3825] underline-offset-2 hover:underline transition-colors whitespace-nowrap"
             >
-              Explore All Products &rarr;
+              Explore All &rarr;
             </Link>
 
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={() => handleScroll('left')}

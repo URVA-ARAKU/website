@@ -23,7 +23,6 @@ export const DEFAULT_CATEGORIES: CategoryItem[] = [
   {
     id: 'shop-all',
     name: 'Shop All',
-    subtitle: 'All Products',
     image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440007/urvaa/categories/shop-all.png',
     imageAlt: 'Browse all URVA products and collections',
     link: '/products',
@@ -33,7 +32,6 @@ export const DEFAULT_CATEGORIES: CategoryItem[] = [
   {
     id: 'tribal-araku-products',
     name: 'Araku Tribal Products',
-    subtitle: 'Coffee & Wild Honey',
     image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440012/urvaa/categories/tribal-araku-products.png',
     imageAlt: 'Araku tribal coffee, forest honey and organic turmeric',
     link: '/category/tribal-araku-products',
@@ -43,7 +41,6 @@ export const DEFAULT_CATEGORIES: CategoryItem[] = [
   {
     id: 'mana-godavari-foods',
     name: 'Mana Godavari Foods',
-    subtitle: 'Palm Jaggery & Sweets',
     image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440015/urvaa/categories/mana-godavari-foods.png',
     imageAlt: 'Traditional Godavari palm jaggery, putharekulu, and regional sweets',
     link: '/category/mana-godavari-foods',
@@ -53,7 +50,6 @@ export const DEFAULT_CATEGORIES: CategoryItem[] = [
   {
     id: 'eco-friendly-products',
     name: 'Eco-Friendly Products',
-    subtitle: 'Leaf Plates & Dhoop',
     image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440018/urvaa/categories/eco-friendly-products.png',
     imageAlt: 'Siali leaf plates and natural herbal dhoop',
     link: '/category/eco-friendly-products',
@@ -63,7 +59,6 @@ export const DEFAULT_CATEGORIES: CategoryItem[] = [
   {
     id: 'swadesi-handlooms',
     name: 'Swadesi Handlooms',
-    subtitle: 'Pure Cotton & Sarees',
     image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440020/urvaa/categories/swadesi-handlooms.png',
     imageAlt: 'Artisanal handwoven sarees and cotton textiles',
     link: '/category/swadesi-handlooms',
@@ -73,7 +68,6 @@ export const DEFAULT_CATEGORIES: CategoryItem[] = [
   {
     id: 'kadiyam-plants',
     name: 'Kadiyam Plants',
-    subtitle: 'Nursery & Saplings',
     image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440023/urvaa/categories/kadiyam-plants.png',
     imageAlt: 'Lush exotic nursery plants and fruit saplings',
     link: '/category/kadiyam-plants',
@@ -104,35 +98,25 @@ export function ShopByCategory({
     if (items && items.length > 0) return items;
     if (catData?.categories && catData.categories.length > 0) {
       const active = catData.categories.filter((c: any) => c.isActive !== false);
-      const totalCount = active.reduce((sum: number, c: any) => sum + (Number(c.productCount) || 0), 0);
       return [
         {
           id: 'shop-all',
           name: 'Shop All',
-          subtitle: totalCount > 0 ? `${totalCount} ${totalCount === 1 ? 'Product' : 'Products'}` : 'All Products',
           image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440007/urvaa/categories/shop-all.png',
           imageAlt: 'Browse all URVA products and collections',
           link: '/products',
           badge: 'All',
           highlightColor: '#C79A56',
         },
-        ...active.map((c: any) => {
-          const count = Number(c.productCount);
-          let label = c.tagline || c.subtitle || '';
-          if (!label && !isNaN(count)) {
-            label = count > 0 ? `${count} ${count === 1 ? 'Product' : 'Products'}` : '';
-          }
-          return {
-            id: c.slug || c.id,
-            name: c.name,
-            subtitle: label,
-            image: c.image || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440007/urvaa/categories/shop-all.png',
-            imageAlt: c.name,
-            link: `/category/${c.slug || c.id}`,
-            badge: c.badge || undefined,
-            highlightColor: c.highlightColor || '#5A3825',
-          };
-        })
+        ...active.map((c: any) => ({
+          id: c.slug || c.id,
+          name: c.name,
+          image: c.image || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440007/urvaa/categories/shop-all.png',
+          imageAlt: c.name,
+          link: `/category/${c.slug || c.id}`,
+          badge: c.badge || undefined,
+          highlightColor: c.highlightColor || '#5A3825',
+        }))
       ];
     }
     return DEFAULT_CATEGORIES;
@@ -158,33 +142,33 @@ export function ShopByCategory({
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-4 sm:mb-5 gap-3">
-          <div className="text-center md:text-left">
+        <div className="flex flex-row items-center justify-between mb-4 sm:mb-5 gap-2">
+          <div className="text-left">
             {eyebrow && (
-              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C7364] block mb-1">
+              <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C7364] block mb-0.5">
                 {eyebrow}
               </span>
             )}
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#5A3825] tracking-tight font-sans">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#5A3825] tracking-tight font-sans text-left">
               {heading}
             </h2>
             {subheading && (
-              <p className="mt-1 text-xs sm:text-sm text-[#8C7364] max-w-xl font-normal leading-relaxed">
+              <p className="mt-0.5 text-xs sm:text-sm text-[#8C7364] max-w-xl font-normal leading-relaxed text-left">
                 {subheading}
               </p>
             )}
           </div>
 
-          {/* Desktop Navigation Arrows & View All Link */}
-          <div className="flex items-center justify-center md:justify-end gap-3 shrink-0">
+          {/* Navigation Arrows & View All Link */}
+          <div className="flex items-center justify-end gap-2 shrink-0">
             <Link
               to="/products"
-              className="text-xs sm:text-sm font-medium text-[#8B5A2B] hover:text-[#5A3825] underline-offset-4 hover:underline transition-colors mr-2"
+              className="text-[11px] sm:text-xs font-medium text-[#8B5A2B] hover:text-[#5A3825] underline-offset-2 hover:underline transition-colors whitespace-nowrap"
             >
-              View All Products &rarr;
+              View All &rarr;
             </Link>
 
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={() => handleScroll('left')}
@@ -257,13 +241,6 @@ export function ShopByCategory({
                 <h3 className="text-xs sm:text-sm font-semibold text-[#5A3825] group-hover:text-[#8B5A2B] transition-colors leading-snug line-clamp-2 max-w-[120px] font-sans">
                   {category.name}
                 </h3>
-
-                {/* Subtitle / Micro Hint */}
-                {category.subtitle && (
-                  <span className="text-[10px] sm:text-[11px] text-[#8C7364] font-normal mt-0.5 line-clamp-1 max-w-[110px] group-hover:text-[#5A3825]">
-                    {category.subtitle}
-                  </span>
-                )}
               </Link>
             ))}
           </div>

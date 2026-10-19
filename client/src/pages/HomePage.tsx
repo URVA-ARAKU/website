@@ -85,7 +85,7 @@ const HomePage: React.FC = () => {
       {/* ─── 6. Explore All Products Grid ─── */}
       <ExploreProducts products={products} />
 
-      {/* ─── 7. Life Across India's Villages (Artisans & Field Gallery) ─── */}
+      {/* ─── 7. Life Across Urva Community  (Artisans & Field Gallery) ─── */}
       <div className="content-auto">
         <CommunityGallery />
       </div>

@@ -59,15 +59,15 @@ export const ExploreProducts: React.FC<ExploreProductsProps> = ({ products = [] 
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 gap-4">
-          <div className="text-center md:text-left">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#5A3825] tracking-tight font-sans">
-              Explore All Products
+        <div className="flex flex-row items-center justify-between mb-6 sm:mb-8 gap-2">
+          <div className="text-left">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#5A3825] tracking-tight font-sans text-left">
+              Explore All
             </h2>
           </div>
 
           {/* Quick Sort Options */}
-          <div className="flex items-center justify-center md:justify-end gap-2 text-xs">
+          <div className="flex items-center justify-end gap-2 text-xs shrink-0">
             <span className="text-[#8C7364] font-medium flex items-center gap-1">
               <FaFilter className="text-[10px] text-[#8B5A2B]" /> Sort:
             </span>
@@ -113,13 +113,13 @@ export const ExploreProducts: React.FC<ExploreProductsProps> = ({ products = [] 
           ))}
         </div>
 
-        {/* View Full Catalog Button */}
+        {/* View All Button */}
         <div className="mt-10 sm:mt-12 text-center">
           <Link
             to="/products"
-            className="inline-flex items-center gap-2 bg-black hover:bg-neutral-800 text-white font-medium text-xs sm:text-sm px-7 py-3.5 rounded-lg shadow-xs hover:shadow-md transition-all tracking-wider uppercase group"
+            className="inline-flex items-center gap-2 bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-medium text-xs sm:text-sm px-7 py-3 rounded-full shadow-xs hover:shadow-md transition-all tracking-wider uppercase group"
           >
-            <span>View Full Catalog</span>
+            <span>View All</span>
             <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
