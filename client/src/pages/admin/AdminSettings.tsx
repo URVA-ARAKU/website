@@ -14,6 +14,7 @@ import {
   FaCheckCircle
 } from 'react-icons/fa';
 import { notify } from '../../utils/util';
+import { parseYouTubeVideoId } from '../../utils/youtube';
 
 const AdminSettings: React.FC = () => {
   const { data, isLoading, refetch } = useGetAdminSettingsQuery();
@@ -110,7 +111,7 @@ const AdminSettings: React.FC = () => {
 
       youtubeChannelUrl: youtubeChannelUrl.trim(),
       youtubeChannelName: youtubeChannelName.trim(),
-      featuredYoutubeVideoId: featuredYoutubeVideoId.trim(),
+      featuredYoutubeVideoId: parseYouTubeVideoId(featuredYoutubeVideoId),
       instagramUrl: instagramUrl.trim(),
       facebookUrl: facebookUrl.trim(),
 
@@ -545,13 +546,13 @@ const AdminSettings: React.FC = () => {
                 <input
                   type="text"
                   value={featuredYoutubeVideoId}
-                  onChange={(e) => setFeaturedYoutubeVideoId(e.target.value)}
-                  placeholder="aN2sDNVf-Js or full YouTube URL"
+                  onChange={(e) => setFeaturedYoutubeVideoId(parseYouTubeVideoId(e.target.value) || e.target.value)}
+                  placeholder="e.g. aN2sDNVf-Js or paste any YouTube URL"
                   className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-[#F4F1EA] text-[#5A3825] text-xs font-mono focus:outline-none"
                 />
                 {featuredYoutubeVideoId && (
                   <a
-                    href={`https://www.youtube.com/watch?v=${featuredYoutubeVideoId}`}
+                    href={`https://www.youtube.com/watch?v=${parseYouTubeVideoId(featuredYoutubeVideoId)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-3.5 py-2 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 text-xs font-semibold shrink-0 transition flex items-center gap-1.5"
@@ -560,9 +561,14 @@ const AdminSettings: React.FC = () => {
                   </a>
                 )}
               </div>
-              <span className="text-[11px] text-[#8C7364] mt-1 block">
-                This video is highlighted on the homepage YouTube Heritage Showcase.
-              </span>
+              <div className="flex flex-wrap items-center justify-between gap-1 text-[11px] text-[#8C7364] mt-1.5">
+                <span>Paste any YouTube video or shorts URL — the 11-char ID is extracted automatically.</span>
+                {featuredYoutubeVideoId && parseYouTubeVideoId(featuredYoutubeVideoId) && (
+                  <span className="font-mono text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">
+                    ID: {parseYouTubeVideoId(featuredYoutubeVideoId)}
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#E2D9CC]">

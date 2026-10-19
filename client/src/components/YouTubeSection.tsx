@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaYoutube, FaPlay, FaExternalLinkAlt, FaCheckCircle, FaTv } from 'react-icons/fa';
 import { useGetStoreSettingsQuery } from '../redux/api/settings.api';
 import { YouTubeVideoItem } from '../types/api-types';
+import { parseYouTubeVideoId, getYouTubeEmbedUrl, getYouTubeThumbnailUrl } from '../utils/youtube';
 
 const defaultVideos: YouTubeVideoItem[] = [
   {
@@ -25,34 +26,55 @@ export const YouTubeSection: React.FC = () => {
   const { data: settingsData } = useGetStoreSettingsQuery();
   const settings = settingsData?.settings;
 
-  const channelUrl = settings?.youtubeChannelUrl || 'https://www.youtube.com/@urvaswadeshi';
+  // Sanitize YouTube channel URL
+  const rawChannelUrl = settings?.youtubeChannelUrl || 'https://www.youtube.com/@urvaswadeshi';
+  const channelUrl = rawChannelUrl.startsWith('http://') || rawChannelUrl.startsWith('https://')
+    ? rawChannelUrl
+    : rawChannelUrl.startsWith('@')
+    ? `https://www.youtube.com/${rawChannelUrl}`
+    : `https://www.youtube.com/@${rawChannelUrl}`;
+
   const channelName = settings?.youtubeChannelName || 'URVA Swadeshi Official';
   const videoList: YouTubeVideoItem[] =
     settings?.youtubeVideos && settings.youtubeVideos.length > 0
       ? settings.youtubeVideos
       : defaultVideos;
 
-  const [activeVideoId, setActiveVideoId] = useState<string>(
-    settings?.featuredYoutubeVideoId || videoList[0]?.id || 'aN2sDNVf-Js'
-  );
+  const initialVideoId = parseYouTubeVideoId(settings?.featuredYoutubeVideoId) || parseYouTubeVideoId(videoList[0]?.id) || 'aN2sDNVf-Js';
+
+  const [activeVideoId, setActiveVideoId] = useState<string>(initialVideoId);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const activeVideo = videoList.find((v) => v.id === activeVideoId) || videoList[0] || {
-    id: activeVideoId,
-    title: 'Discover URVA’s Heritage Stories',
-    subtitle: 'Watch real rural artisans and farmer cooperatives across India.',
-  };
+  // Sync state whenever settings load/update from backend
+  useEffect(() => {
+    if (settings?.featuredYoutubeVideoId) {
+      const cleanId = parseYouTubeVideoId(settings.featuredYoutubeVideoId);
+      if (cleanId) {
+        setActiveVideoId(cleanId);
+      }
+    }
+  }, [settings?.featuredYoutubeVideoId]);
 
-  const handleSelectVideo = (videoId: string) => {
-    setActiveVideoId(videoId);
+  const currentVideoId = parseYouTubeVideoId(activeVideoId) || 'aN2sDNVf-Js';
+
+  const activeVideo =
+    videoList.find((v) => parseYouTubeVideoId(v.id) === currentVideoId) || {
+      id: currentVideoId,
+      title: 'Discover URVA’s Heritage Stories',
+      subtitle: 'Watch real rural artisans and farmer cooperatives across India.',
+    };
+
+  const handleSelectVideo = (rawId: string) => {
+    const cleanId = parseYouTubeVideoId(rawId);
+    setActiveVideoId(cleanId);
     setIsPlaying(true);
   };
 
   return (
-    <section className="bg-[#FAF8F4] border-t border-b border-[#E2D9CC] py-12 sm:py-16">
+    <section className="bg-[#FAF8F4] border-t border-b border-[#E2D9CC] py-10 sm:py-16 font-sans">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Heading & YouTube Channel CTA */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 text-[11px] font-bold uppercase tracking-wider">
@@ -63,10 +85,10 @@ export const YouTubeSection: React.FC = () => {
                 <FaCheckCircle className="text-emerald-600 text-xs" /> Verified Stories
               </span>
             </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[#5A3825]">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[#5A3825] leading-tight">
               Experience Our Rural Heritage in Motion
             </h2>
-            <p className="mt-2 text-xs sm:text-sm text-[#8C7364] max-w-2xl">
+            <p className="mt-2 text-xs sm:text-sm text-[#8C7364] max-w-2xl leading-relaxed">
               Authentic documentary glimpses, harvest traditions, and conversations with the rural
               artisans behind your favorite URVA products.
             </p>
@@ -91,7 +113,7 @@ export const YouTubeSection: React.FC = () => {
             <div className="relative aspect-video w-full bg-black">
               {isPlaying ? (
                 <iframe
-                  src={`https://www.youtube-nocookie.com/embed/${activeVideo.id}?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1`}
+                  src={getYouTubeEmbedUrl(currentVideoId, true)}
                   title={activeVideo.title}
                   className="w-full h-full border-0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -103,10 +125,9 @@ export const YouTubeSection: React.FC = () => {
                   onClick={() => setIsPlaying(true)}
                 >
                   <img
-                    src={`https://img.youtube.com/vi/${activeVideo.id}/maxresdefault.jpg`}
+                    src={getYouTubeThumbnailUrl(currentVideoId, 'hq')}
                     onError={(e) => {
-                      // Fallback to hqdefault if maxres is unavailable
-                      (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${activeVideo.id}/hqdefault.jpg`;
+                      (e.target as HTMLImageElement).src = getYouTubeThumbnailUrl(currentVideoId, 'mq');
                     }}
                     alt={activeVideo.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
@@ -115,17 +136,17 @@ export const YouTubeSection: React.FC = () => {
 
                   {/* Play Button Overlay */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-red-600/90 hover:bg-red-600 text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-110">
-                      <FaPlay className="text-xl sm:text-2xl ml-1 text-white" />
+                    <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-red-600/90 hover:bg-red-600 text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-110">
+                      <FaPlay className="text-lg sm:text-2xl ml-1 text-white" />
                     </div>
                   </div>
 
                   {/* Video Title on Thumbnail */}
-                  <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 pointer-events-none">
-                    <span className="inline-block px-2.5 py-1 rounded-md bg-black/70 backdrop-blur-md text-[11px] font-bold text-amber-300 uppercase tracking-wide mb-2">
+                  <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-6 pointer-events-none">
+                    <span className="inline-block px-2.5 py-0.5 sm:py-1 rounded-md bg-black/70 backdrop-blur-md text-[10px] sm:text-[11px] font-bold text-amber-300 uppercase tracking-wide mb-1 sm:mb-2">
                       Now Playing
                     </span>
-                    <h3 className="text-base sm:text-xl font-bold text-white drop-shadow-md line-clamp-2">
+                    <h3 className="text-sm sm:text-xl font-bold text-white drop-shadow-md line-clamp-2">
                       {activeVideo.title}
                     </h3>
                   </div>
@@ -134,21 +155,21 @@ export const YouTubeSection: React.FC = () => {
             </div>
 
             {/* Video Description Bar */}
-            <div className="bg-[#FAF8F4] p-5 sm:p-6 border-t border-[#E2D9CC]">
+            <div className="bg-[#FAF8F4] p-4 sm:p-6 border-t border-[#E2D9CC]">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <h3 className="text-lg font-serif font-bold text-[#5A3825]">
+                <div className="min-w-0">
+                  <h3 className="text-base sm:text-lg font-serif font-bold text-[#5A3825] truncate">
                     {activeVideo.title}
                   </h3>
                   {activeVideo.subtitle && (
-                    <p className="text-xs sm:text-sm text-[#8C7364] mt-1 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#8C7364] mt-1 leading-relaxed line-clamp-2">
                       {activeVideo.subtitle}
                     </p>
                   )}
                 </div>
                 <div className="shrink-0 flex items-center gap-2">
                   <span className="text-[11px] font-semibold text-[#8C7364]">Presented by</span>
-                  <span className="px-3 py-1 rounded-lg bg-[#F4F1EA] text-[#5A3825] text-xs font-bold border border-[#E2D9CC]">
+                  <span className="px-3 py-1 rounded-lg bg-[#F4F1EA] text-[#5A3825] text-xs font-bold border border-[#E2D9CC] truncate max-w-[180px]">
                     {channelName}
                   </span>
                 </div>
@@ -168,34 +189,35 @@ export const YouTubeSection: React.FC = () => {
               </span>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-2.5 sm:space-y-3">
               {videoList.map((video) => {
-                const isSelected = video.id === activeVideoId;
+                const cleanId = parseYouTubeVideoId(video.id);
+                const isSelected = cleanId === currentVideoId;
                 return (
                   <button
                     key={video.id}
                     type="button"
-                    onClick={() => handleSelectVideo(video.id)}
-                    className={`w-full text-left p-3 rounded-2xl border transition-all duration-300 flex items-center gap-3.5 group ${
+                    onClick={() => handleSelectVideo(cleanId)}
+                    className={`w-full text-left p-2.5 sm:p-3 rounded-2xl border transition-all duration-300 flex items-center gap-3 group ${
                       isSelected
                         ? 'bg-[#FAF8F4] border-[#8B5A2B] ring-2 ring-[#8B5A2B]/20 shadow-md'
                         : 'bg-[#FAF8F4] border-[#E2D9CC] hover:bg-[#F4F1EA] hover:border-[#8C7364]'
                     }`}
                   >
                     {/* Thumbnail */}
-                    <div className="relative w-24 sm:w-28 aspect-video rounded-xl overflow-hidden shrink-0 bg-black">
+                    <div className="relative w-20 sm:w-28 aspect-video rounded-xl overflow-hidden shrink-0 bg-black">
                       <img
-                        src={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
+                        src={getYouTubeThumbnailUrl(cleanId, 'mq')}
                         alt={video.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
                       <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
                         <div
-                          className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                          className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center ${
                             isSelected ? 'bg-red-600 text-white' : 'bg-white/80 text-black'
                           }`}
                         >
-                          <FaPlay className="text-[9px] ml-0.5" />
+                          <FaPlay className="text-[8px] sm:text-[9px] ml-0.5" />
                         </div>
                       </div>
                     </div>
@@ -214,7 +236,7 @@ export const YouTubeSection: React.FC = () => {
                           {video.subtitle}
                         </p>
                       )}
-                      <div className="flex items-center gap-2 mt-1.5">
+                      <div className="flex items-center gap-2 mt-1">
                         <span className="text-[10px] font-semibold text-red-600 flex items-center gap-1">
                           <FaYoutube className="text-xs" /> Watch
                         </span>

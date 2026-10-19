@@ -59,14 +59,39 @@ const FeaturedSection: React.FC = () => {
     setActiveImage((index + heroBanners.length) % heroBanners.length);
   };
 
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    if (distance > 40) {
+      showImage(activeImage + 1);
+    } else if (distance < -40) {
+      showImage(activeImage - 1);
+    }
+  };
+
   return (
     <section
-      className="relative w-full overflow-hidden bg-[#111111] group aspect-[2/1] sm:aspect-[2.2/1] md:aspect-auto md:h-[clamp(20rem,55vw,44rem)]"
+      className="relative w-full overflow-hidden bg-[#111111] group aspect-[2/1] sm:aspect-[2.2/1] md:aspect-auto md:h-[clamp(20rem,55vw,44rem)] touch-pan-y"
       role="region"
       aria-label="URVA stories from rural India"
       aria-roledescription="carousel"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     >
       {/* Background Slides */}
       {heroBanners.map((banner, index) => {
@@ -104,9 +129,9 @@ const FeaturedSection: React.FC = () => {
         );
       })}
 
-      {/* Dots Indicator */}
+      {/* Dots Indicator - Centered at bottom on mobile, bottom-right on desktop */}
       {heroBanners.length > 1 && (
-        <div className="absolute bottom-4 sm:bottom-6 right-6 sm:right-12 z-30 flex items-center gap-2 rounded-full bg-black/50 backdrop-blur-md px-3 py-1.5 border border-white/10">
+        <div className="absolute bottom-2.5 sm:bottom-6 left-1/2 -translate-x-1/2 sm:left-auto sm:right-12 sm:translate-x-0 z-30 flex items-center gap-1.5 sm:gap-2 rounded-full bg-black/60 backdrop-blur-md px-2.5 sm:px-3 py-1 sm:py-1.5 border border-white/10">
           {heroBanners.map((_, index) => (
             <button
               key={index}
@@ -114,8 +139,9 @@ const FeaturedSection: React.FC = () => {
               onClick={() => showImage(index)}
               aria-label={`Go to slide ${index + 1}`}
               aria-current={index === activeImage ? 'true' : undefined}
-              className={`h-2 rounded-full transition-all duration-300 ${index === activeImage ? 'w-6 bg-[#8B5A2B]' : 'w-2 bg-white/50 hover:bg-white'
-                }`}
+              className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
+                index === activeImage ? 'w-5 sm:w-6 bg-[#8B5A2B]' : 'w-1.5 sm:w-2 bg-white/50 hover:bg-white'
+              }`}
             />
           ))}
         </div>

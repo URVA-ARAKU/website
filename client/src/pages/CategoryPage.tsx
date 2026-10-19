@@ -177,7 +177,7 @@ const CategoryPage: React.FC = () => {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3">
                 {data.products.map((product: Product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}

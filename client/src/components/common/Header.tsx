@@ -44,11 +44,19 @@ const Header: React.FC = () => {
       </div>
 
       <header className="bg-[#FAF8F4]/95 text-[#5A3825] border-b border-[#E2D9CC] shadow-xs p-3.5 px-4 md:px-12 relative z-40 transition-all duration-300 backdrop-blur-md">
-        <div className="container mx-auto flex justify-between items-center">
+        <div className="container mx-auto flex justify-between items-center relative">
+          {/* Mobile Left: Explore Products Link */}
+          <div className="flex md:hidden items-center">
+            <Link to="/products" className="flex items-center gap-1.5 text-[#5A3825] hover:text-[#8B5A2B] text-xs font-medium py-1 px-2 rounded-lg hover:bg-[#F4F1EA] transition-colors" aria-label="Explore Products">
+              <FaBox className="text-sm text-[#8B5A2B]" />
+              <span className="text-[11px] font-semibold">Products</span>
+            </Link>
+          </div>
+
           {/* Logo */}
           <div className="absolute left-1/2 flex -translate-x-1/2 items-center md:static md:translate-x-0">
             <Link to="/" className="flex items-center gap-2.5">
-              <img src="https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png" alt="URVA — Delivering the Authentic Rural Aura" className="h-11 w-11 md:h-13 md:w-13 object-contain" />
+              <img src="https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png" alt="URVA — Delivering the Authentic Rural Aura" className="h-10 w-10 sm:h-11 sm:w-11 md:h-13 md:w-13 object-contain" />
               <span className="hidden flex-col text-[#5A3825] md:flex">
                 <span className="text-lg font-bold tracking-tight md:text-2xl font-sans text-[#5A3825]">URVA</span>
                 <span className="hidden text-[9px] font-medium uppercase tracking-[0.14em] text-[#8C7364] md:block">Delivering the Authentic Rural Aura</span>
@@ -79,12 +87,12 @@ const Header: React.FC = () => {
             </Link>
           </div>
 
-          {/* Mobile Quick Action Buttons */}
-          <div className="md:hidden flex items-center gap-4">
-            <Link to="/cart" className="text-[#5A3825] hover:text-[#8B5A2B] transition-colors p-1 relative" aria-label="Cart">
+          {/* Mobile Right: Cart Action */}
+          <div className="md:hidden flex items-center gap-2">
+            <Link to="/cart" className="text-[#5A3825] hover:text-[#8B5A2B] transition-colors p-1.5 relative flex items-center" aria-label="Cart">
               <FaShoppingCart className="text-lg" />
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-2 font-bold text-[9px] w-4 h-4 rounded-full flex items-center justify-center bg-[#8B5A2B] text-white shadow-xs">
+                <span className="absolute -top-1 -right-1 font-bold text-[9px] w-4 h-4 rounded-full flex items-center justify-center bg-[#8B5A2B] text-white shadow-xs">
                   {cartCount}
                 </span>
               )}
