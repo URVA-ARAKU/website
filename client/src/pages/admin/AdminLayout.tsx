@@ -24,7 +24,7 @@ const AdminLoginGate: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input === ADMIN_PASSWORD || input === 'urvaa@Admin2026' || input === 'julinacandles@2026') {
+    if (input === ADMIN_PASSWORD || input === 'urvaa@Admin2026') {
       sessionStorage.setItem(SESSION_KEY, '1');
       // For local/dev convenience: set a temporary admin token so API-protected admin
       // endpoints (which expect a 128-hex token) accept actions. This is only a

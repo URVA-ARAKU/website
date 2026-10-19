@@ -2101,7 +2101,6 @@ export default async function handler(req, res) {
       // Default built-in admin credentials
       const ADMIN_EMAIL = 'admin@urvaswadeshi.in';
       const DEFAULT_ADMIN_HASH = hashAdminPassword('urvaa@2026');
-      const LEGACY_ADMIN_HASH = hashAdminPassword('julinacandles@2026');
       const providedPasswordHash = hashAdminPassword(password);
 
       let isAdminValid = false;
@@ -2112,8 +2111,8 @@ export default async function handler(req, res) {
       };
 
       // 1. Check built-in admin account
-      if ((cleanEmail === ADMIN_EMAIL.toLowerCase() || cleanEmail === 'admin@urvaa.in' || cleanEmail === 'admin@julinacandles.in') && 
-          (providedPasswordHash === DEFAULT_ADMIN_HASH || providedPasswordHash === LEGACY_ADMIN_HASH)) {
+      if ((cleanEmail === ADMIN_EMAIL.toLowerCase() || cleanEmail === 'admin@urvaa.in') && 
+          providedPasswordHash === DEFAULT_ADMIN_HASH) {
         isAdminValid = true;
       } else {
         // 2. Fallback: check Supabase users table for user with role='admin'

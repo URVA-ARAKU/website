@@ -23,8 +23,8 @@ const LoginPage: React.FC = () => {
 
         setIsLoading(true);
         try {
-            // Known demo accounts — skip Supabase auth entirely
-            const demoEmails = ['admin@urvaswadeshi.in', 'customer@urvaswadeshi.in', 'admin@urvaa.in', 'customer@urvaa.in', 'admin@julinacandles.in', 'customer@julinacandles.in'];
+            // Known admin accounts — skip Supabase auth entirely
+            const demoEmails = ['admin@urvaswadeshi.in', 'customer@urvaswadeshi.in', 'admin@urvaa.in', 'customer@urvaa.in'];
             const isDemoAccount = demoEmails.includes(email.toLowerCase());
 
             if (isDemoAccount) {

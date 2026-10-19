@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import ProductCard from '../components/ProductCard';
 import { useSearchProductsQuery } from '../redux/api/product.api';
+import { useGetCategoriesQuery } from '../redux/api/category.api';
 import { Product } from '../types/api-types';
 import { usePageSEO } from '../hooks/usePageSEO';
 import { urvaaCategories } from '../data/categories';
@@ -10,9 +11,36 @@ import { collectionPageSchema, breadcrumbSchema, itemListSchema } from '../seo/s
 
 const CategoryPage: React.FC = () => {
   const { categorySlug } = useParams<{ categorySlug: string }>();
-  const category = categorySlug
-    ? urvaaCategories[categorySlug as keyof typeof urvaaCategories]
-    : undefined;
+  const { data: catData } = useGetCategoriesQuery();
+
+  const category = useMemo(() => {
+    if (!categorySlug) return undefined;
+    const staticMatch = urvaaCategories[categorySlug as keyof typeof urvaaCategories];
+    if (staticMatch) return staticMatch;
+
+    const dynamicMatch = catData?.categories?.find(
+      (c: any) =>
+        c.slug === categorySlug ||
+        c.id === categorySlug ||
+        c.name?.toLowerCase().replace(/\s+/g, '-') === categorySlug?.toLowerCase() ||
+        c.name?.toLowerCase() === categorySlug?.toLowerCase().replace(/-/g, ' ')
+    );
+
+    if (dynamicMatch) {
+      return {
+        title: dynamicMatch.name,
+        description: dynamicMatch.description || (dynamicMatch as any).tagline || `Explore authentic ${dynamicMatch.name} directly from rural artisans.`,
+        heroImage: dynamicMatch.image || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791905009/urvaa/images/hero/from-our-villages.jpg',
+        image: dynamicMatch.image || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791905009/urvaa/images/hero/from-our-villages.jpg',
+        products: [] as string[],
+        highlights: ['100% Genuine', 'Rural Sourced', 'Direct Artisan Support'],
+        minimumOrder: 'Direct Cooperative Sourcing',
+        bulkPricing: 'Custom packing and bulk orders available.',
+      };
+    }
+    return undefined;
+  }, [categorySlug, catData]);
+
   const [page, setPage] = useState(1);
 
   useEffect(() => {

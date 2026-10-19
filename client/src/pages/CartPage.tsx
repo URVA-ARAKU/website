@@ -19,7 +19,6 @@ const Cart: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { cartItems, subTotal, total, discount } = useSelector((state: RootState) => state.cart);
-  const hasDemoItems = cartItems.some((item) => item.productId.startsWith('demo-'));
 
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState('');
@@ -103,7 +102,7 @@ const Cart: React.FC = () => {
                     <div key={item.productId} className="bg-[#F4F1EA]/70 p-4 rounded-xl border border-[#E2D9CC] flex flex-col gap-3">
                       <div className="flex items-center gap-3">
                         <Link
-                          to={item.productId.startsWith('demo-') ? '/products' : `/product/${item.productId}`}
+                          to={`/product/${item.productId}`}
                           className="flex-shrink-0"
                         >
                           <img
@@ -116,7 +115,7 @@ const Cart: React.FC = () => {
                           />
                         </Link>
                         <div className="flex-1 min-w-0">
-                          <Link to={item.productId.startsWith('demo-') ? '/products' : `/product/${item.productId}`}>
+                          <Link to={`/product/${item.productId}`}>
                             <h3 className="font-semibold text-sm text-[#5A3825] truncate">{item.name}</h3>
                           </Link>
                           <p className="text-xs text-[#8C7364]">₹ {item.price.toFixed(2)} per unit</p>
@@ -170,7 +169,7 @@ const Cart: React.FC = () => {
                         <tr className="hover:bg-[#FAF8F4]/80 transition-colors" key={item.productId}>
                           <td className="p-4">
                             <Link
-                              to={item.productId.startsWith('demo-') ? '/products' : `/product/${item.productId}`}
+                              to={`/product/${item.productId}`}
                               className="flex items-center space-x-3 group"
                             >
                               <img
@@ -294,17 +293,11 @@ const Cart: React.FC = () => {
                 </div>
 
                 {/* Proceed Button */}
-                {hasDemoItems && (
-                  <p className="mt-4 rounded-lg border border-[#E2D9CC] bg-[#F4F1EA] p-3 text-xs leading-relaxed text-[#8C7364]">
-                    Sample products are for preview only and are not available to order yet. Remove them from your basket to continue to checkout.
-                  </p>
-                )}
                 <button
                   onClick={() => navigate('/shipping')}
-                  disabled={hasDemoItems}
-                  className="w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-semibold py-3.5 px-4 rounded-lg text-xs uppercase tracking-widest transition-colors shadow-sm text-center block mt-4 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-semibold py-3.5 px-4 rounded-lg text-xs uppercase tracking-widest transition-colors shadow-sm text-center block mt-4"
                 >
-                  {hasDemoItems ? 'Remove Sample Items to Checkout' : 'Proceed to Checkout ➔'}
+                  Proceed to Checkout ➔
                 </button>
               </div>
             </div>

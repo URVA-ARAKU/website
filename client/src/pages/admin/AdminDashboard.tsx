@@ -80,17 +80,29 @@ const AdminDashboard: React.FC = () => {
     }
   }), []);
 
-  // Revenue chart data
+  // Revenue chart data (Real Database / Order Analytics)
   const chartData = useMemo(() => {
-    const rawData = stats?.revenueByMonth || {
-      Jan: 1200, Feb: 2800, Mar: 4500, Apr: 6800, May: 9200, Jun: 14000
-    };
+    const rawData = stats?.revenueByMonth || {};
+    const hasData = Object.keys(rawData).length > 0;
+
+    // If no order history exists yet, construct the past 6 calendar months with ₹0
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const currentMonthIndex = new Date().getMonth();
+    const defaultLabels: string[] = [];
+    for (let i = 5; i >= 0; i--) {
+      const idx = (currentMonthIndex - i + 12) % 12;
+      defaultLabels.push(months[idx]);
+    }
+
+    const labels = hasData ? Object.keys(rawData) : defaultLabels;
+    const dataValues = labels.map((m) => rawData[m] || 0);
+
     return {
-      labels: Object.keys(rawData),
+      labels,
       datasets: [
         {
-          label: 'Revenue',
-          data: Object.values(rawData),
+          label: 'Revenue (₹)',
+          data: dataValues,
           fill: true,
           backgroundColor: 'rgba(139, 90, 43, 0.08)',
           borderColor: '#8B5A2B',
@@ -106,18 +118,21 @@ const AdminDashboard: React.FC = () => {
     };
   }, [stats]);
 
-  // Order demographic doughnut chart
+  // Order demographic doughnut chart (Real Database Statuses)
   const doughnutData = useMemo(() => {
     const rawDemo = (stats as any)?.orderStatusDemographic || [];
-    const labels = rawDemo.length > 0 ? rawDemo.map((g: any) => g._id) : ['Delivered', 'Processing', 'Pending'];
-    const data = rawDemo.length > 0 ? rawDemo.map((g: any) => g.count) : [12, 5, 2];
+    const hasValidOrders = rawDemo.length > 0 && rawDemo.some((g: any) => (g.count || 0) > 0);
+    const labels = hasValidOrders ? rawDemo.map((g: any) => g._id) : ['No Orders Yet'];
+    const data = hasValidOrders ? rawDemo.map((g: any) => g.count) : [1];
 
     return {
       labels,
       datasets: [
         {
           data,
-          backgroundColor: ['#5A3825', '#8B5A2B', '#C8BCAB', '#D97706'],
+          backgroundColor: hasValidOrders
+            ? ['#5A3825', '#8B5A2B', '#C8BCAB', '#D97706']
+            : ['#E2D9CC'],
           borderWidth: 2,
           borderColor: '#FAF8F4',
         },

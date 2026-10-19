@@ -127,11 +127,6 @@ const CheckoutForm: React.FC = () => {
       return;
     }
 
-    if (cartItems.some((item) => item.productId.startsWith('demo-'))) {
-      notify('Sample products are for preview only. Remove them from your basket before checkout.', 'error');
-      return;
-    }
-
     const trimmedTxnId = transactionId.trim();
     if (!trimmedTxnId) {
       notify('Please enter the 12-digit UPI Transaction ID / UTR number from your payment confirmation screen.', 'error');
