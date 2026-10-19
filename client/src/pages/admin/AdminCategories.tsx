@@ -20,11 +20,11 @@ import {
 import { notify } from '../../utils/util';
 
 const defaultCategoryImages = [
-  'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904994/urvaa/images/categories/tribal-araku.jpg',
-  'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904992/urvaa/images/categories/mana-godavari.jpg',
-  'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904990/urvaa/images/categories/eco-friendly.jpg',
-  'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904993/urvaa/images/categories/swadesi-handlooms.jpg',
-  'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904991/urvaa/images/categories/kadiyam-plants.jpg',
+  'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440012/urvaa/categories/tribal-araku-products.png',
+  'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440015/urvaa/categories/mana-godavari-foods.png',
+  'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440018/urvaa/categories/eco-friendly-products.png',
+  'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440020/urvaa/categories/swadesi-handlooms.png',
+  'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440023/urvaa/categories/kadiyam-plants.png',
 ];
 
 const AdminCategories: React.FC = () => {

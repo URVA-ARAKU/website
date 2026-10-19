@@ -2620,7 +2620,7 @@ export default async function handler(req, res) {
         slug: rawSlug,
         name: rawTitle,
         title: rawTitle,
-        image: body.image || body.imageUrl || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904994/urvaa/images/categories/tribal-araku.jpg',
+        image: body.image || body.imageUrl || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440012/urvaa/categories/tribal-araku-products.png',
         description: body.description || '',
         minimumOrder: body.minimumOrder || '',
         bulkPricing: body.bulkPricing || '',

@@ -1,7 +1,7 @@
 export const urvaaCategories = {
   'tribal-araku-products': {
     title: 'Tribal Araku Products',
-    image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904994/urvaa/images/categories/tribal-araku.jpg',
+    image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440012/urvaa/categories/tribal-araku-products.png',
     description: 'Discover Araku coffee, organic turmeric, unpasteurized raw honey, and tribal millets.',
     products: [
       'Urvaa Araku Arabica Coffee Powder',
@@ -14,7 +14,7 @@ export const urvaaCategories = {
   },
   'mana-godavari-foods': {
     title: 'Mana Godavari Foods',
-    image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904992/urvaa/images/categories/mana-godavari.jpg',
+    image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440015/urvaa/categories/mana-godavari-foods.png',
     description: 'Explore traditional Godavari sweets, palm jaggery, and regional foods.',
     products: [
       'Thati Bellam (Palm Jaggery)',
@@ -27,7 +27,7 @@ export const urvaaCategories = {
   },
   'eco-friendly-products': {
     title: 'Eco-Friendly Products',
-    image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904990/urvaa/images/categories/eco-friendly.jpg',
+    image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440018/urvaa/categories/eco-friendly-products.png',
     description: 'Browse thoughtful, eco-friendly finds for more mindful everyday living.',
     products: [
       'Siali and Modugu Leaf Plates (12-inch)',
@@ -40,7 +40,7 @@ export const urvaaCategories = {
   },
   'swadesi-handlooms': {
     title: 'Swadesi Handlooms',
-    image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904993/urvaa/images/categories/swadesi-handlooms.jpg',
+    image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440020/urvaa/categories/swadesi-handlooms.png',
     description: 'Explore traditional handlooms, cotton dress materials, fabrics, and towels.',
     products: [
       'Traditional Handloom Sarees',
@@ -54,7 +54,7 @@ export const urvaaCategories = {
   },
   'kadiyam-plants': {
     title: 'Kadiyam Plants',
-    image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904991/urvaa/images/categories/kadiyam-plants.jpg',
+    image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440023/urvaa/categories/kadiyam-plants.png',
     description: 'Explore decorative plants, fruit and flower saplings, and gardening products.',
     products: [
       'Indoor & Outdoor Decorative Plants',
