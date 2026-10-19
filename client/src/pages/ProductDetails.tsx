@@ -12,9 +12,6 @@ import {
   FaExpand,
   FaChevronDown,
   FaChevronUp,
-  FaCreditCard,
-  FaBoxOpen,
-  FaMoneyBillWave,
   FaArrowLeft,
   FaTimes,
   FaShoppingBag,
@@ -306,8 +303,8 @@ const ProductDetails: React.FC = () => {
         {/* ─── Balanced 2-Column Responsive Layout (Zero Empty Space) ─── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
-          {/* ════ LEFT COLUMN: Visuals, Story & Knowledge Accordions (7 cols on lg) ════ */}
-          <div className="lg:col-span-7 space-y-6">
+          {/* ════ 1. VISUALS / GALLERY (Order 1 on Mobile, Left Column Row 1 on Desktop) ════ */}
+          <div className="order-1 lg:col-span-7 lg:col-start-1 lg:row-start-1 space-y-4">
             
             {/* Main Stage Image */}
             <div className="relative bg-white rounded-2xl p-4 sm:p-6 border border-neutral-200/90 shadow-xs overflow-hidden group">
@@ -368,125 +365,10 @@ const ProductDetails: React.FC = () => {
                 })}
               </div>
             )}
-
-            {/* Key Features & Craft Provenance Highlight Box */}
-            <div className="bg-white rounded-2xl p-5 sm:p-6 border border-neutral-200/90 shadow-xs space-y-4">
-              <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#111111]">
-                  Authenticity & Craft Features
-                </span>
-                <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
-                  Verified Producer
-                </span>
-              </div>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm text-neutral-700">
-                {features.map((feat: string, i: number) => (
-                  <li key={i} className="flex items-center gap-2.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-black shrink-0" />
-                    <span className="font-medium text-neutral-800">{feat}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="pt-2 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-500">
-                <span className="flex items-center gap-1.5">
-                  <FaCheck className="text-xs text-emerald-600" /> 100% Genuine Rural Guarantee
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <FaCheck className="text-xs text-emerald-600" /> Direct Cooperative Sourcing
-                </span>
-              </div>
-            </div>
-
-            {/* ─── Integrated Knowledge & Policy Accordions (Left Column) ─── */}
-            <div className="bg-white rounded-2xl border border-neutral-200/90 p-5 sm:p-6 space-y-3.5 shadow-xs">
-              <h2 className="font-sans text-base sm:text-lg font-semibold text-[#111111] border-b border-neutral-100 pb-3">
-                Product Knowledge & Heritage Story
-              </h2>
-
-              {/* Accordion 1: Product Information */}
-              <div className="border-b border-neutral-100 pb-3">
-                <button
-                  type="button"
-                  onClick={() => toggleAccordion('info')}
-                  className="w-full flex items-center justify-between text-left py-2 font-semibold text-xs sm:text-sm text-neutral-900 hover:text-black transition-colors"
-                >
-                  <span>Product Information & Regional Origin</span>
-                  {openAccordion === 'info' ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
-                </button>
-                {openAccordion === 'info' && (
-                  <div className="pt-2 pb-3 text-xs sm:text-sm text-neutral-600 leading-relaxed space-y-2">
-                    <p>{resolvedProduct.description}</p>
-                    <p>
-                      Every batch is documented through the One Village – One Product initiative, directly crediting
-                      the rural cooperatives and artisan clusters that hand-produce and harvest each item.
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Accordion 2: Care / Storage */}
-              <div className="border-b border-neutral-100 pb-3">
-                <button
-                  type="button"
-                  onClick={() => toggleAccordion('care')}
-                  className="w-full flex items-center justify-between text-left py-2 font-semibold text-xs sm:text-sm text-neutral-900 hover:text-black transition-colors"
-                >
-                  <span>Storage & Usage Instructions</span>
-                  {openAccordion === 'care' ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
-                </button>
-                {openAccordion === 'care' && (
-                  <div className="pt-2 pb-3 text-xs sm:text-sm text-neutral-600 leading-relaxed">
-                    <p>
-                      {(resolvedProduct as any)?.careInstructions ||
-                        'Store in a cool, dry place away from heat and moisture. Use a clean, dry spoon for food products. Keep container tightly sealed.'}
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Accordion 3: Shipping & Delivery */}
-              <div className="border-b border-neutral-100 pb-3">
-                <button
-                  type="button"
-                  onClick={() => toggleAccordion('shipping')}
-                  className="w-full flex items-center justify-between text-left py-2 font-semibold text-xs sm:text-sm text-neutral-900 hover:text-black transition-colors"
-                >
-                  <span>Shipping & Nationwide Delivery</span>
-                  {openAccordion === 'shipping' ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
-                </button>
-                {openAccordion === 'shipping' && (
-                  <div className="pt-2 pb-3 text-xs sm:text-sm text-neutral-600 leading-relaxed space-y-1.5">
-                    <p>• Dispatched within 24 to 48 hours directly from our regional fulfillment centers.</p>
-                    <p>• Estimated delivery: 3–5 working days across major Indian cities; 4–7 days for regional locations.</p>
-                    <p>• Tracking link provided via SMS and WhatsApp once dispatched.</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Accordion 4: Return Policies */}
-              <div>
-                <button
-                  type="button"
-                  onClick={() => toggleAccordion('returns')}
-                  className="w-full flex items-center justify-between text-left py-2 font-semibold text-xs sm:text-sm text-neutral-900 hover:text-black transition-colors"
-                >
-                  <span>Authenticity & Return Guarantee</span>
-                  {openAccordion === 'returns' ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
-                </button>
-                {openAccordion === 'returns' && (
-                  <div className="pt-2 pb-3 text-xs sm:text-sm text-gray-600 leading-relaxed space-y-1.5">
-                    <p>• 100% Genuine Rural Guarantee: We stand by the heritage purity of every item.</p>
-                    <p>
-                      • If an item arrives damaged or compromised during transit, contact our WhatsApp support within 48 hours for immediate replacement or full refund.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
 
-          {/* ════ RIGHT COLUMN: Sticky Buy Box & Multi-Variant Selector (5 cols on lg) ════ */}
-          <div className="lg:col-span-5 sticky top-20">
+          {/* ════ 2. PURCHASING & ORDERING ENGINE (Order 2 on Mobile, Right Column on Desktop) ════ */}
+          <div className="order-2 lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-20">
             <div className="bg-white rounded-2xl p-6 sm:p-7 border border-neutral-200/90 shadow-sm space-y-5">
               
               {/* Product Header */}
@@ -766,21 +648,124 @@ const ProductDetails: React.FC = () => {
                 <FaWhatsapp className="text-sm text-emerald-600" />
                 <span>Got Questions? Chat with us on WhatsApp</span>
               </a>
+            </div>
+          </div>
 
-              {/* Trust Badges */}
-              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[#E2D9CC] text-center text-[10px] text-[#8C7364]">
-                <div className="flex flex-col items-center gap-1">
-                  <FaCreditCard className="text-[#5A3825] text-sm" />
-                  <span>Easy Payments</span>
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                  <FaBoxOpen className="text-[#5A3825] text-sm" />
-                  <span>Easy Returns</span>
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                  <FaMoneyBillWave className="text-[#5A3825] text-sm" />
-                  <span>COD Option</span>
-                </div>
+          {/* ════ 3. CRAFT FEATURES & HERITAGE STORY (Order 3 on Mobile, Left Column Row 2 on Desktop) ════ */}
+          <div className="order-3 lg:col-span-7 lg:col-start-1 lg:row-start-2 space-y-6">
+            
+            {/* Key Features & Craft Provenance Highlight Box */}
+            <div className="bg-white rounded-2xl p-5 sm:p-6 border border-neutral-200/90 shadow-xs space-y-4">
+              <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#111111]">
+                  Authenticity & Craft Features
+                </span>
+                <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
+                  Verified Producer
+                </span>
+              </div>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm text-neutral-700">
+                {features.map((feat: string, i: number) => (
+                  <li key={i} className="flex items-center gap-2.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-black shrink-0" />
+                    <span className="font-medium text-neutral-800">{feat}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="pt-2 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-500">
+                <span className="flex items-center gap-1.5">
+                  <FaCheck className="text-xs text-emerald-600" /> 100% Genuine Rural Guarantee
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <FaCheck className="text-xs text-emerald-600" /> Direct Cooperative Sourcing
+                </span>
+              </div>
+            </div>
+
+            {/* ─── Integrated Knowledge & Policy Accordions (Left Column) ─── */}
+            <div className="bg-white rounded-2xl border border-neutral-200/90 p-5 sm:p-6 space-y-3.5 shadow-xs">
+              <h2 className="font-sans text-base sm:text-lg font-semibold text-[#111111] border-b border-neutral-100 pb-3">
+                Product Knowledge & Heritage Story
+              </h2>
+
+              {/* Accordion 1: Product Information */}
+              <div className="border-b border-neutral-100 pb-3">
+                <button
+                  type="button"
+                  onClick={() => toggleAccordion('info')}
+                  className="w-full flex items-center justify-between text-left py-2 font-semibold text-xs sm:text-sm text-neutral-900 hover:text-black transition-colors"
+                >
+                  <span>Product Information & Regional Origin</span>
+                  {openAccordion === 'info' ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
+                </button>
+                {openAccordion === 'info' && (
+                  <div className="pt-2 pb-3 text-xs sm:text-sm text-neutral-600 leading-relaxed space-y-2">
+                    <p>{resolvedProduct.description}</p>
+                    <p>
+                      Every batch is documented through the One Village – One Product initiative, directly crediting
+                      the rural cooperatives and artisan clusters that hand-produce and harvest each item.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Accordion 2: Care / Storage */}
+              <div className="border-b border-neutral-100 pb-3">
+                <button
+                  type="button"
+                  onClick={() => toggleAccordion('care')}
+                  className="w-full flex items-center justify-between text-left py-2 font-semibold text-xs sm:text-sm text-neutral-900 hover:text-black transition-colors"
+                >
+                  <span>Storage & Usage Instructions</span>
+                  {openAccordion === 'care' ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
+                </button>
+                {openAccordion === 'care' && (
+                  <div className="pt-2 pb-3 text-xs sm:text-sm text-neutral-600 leading-relaxed">
+                    <p>
+                      {(resolvedProduct as any)?.careInstructions ||
+                        'Store in a cool, dry place away from heat and moisture. Use a clean, dry spoon for food products. Keep container tightly sealed.'}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Accordion 3: Shipping & Delivery */}
+              <div className="border-b border-neutral-100 pb-3">
+                <button
+                  type="button"
+                  onClick={() => toggleAccordion('shipping')}
+                  className="w-full flex items-center justify-between text-left py-2 font-semibold text-xs sm:text-sm text-neutral-900 hover:text-black transition-colors"
+                >
+                  <span>Shipping & Nationwide Delivery</span>
+                  {openAccordion === 'shipping' ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
+                </button>
+                {openAccordion === 'shipping' && (
+                  <div className="pt-2 pb-3 text-xs sm:text-sm text-neutral-600 leading-relaxed space-y-1.5">
+                    <p>• Dispatched within 24 to 48 hours directly from our regional fulfillment centers.</p>
+                    <p>• Estimated delivery: 3–5 working days across major Indian cities; 4–7 days for regional locations.</p>
+                    <p>• Tracking link provided via SMS and WhatsApp once dispatched.</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Accordion 4: Return Policies */}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => toggleAccordion('returns')}
+                  className="w-full flex items-center justify-between text-left py-2 font-semibold text-xs sm:text-sm text-neutral-900 hover:text-black transition-colors"
+                >
+                  <span>Authenticity & Return Guarantee</span>
+                  {openAccordion === 'returns' ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
+                </button>
+                {openAccordion === 'returns' && (
+                  <div className="pt-2 pb-3 text-xs sm:text-sm text-gray-600 leading-relaxed space-y-1.5">
+                    <p>• 100% Genuine Rural Guarantee: We stand by the heritage purity of every item.</p>
+                    <p>
+                      • If an item arrives damaged or compromised during transit, contact our WhatsApp support within 48 hours for immediate replacement or full refund.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
