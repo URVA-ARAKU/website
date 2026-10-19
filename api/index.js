@@ -343,6 +343,21 @@ async function handleOrderSuccess(orderId) {
 // Map Supabase row → product object (NO hardcoded defaults — only real DB data)
 function mapProduct(row) {
   if (!row) return null;
+
+  // STRICT PURITY FILTER: Block any miikorean, k-beauty, skincare, or cosmetic items
+  const probe = `${row.name || ''} ${row.category || ''} ${row.description || ''} ${row.photo || ''}`.toLowerCase();
+  if (
+    probe.includes('miikorean') ||
+    probe.includes('k-beauty') ||
+    probe.includes('korean') ||
+    probe.includes('glow serum') ||
+    probe.includes('skin care') ||
+    probe.includes('skincare') ||
+    (probe.includes('serum') && !probe.includes('urva'))
+  ) {
+    return null;
+  }
+
   let variants = [];
 
   if (row.variants && Array.isArray(row.variants) && row.variants.length > 0) {
@@ -1633,7 +1648,7 @@ export default async function handler(req, res) {
       query = query.range(from, to);
 
       const { data, count } = await query;
-      const products = (data || []).map(mapProduct);
+      const products = (data || []).map(mapProduct).filter(Boolean);
       const totalCount = count || 0;
       const totalPage = Math.ceil(totalCount / limit) || 1;
 
@@ -1653,7 +1668,7 @@ export default async function handler(req, res) {
         .order('created_at', { ascending: false })
         .limit(50);
 
-      const productsList = (!error && data) ? data.map(mapProduct) : [];
+      const productsList = (!error && data) ? data.map(mapProduct).filter(Boolean) : [];
 
       const resBody = {
         success: true,
@@ -1672,7 +1687,7 @@ export default async function handler(req, res) {
 
       const { data, error, count } = await supabase.from('products').select('*', { count: 'exact' }).order('created_at', { ascending: false });
 
-      const productsList = (!error && data) ? data.map(mapProduct) : [];
+      const productsList = (!error && data) ? data.map(mapProduct).filter(Boolean) : [];
       const totalProducts = count || productsList.length;
       const totalPages = Math.ceil(totalProducts / limit) || 1;
 
@@ -1703,12 +1718,14 @@ export default async function handler(req, res) {
         catList = local.filter(c => c.isActive !== false).map(c => c.title || c.name);
       }
 
-      // Also get any distinct category names from products
+      // Also get any distinct category names from products (filtering out foreign/skincare categories)
       try {
-        const { data: prodCats } = await supabase.from('products').select('category');
+        const { data: prodCats } = await supabase.from('products').select('name, category, description, photo');
         if (prodCats) {
           prodCats.forEach(p => {
-            if (p.category && !catList.includes(p.category)) {
+            const probe = `${p.name || ''} ${p.category || ''} ${p.description || ''} ${p.photo || ''}`.toLowerCase();
+            const isInvalid = probe.includes('miikorean') || probe.includes('korean') || probe.includes('serum') || probe.includes('skin') || probe.includes('beauty');
+            if (p.category && !isInvalid && !catList.includes(p.category)) {
               catList.push(p.category);
             }
           });
@@ -1744,7 +1761,7 @@ export default async function handler(req, res) {
         .neq('is_active', false);
 
       if (!error && data) {
-        productsList = data.map(mapProduct);
+        productsList = data.map(mapProduct).filter(Boolean);
       }
 
       const resBody = {
@@ -1768,6 +1785,11 @@ export default async function handler(req, res) {
 
       if (!name || !category || price === undefined || stock === undefined || !description) {
         return res.status(400).json({ success: false, message: 'Please provide name, category, price, stock, and description' });
+      }
+
+      const checkText = `${name} ${category} ${description} ${photo || ''}`.toLowerCase();
+      if (checkText.includes('miikorean') || checkText.includes('k-beauty') || checkText.includes('korean') || checkText.includes('serum') || checkText.includes('skincare') || checkText.includes('skin care')) {
+        return res.status(400).json({ success: false, message: 'Invalid product category: only authentic URVA rural & regional products are permitted.' });
       }
 
       const insertData = {
