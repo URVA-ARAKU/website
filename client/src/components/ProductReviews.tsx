@@ -49,7 +49,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, produ
   const totalReviews = reviews.length;
   const avgRating = totalReviews > 0
     ? (reviews.reduce((sum, r) => sum + (r.rating || 5), 0) / totalReviews).toFixed(1)
-    : '4.9';
+    : '0.0';
 
   const ratingCounts = useMemo(() => {
     const counts: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
@@ -81,7 +81,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, produ
 
     try {
       const res = await addReview({
-        productId: productId || 'all',
+        productId: productId || '',
         productName: productName || 'URVA Specialty',
         authorName: authorName.trim(),
         authorLocation: authorLocation.trim() || 'Verified Indian Patron',
@@ -122,24 +122,43 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, produ
           {/* Left: Overall Score */}
           <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
             <div className="flex flex-col items-center justify-center w-28 h-28 rounded-2xl bg-[#5A3825] text-[#FAF8F4] p-3 shadow-md">
-              <span className="text-4xl font-extrabold tracking-tight font-serif">{avgRating}</span>
+              <span className="text-4xl font-extrabold tracking-tight font-serif">
+                {totalReviews > 0 ? avgRating : '—'}
+              </span>
               <div className="flex items-center text-amber-300 text-xs mt-1">
                 {[1, 2, 3, 4, 5].map((s) => (
-                  <FaStar key={s} />
+                  <FaStar
+                    key={s}
+                    className={
+                      totalReviews > 0 && s <= Math.round(Number(avgRating))
+                        ? 'text-amber-300'
+                        : 'text-[#8C7364]'
+                    }
+                  />
                 ))}
               </div>
-              <span className="text-[10px] text-[#E2D9CC] mt-1 font-medium">Out of 5.0</span>
+              <span className="text-[10px] text-[#E2D9CC] mt-1 font-medium">
+                {totalReviews > 0 ? 'Out of 5.0' : 'No ratings yet'}
+              </span>
             </div>
 
             <div>
-              <span className="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-semibold tracking-wide uppercase mb-2">
-                ✓ Verified Customer Reviews
+              <span
+                className={`inline-block px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase mb-2 ${
+                  totalReviews > 0
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : 'bg-[#EAE5D9] text-[#5A3825]'
+                }`}
+              >
+                {totalReviews > 0 ? '✓ Verified Customer Reviews' : 'Customer Feedback'}
               </span>
               <h3 className="text-2xl font-serif font-bold text-[#5A3825]">
                 Customer Reviews & Suggestions
               </h3>
               <p className="text-xs sm:text-sm text-[#8C7364] mt-1 max-w-md">
-                Honest feedback from patrons across India supporting rural artisans and tribal farmers.
+                {totalReviews > 0
+                  ? 'Honest feedback from patrons across India supporting rural artisans and tribal farmers.'
+                  : 'Share your feedback to help our rural artisan cooperatives craft better products.'}
               </p>
             </div>
           </div>
@@ -240,14 +259,20 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, produ
       ) : filteredReviews.length === 0 ? (
         <div className="bg-[#FAF8F4] border border-[#E2D9CC] rounded-2xl p-10 text-center">
           <FaQuoteLeft className="mx-auto text-2xl text-[#8C7364]/40 mb-3" />
-          <p className="text-sm font-semibold text-[#5A3825]">No reviews matching your filter.</p>
-          <p className="text-xs text-[#8C7364] mt-1">Be the first to leave a review and suggestion for this craft!</p>
+          <p className="text-sm font-semibold text-[#5A3825]">
+            {totalReviews === 0
+              ? 'No customer reviews yet for this product.'
+              : 'No reviews matching your filter.'}
+          </p>
+          <p className="text-xs text-[#8C7364] mt-1">
+            Be the first to share your honest review & experience with this craft!
+          </p>
           <button
             type="button"
             onClick={() => setIsFormOpen(true)}
-            className="mt-4 px-4 py-2 rounded-lg bg-[#5A3825] text-white text-xs font-semibold"
+            className="mt-4 px-5 py-2.5 rounded-xl bg-[#5A3825] hover:bg-[#3F2618] text-white text-xs font-semibold shadow transition-colors"
           >
-            Leave Feedback
+            Write a Review & Feedback
           </button>
         </div>
       ) : (

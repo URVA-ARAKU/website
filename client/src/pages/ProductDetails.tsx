@@ -22,6 +22,7 @@ import {
 } from 'react-icons/fa';
 import ProductReviews from '../components/ProductReviews';
 import { useProductDetailsQuery } from '../redux/api/product.api';
+import { useGetReviewsQuery } from '../redux/api/review.api';
 import { addToCart, decrementCartItem, incrementCartItem } from '../redux/reducers/cart.reducer';
 import { RootState } from '../redux/store';
 import { usePageSEO } from '../hooks/usePageSEO';
@@ -54,6 +55,17 @@ const ProductDetails: React.FC = () => {
 
   // Resolve Product Data strictly from Database
   const resolvedProduct = data?.product;
+  const currentProductId = productId || (resolvedProduct as any)?.id || resolvedProduct?._id || '';
+
+  // Customer reviews strictly from database / live store
+  const { data: reviewsData } = useGetReviewsQuery(currentProductId, {
+    skip: !currentProductId,
+  });
+  const productReviews = useMemo(() => reviewsData?.reviews || [], [reviewsData]);
+  const reviewCount = productReviews.length;
+  const ratingScore = reviewCount > 0
+    ? (productReviews.reduce((sum, r) => sum + (r.rating || 5), 0) / reviewCount).toFixed(1)
+    : null;
 
   // Varieties derived from DB variants or auto-generated pack options
   const availableVarieties = useMemo<ProductVariety[]>(() => {
@@ -257,8 +269,6 @@ const ProductDetails: React.FC = () => {
     );
   }
 
-  const reviewCount = (resolvedProduct as any)?.reviewCount || 312;
-  const ratingScore = (resolvedProduct as any)?.rating || 4.8;
   const features = (resolvedProduct as any)?.features || [
     '100% Pure & Authentic',
     'Direct from Rural Farmers',
@@ -489,18 +499,42 @@ const ProductDetails: React.FC = () => {
                 </h1>
 
                 {/* Star Rating Row */}
-                <div className="mt-2.5 flex items-center gap-2">
-                  <div className="flex text-amber-500 text-xs">
-                    {[...Array(5)].map((_, i) => (
-                      <FaStar key={i} />
-                    ))}
+                {reviewCount > 0 ? (
+                  <div className="mt-2.5 flex items-center gap-2">
+                    <div className="flex text-amber-500 text-xs">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <FaStar
+                          key={s}
+                          className={s <= Math.round(Number(ratingScore)) ? 'text-amber-500' : 'text-neutral-300'}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-xs font-bold text-[#111111]">{ratingScore}</span>
+                    <span className="text-xs text-neutral-300">|</span>
+                    <a
+                      href="#customer-reviews"
+                      className="text-xs text-neutral-500 font-medium underline underline-offset-2 hover:text-[#5A3825]"
+                    >
+                      {reviewCount} {reviewCount === 1 ? 'Customer Review' : 'Customer Reviews'}
+                    </a>
                   </div>
-                  <span className="text-xs font-bold text-[#111111]">{ratingScore}</span>
-                  <span className="text-xs text-neutral-300">|</span>
-                  <span className="text-xs text-neutral-500 font-medium underline underline-offset-2">
-                    {reviewCount} Verified Reviews
-                  </span>
-                </div>
+                ) : (
+                  <div className="mt-2.5 flex items-center gap-2">
+                    <div className="flex text-neutral-300 text-xs">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <FaStar key={s} />
+                      ))}
+                    </div>
+                    <span className="text-xs text-[#8C7364]">No reviews yet</span>
+                    <span className="text-xs text-neutral-300">•</span>
+                    <a
+                      href="#customer-reviews"
+                      className="text-xs font-semibold text-[#8B5A2B] hover:underline"
+                    >
+                      Be the first to review
+                    </a>
+                  </div>
+                )}
               </div>
 
               {/* Dynamic Price Display */}
@@ -753,10 +787,12 @@ const ProductDetails: React.FC = () => {
         </div>
 
         {/* Customer Reviews & Feedback Section */}
-        <ProductReviews
-          productId={resolvedProduct?._id}
-          productName={resolvedProduct?.name}
-        />
+        <div id="customer-reviews">
+          <ProductReviews
+            productId={currentProductId}
+            productName={resolvedProduct?.name}
+          />
+        </div>
       </div>
 
       {/* ─── Lightbox Fullscreen Modal ─── */}

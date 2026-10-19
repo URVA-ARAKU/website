@@ -583,16 +583,21 @@ function saveLocalFallbackBanners(banners) {
 }
 
 // ─── Local JSON Cache Readers & Writers ───
+function getNormalizedDataDirs() {
+  const isClientCwd = process.cwd().endsWith('client');
+  const projectRoot = isClientCwd ? path.resolve(process.cwd(), '..') : process.cwd();
+  return [
+    path.resolve(__dirname, 'data'),
+    path.resolve(projectRoot, 'api/data'),
+    path.resolve(projectRoot, 'client/src/data'),
+  ];
+}
+
 function readLocalJsonFile(filename, fallback) {
   try {
-    const candidatePaths = [
-      path.resolve(__dirname, `data/${filename}`),
-      path.resolve(process.cwd(), `api/data/${filename}`),
-      path.resolve(process.cwd(), `../api/data/${filename}`),
-      path.resolve(process.cwd(), `client/src/data/${filename}`),
-      path.resolve(process.cwd(), `scratch/${filename}`),
-    ];
-    for (const p of candidatePaths) {
+    const candidateDirs = getNormalizedDataDirs();
+    for (const dir of candidateDirs) {
+      const p = path.join(dir, filename);
       if (fs.existsSync(p)) {
         const raw = fs.readFileSync(p, 'utf8');
         return JSON.parse(raw);
@@ -606,12 +611,7 @@ function readLocalJsonFile(filename, fallback) {
 
 function writeLocalJsonFile(filename, data) {
   try {
-    const candidateDirs = [
-      path.resolve(__dirname, 'data'),
-      path.resolve(process.cwd(), 'api/data'),
-      path.resolve(process.cwd(), '../api/data'),
-      path.resolve(process.cwd(), 'client/src/data'),
-    ];
+    const candidateDirs = getNormalizedDataDirs();
     for (const dir of candidateDirs) {
       try {
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -2718,7 +2718,7 @@ export default async function handler(req, res) {
     // ─── REVIEWS & FEEDBACK API (Product Ratings, Reviews, Suggestions) ───
     // ═══════════════════════════════════════════════════════════════════════
 
-    // ─── GET: Reviews (filtered by product or all) ───
+    // ─── GET: Reviews (filtered strictly by product or all) ───
     if ((url.includes('/api/v1/reviews') || url.includes('/reviews')) && req.method === 'GET') {
       const urlObj = new URL(url, 'http://localhost');
       const productId = urlObj.searchParams.get('productId') || url.split('/products/')[1]?.split('/')[0] || '';
@@ -2727,7 +2727,20 @@ export default async function handler(req, res) {
       try {
         const { data, error } = await supabase.from('product_reviews').select('*').order('created_at', { ascending: false });
         if (!error && data && data.length > 0) {
-          allReviews = data;
+          allReviews = data.map(r => ({
+            id: r.id,
+            productId: r.product_id || r.productId || '',
+            productName: r.product_name || r.productName || '',
+            authorName: r.author_name || r.authorName || 'Verified Buyer',
+            authorLocation: r.author_location || r.authorLocation || '',
+            rating: Number(r.rating) || 5,
+            title: r.title || '',
+            comment: r.comment || '',
+            suggestion: r.suggestion || '',
+            verifiedPurchase: r.verified_purchase !== undefined ? r.verified_purchase : true,
+            helpfulCount: Number(r.helpful_count) || 0,
+            createdAt: r.created_at || r.createdAt || new Date().toISOString()
+          }));
         }
       } catch (e) {}
 
@@ -2735,8 +2748,9 @@ export default async function handler(req, res) {
         allReviews = getLocalReviews();
       }
 
+      // Filter strictly by productId when requested (no leaking between products)
       const reviews = productId
-        ? allReviews.filter(r => r.productId === productId || r.productId === 'all')
+        ? allReviews.filter(r => (r.productId || r.product_id) === productId)
         : allReviews;
 
       return res.status(200).json({ success: true, reviews });
@@ -2747,16 +2761,16 @@ export default async function handler(req, res) {
       const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
       const newReview = {
         id: `rev_${Date.now()}`,
-        productId: body.productId || 'all',
-        productName: body.productName || 'URVA Specialty',
+        productId: body.productId || '',
+        productName: (body.productName || 'URVA Specialty').trim(),
         authorName: (body.authorName || body.name || 'Verified Buyer').trim(),
-        authorLocation: (body.authorLocation || body.location || body.city || 'India').trim(),
+        authorLocation: (body.authorLocation || body.location || body.city || '').trim(),
         rating: Math.min(5, Math.max(1, Number(body.rating) || 5)),
-        title: (body.title || 'Great Product & Experience!').trim(),
+        title: (body.title || `${Number(body.rating) || 5}-Star Experience with URVA`).trim(),
         comment: (body.comment || body.review || '').trim(),
         suggestion: (body.suggestion || '').trim(),
         verifiedPurchase: true,
-        helpfulCount: 1,
+        helpfulCount: 0,
         createdAt: new Date().toISOString(),
       };
 
@@ -2776,7 +2790,7 @@ export default async function handler(req, res) {
           comment: newReview.comment,
           suggestion: newReview.suggestion,
           verified_purchase: true,
-          helpful_count: 1,
+          helpful_count: 0,
         });
       } catch (e) {}
 
@@ -2789,6 +2803,20 @@ export default async function handler(req, res) {
         review: newReview,
         message: 'Thank you for your valuable review & feedback! It has been posted.',
       });
+    }
+
+    // ─── DELETE: Delete a Customer Review ───
+    if ((url.includes('/api/v1/reviews/') || url.includes('/reviews/')) && req.method === 'DELETE') {
+      const reviewId = url.split('/reviews/')[1]?.split('?')[0];
+      if (reviewId) {
+        try {
+          await supabase.from('product_reviews').delete().eq('id', reviewId);
+        } catch (e) {}
+        let localRevs = getLocalReviews();
+        localRevs = localRevs.filter(r => r.id !== reviewId);
+        saveLocalReviews(localRevs);
+        return res.status(200).json({ success: true, message: 'Review removed successfully' });
+      }
     }
 
     // ═══════════════════════════════════════════════════════════════════════

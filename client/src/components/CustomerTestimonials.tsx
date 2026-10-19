@@ -1,151 +1,103 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { FaStar } from 'react-icons/fa';
+import { useGetReviewsQuery } from '../redux/api/review.api';
 
-const customerReviews = [
-  {
-    name: 'Amulya Devi',
-    location: 'Rajahmundry, Andhra Pradesh',
-    metric: 'Regional Foods',
-    review: 'Loved exploring Andhra foods. The wood-pressed groundnut oil details were truly authentic.',
-    avatar: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791914048/urvaa/avatars/Amulya.webp',
-  },
-  {
-    name: 'Ajay Reddy',
-    location: 'Vijayawada, Andhra Pradesh',
-    metric: 'Eco-Friendly Finds',
-    review: 'The areca leaf plates are perfect for family get-togethers. Very sturdy and eco-friendly.',
-    avatar: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791914049/urvaa/avatars/Ajay_Reddy.webp',
-  },
-  {
-    name: 'Shridhar Reddy',
-    location: 'Kadiyam, Andhra Pradesh',
-    metric: 'Garden & Nursery',
-    review: 'Happy to find Kadiyam plants alongside other local specialties delivered safely.',
-    avatar: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791914050/urvaa/avatars/Shridhar_Reddy.webp',
-  },
-  {
-    name: 'Bhargavi Reddy',
-    location: 'Visakhapatnam, Andhra Pradesh',
-    metric: 'Everyday Essentials',
-    review: 'The neem wooden spoons are useful for everyday cooking and gifting. Lovely finish.',
-    avatar: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791914051/urvaa/avatars/Bhargavi.webp',
-  },
-  {
-    name: 'Avinash Varma',
-    location: 'Araku Valley, Andhra Pradesh',
-    metric: 'Regional Discoveries',
-    review: 'I love discovering authentic rural products and stories from tribal communities.',
-    avatar: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791914053/urvaa/avatars/Avinash.webp',
-  },
-  {
-    name: 'Harshini Katta',
-    location: 'Kakinada, Andhra Pradesh',
-    metric: 'Regional Foods',
-    review: 'The regional foods are easy to browse, with authentic taste and clear farm details.',
-    avatar: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791914054/urvaa/avatars/Harshini_Katta.webp',
-  },
-  {
-    name: 'Sai Kiran',
-    location: 'Tirupati, Andhra Pradesh',
-    metric: 'Thoughtful Gifting',
-    review: 'A wonderful place to find regional handloom goods and meaningful festive gifts.',
-    avatar: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791914055/urvaa/avatars/Sai_Kiran.webp',
-  },
-  {
-    name: 'Suma Latha',
-    location: 'Guntur, Andhra Pradesh',
-    metric: 'Eco-Friendly Finds',
-    review: 'Found great reusable kitchenware, and the clay and wood products are superb.',
-    avatar: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791914056/urvaa/avatars/Suma.webp',
-  },
-  {
-    name: 'Prafful Kumar',
-    location: 'Eluru, Andhra Pradesh',
-    metric: 'Local Products',
-    review: 'I enjoy discovering genuine village products directly supporting our local artisans.',
-    avatar: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791914056/urvaa/avatars/Prafful.webp',
-  },
-  {
-    name: 'Pavani S.',
-    location: 'Srikakulam, Andhra Pradesh',
-    metric: 'Regional Discoveries',
-    review: 'Regional specialties and eco-friendly everyday products delivered right to our doorstep.',
-    avatar: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791914057/urvaa/avatars/Pavani.webp',
-  },
-  {
-    name: 'Jalender Rao',
-    location: 'Ongole, Andhra Pradesh',
-    metric: 'Everyday Essentials',
-    review: 'Loved finding pure wood pressed oils and rural kitchen essentials in one trusted store.',
-    avatar: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791914058/urvaa/avatars/Jalender.webp',
-  },
-];
+const CustomerTestimonials: React.FC = () => {
+  const { data } = useGetReviewsQuery();
+  const reviews = useMemo(() => data?.reviews || [], [data]);
 
-const CustomerTestimonials: React.FC = () => (
-  <section
-    aria-labelledby="customer-testimonials-heading"
-    className="w-full overflow-hidden border-t border-[#E2D9CC] bg-[#F4F1EA] py-12 md:py-16"
-  >
-    <div className="mx-auto mb-8 max-w-7xl px-4 text-center sm:mb-10 sm:px-6">
-      <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C7364] block mb-1.5">
-        VOICES OF URVA
-      </span>
-      <h2
-        id="customer-testimonials-heading"
-        className="font-sans text-2xl font-semibold tracking-tight text-[#5A3825] sm:text-3xl"
-      >
-        Loved by Customers Across India
-      </h2>
-      <p className="mt-2 text-xs md:text-sm text-[#8C7364] max-w-lg mx-auto">
-        Real experiences from patrons cherishing genuine rural craftsmanship and regional flavors.
-      </p>
-    </div>
+  const marqueeItems = useMemo(() => {
+    if (reviews.length === 0) return [];
+    if (reviews.length >= 6) return reviews;
+    const repeated = [...reviews];
+    while (repeated.length < 6) {
+      repeated.push(...reviews);
+    }
+    return repeated;
+  }, [reviews]);
 
-    <div className="overflow-hidden">
-      <div className="animate-marquee">
-        {[0, 1].map((copy) => (
-          <div
-            key={copy}
-            aria-hidden={copy === 1}
-            className="flex shrink-0 gap-3 pr-3 sm:gap-5 sm:pr-5"
-          >
-            {customerReviews.map((customer) => (
-              <article
-                key={`${copy}-${customer.name}`}
-                className="flex w-[min(270px,calc(100vw-2rem))] shrink-0 flex-col justify-between rounded-xl border border-[#E2D9CC] bg-[#FAF8F4] p-5 shadow-xs transition-shadow hover:shadow-sm sm:w-[300px] md:w-[340px]"
-              >
-                <div className="min-w-0">
-                  <span className="mb-3 inline-block rounded-xs bg-[#5A3825] text-[#F4F1EA] px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider">
-                    {customer.metric}
-                  </span>
-                  <p className="line-clamp-3 w-full whitespace-normal break-words text-xs italic leading-relaxed text-[#5A3825] sm:text-sm">
-                    “{customer.review}”
-                  </p>
-                </div>
+  // Zero mock data: Do not render mock reviews if no real customer reviews exist
+  if (reviews.length === 0) {
+    return null;
+  }
 
-                <div className="mt-4 flex min-w-0 items-center gap-3 border-t border-[#E2D9CC] pt-3">
-                  <img
-                    src={customer.avatar}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                    className="h-10 w-10 shrink-0 rounded-full border border-[#E2D9CC] object-cover"
-                  />
+  return (
+    <section
+      aria-labelledby="customer-testimonials-heading"
+      className="w-full overflow-hidden border-t border-[#E2D9CC] bg-[#F4F1EA] py-12 md:py-16"
+    >
+      <div className="mx-auto mb-8 max-w-7xl px-4 text-center sm:mb-10 sm:px-6">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C7364] block mb-1.5">
+          VOICES OF URVA
+        </span>
+        <h2
+          id="customer-testimonials-heading"
+          className="font-sans text-2xl font-semibold tracking-tight text-[#5A3825] sm:text-3xl font-serif"
+        >
+          Loved by Customers Across India
+        </h2>
+        <p className="mt-2 text-xs md:text-sm text-[#8C7364] max-w-lg mx-auto">
+          Real experiences and honest feedback from patrons cherishing genuine rural craftsmanship and regional flavors.
+        </p>
+      </div>
+
+      <div className="overflow-hidden">
+        <div className="animate-marquee flex">
+          {[0, 1].map((copy) => (
+            <div
+              key={copy}
+              aria-hidden={copy === 1}
+              className="flex shrink-0 gap-3 pr-3 sm:gap-5 sm:pr-5"
+            >
+              {marqueeItems.map((rev, index) => (
+                <article
+                  key={`${copy}-${rev.id}-${index}`}
+                  className="flex w-[min(280px,calc(100vw-2rem))] shrink-0 flex-col justify-between rounded-2xl border border-[#E2D9CC] bg-[#FAF8F4] p-5 shadow-xs transition-shadow hover:shadow-sm sm:w-[320px] md:w-[350px]"
+                >
                   <div className="min-w-0">
-                    <p className="truncate text-xs font-semibold leading-snug text-[#5A3825]">
-                      {customer.name}
-                    </p>
-                    <p className="truncate text-[10px] text-[#8C7364]">
-                      {customer.location}
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="truncate inline-block rounded-xs bg-[#5A3825] text-[#F4F1EA] px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider">
+                        {rev.productName || 'Verified Purchase'}
+                      </span>
+                      <div className="flex items-center gap-0.5 text-amber-500 text-xs shrink-0">
+                        {[...Array(rev.rating || 5)].map((_, i) => (
+                          <FaStar key={i} />
+                        ))}
+                      </div>
+                    </div>
+
+                    {rev.title && (
+                      <h4 className="text-xs font-bold text-[#5A3825] font-serif mb-1 line-clamp-1">
+                        {rev.title}
+                      </h4>
+                    )}
+
+                    <p className="line-clamp-3 w-full whitespace-normal break-words text-xs italic leading-relaxed text-[#5A3825]">
+                      &ldquo;{rev.comment}&rdquo;
                     </p>
                   </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        ))}
+
+                  <div className="mt-4 flex min-w-0 items-center gap-3 border-t border-[#E2D9CC] pt-3">
+                    <div className="h-9 w-9 shrink-0 rounded-full bg-[#5A3825] text-[#FAF8F4] flex items-center justify-center font-bold text-xs uppercase shadow-xs">
+                      {rev.authorName ? rev.authorName[0] : 'U'}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-xs font-semibold leading-snug text-[#5A3825]">
+                        {rev.authorName}
+                      </p>
+                      <p className="truncate text-[10px] text-[#8C7364]">
+                        {rev.authorLocation || 'Verified Indian Patron'}
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
   );
+};
 
 export default CustomerTestimonials;

@@ -22,10 +22,19 @@ export const reviewApi = createApi({
             }),
             invalidatesTags: ['Review'],
         }),
+
+        deleteReview: builder.mutation<{ success: boolean; message: string }, string>({
+            query: (reviewId) => ({
+                url: `reviews/${reviewId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Review'],
+        }),
     }),
 });
 
 export const {
     useGetReviewsQuery,
     useAddReviewMutation,
+    useDeleteReviewMutation,
 } = reviewApi;
