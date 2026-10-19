@@ -2598,6 +2598,35 @@ export default async function handler(req, res) {
         categories = getLocalCategories();
       }
 
+      // Compute actual live product counts per category from database
+      try {
+        const { data: prods } = await supabase
+          .from('products')
+          .select('category, is_active');
+        if (prods && prods.length > 0) {
+          const counts = {};
+          let totalActive = 0;
+          for (const p of prods) {
+            if (p.is_active !== false && p.category) {
+              const key = p.category.toLowerCase().trim();
+              counts[key] = (counts[key] || 0) + 1;
+              totalActive++;
+            }
+          }
+          categories = categories.map(cat => {
+            const catNameKey = (cat.name || cat.title || '').toLowerCase().trim();
+            const count = counts[catNameKey] || 0;
+            return {
+              ...cat,
+              productCount: count,
+              totalProducts: totalActive,
+            };
+          });
+        }
+      } catch (e) {
+        console.error('Error calculating category product counts:', e);
+      }
+
       const isAdmin = url.includes('/admin/');
       const resultList = isAdmin ? categories : categories.filter(c => c.isActive !== false);
 

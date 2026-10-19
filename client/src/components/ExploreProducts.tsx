@@ -122,9 +122,6 @@ export const ExploreProducts: React.FC<ExploreProductsProps> = ({ products = [] 
             <span>View Full Catalog</span>
             <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform" />
           </Link>
-          <p className="mt-2 text-[11px] text-neutral-500">
-            Over 50+ regional treasures available direct from artisan cooperatives
-          </p>
         </div>
       </div>
     </section>

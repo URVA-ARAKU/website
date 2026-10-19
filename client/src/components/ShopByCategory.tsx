@@ -104,27 +104,35 @@ export function ShopByCategory({
     if (items && items.length > 0) return items;
     if (catData?.categories && catData.categories.length > 0) {
       const active = catData.categories.filter((c: any) => c.isActive !== false);
+      const totalCount = active.reduce((sum: number, c: any) => sum + (Number(c.productCount) || 0), 0);
       return [
         {
           id: 'shop-all',
           name: 'Shop All',
-          subtitle: 'All Products',
+          subtitle: totalCount > 0 ? `${totalCount} ${totalCount === 1 ? 'Product' : 'Products'}` : 'All Products',
           image: 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440007/urvaa/categories/shop-all.png',
           imageAlt: 'Browse all URVA products and collections',
           link: '/products',
           badge: 'All',
           highlightColor: '#C79A56',
         },
-        ...active.map((c: any) => ({
-          id: c.slug || c.id,
-          name: c.name,
-          subtitle: c.tagline || c.subtitle || `${c.productCount || 0} Products`,
-          image: c.image || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791905009/urvaa/images/hero/from-our-villages.jpg',
-          imageAlt: c.name,
-          link: `/category/${c.slug || c.id}`,
-          badge: c.badge || undefined,
-          highlightColor: c.highlightColor || '#5A3825',
-        }))
+        ...active.map((c: any) => {
+          const count = Number(c.productCount);
+          let label = c.tagline || c.subtitle || '';
+          if (!label && !isNaN(count)) {
+            label = count > 0 ? `${count} ${count === 1 ? 'Product' : 'Products'}` : '';
+          }
+          return {
+            id: c.slug || c.id,
+            name: c.name,
+            subtitle: label,
+            image: c.image || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1792440007/urvaa/categories/shop-all.png',
+            imageAlt: c.name,
+            link: `/category/${c.slug || c.id}`,
+            badge: c.badge || undefined,
+            highlightColor: c.highlightColor || '#5A3825',
+          };
+        })
       ];
     }
     return DEFAULT_CATEGORIES;
