@@ -79,7 +79,7 @@ const ProductDetails: React.FC = () => {
         mrp: v.mrp || (v.price ? Math.round(v.price * 1.25) : 399),
         pack: v.pack,
         savingsBadge: v.savingsBadge || (index === 1 ? 'SAVE 20% - Most Popular' : index === 2 ? 'BEST VALUE' : undefined),
-        image: v.photo || resolvedProduct.photo,
+        image: v.photo || (resolvedProduct.photos && resolvedProduct.photos.length > 0 ? resolvedProduct.photos[0] : resolvedProduct.photo),
         sku: v.sku || `URVA-${index}`,
         inStock: v.inStock !== false,
       }));
@@ -95,7 +95,7 @@ const ProductDetails: React.FC = () => {
         price: basePrice,
         mrp: basePrice,
         unitPrice: `₹${basePrice}`,
-        image: resolvedProduct.photo,
+        image: (resolvedProduct.photos && resolvedProduct.photos.length > 0) ? resolvedProduct.photos[0] : resolvedProduct.photo,
         sku: `URVA-${resolvedProduct._id?.slice(-4) || 'STD'}`,
         inStock: resolvedProduct.stock !== undefined ? resolvedProduct.stock > 0 : true,
       },
@@ -131,6 +131,8 @@ const ProductDetails: React.FC = () => {
   useEffect(() => {
     if (selectedVariety?.image) {
       setActiveImage(selectedVariety.image);
+    } else if (resolvedProduct?.photos && resolvedProduct.photos.length > 0) {
+      setActiveImage(resolvedProduct.photos[0]);
     } else if (resolvedProduct?.photo) {
       setActiveImage(resolvedProduct.photo);
     }

@@ -398,7 +398,7 @@ function mapProduct(row) {
     .trim();
 
   let photo = (photos.length > 0 ? photos[0] : row.photo) || '';
-  if (!photo || photo.includes('v1791904263') || photo.includes('/urvaa/products/')) {
+  if (!photo || (photos.length === 0 && photo.includes('v1791904263'))) {
     const raw = (photo + ' ' + (row.name || '')).toLowerCase();
     if (raw.includes('araku') || raw.includes('coffee')) {
       photo = 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904994/urvaa/images/categories/tribal-araku.jpg';
