@@ -59,3 +59,6 @@ export function getYouTubeThumbnailUrl(urlOrId: string, quality: 'maxres' | 'hq'
   }
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 }
+
+// Backward compatibility alias
+export const getYouTubeId = parseYouTubeVideoId;

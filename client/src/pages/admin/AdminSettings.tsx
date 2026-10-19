@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useGetAdminSettingsQuery, useUpdateStoreSettingsMutation } from '../../redux/api/settings.api';
 import { StoreSettings } from '../../types/api-types';
 import { 
@@ -7,6 +8,7 @@ import {
   FaQrcode, 
   FaTruck, 
   FaYoutube, 
+  FaVideo,
   FaShieldAlt, 
   FaEnvelope, 
   FaWhatsapp, 
@@ -569,6 +571,25 @@ const AdminSettings: React.FC = () => {
                   </span>
                 )}
               </div>
+            </div>
+
+            {/* Manage YouTube Playlist Videos Link */}
+            <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="text-xs font-bold text-[#5A3825] flex items-center gap-1.5">
+                  <FaVideo className="text-[#8B5A2B]" />
+                  <span>Manage YouTube Showcase Playlist Videos</span>
+                </h3>
+                <p className="text-[11px] text-[#8C7364] mt-0.5">
+                  Add, edit, reorder, or delete videos displayed in the YouTube section on your homepage.
+                </p>
+              </div>
+              <Link
+                to="/admin/banners"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#5A3825] hover:bg-[#3F2618] text-[#FAF8F4] text-xs font-bold transition shadow-xs shrink-0"
+              >
+                <span>Open Video Manager →</span>
+              </Link>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#E2D9CC]">

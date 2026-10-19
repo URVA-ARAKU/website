@@ -4,7 +4,6 @@ import FeaturedSection from '../components/FeaturedSection';
 import ShopByCategory from '../components/ShopByCategory';
 import PopularProducts from '../components/PopularProduct';
 import CommunityGallery from '../components/CommunityGallery';
-import CommunityVideos from '../components/CommunityVideos';
 import YouTubeSection from '../components/YouTubeSection';
 import CustomerTestimonials from '../components/CustomerTestimonials';
 import ExploreProducts from '../components/ExploreProducts';
@@ -91,12 +90,7 @@ const HomePage: React.FC = () => {
         <CommunityGallery />
       </div>
 
-      {/* ─── 8. Video Stories from the Ground ─── */}
-      <div className="content-auto">
-        <CommunityVideos />
-      </div>
-
-      {/* ─── 9. Official YouTube Channel & Documentaries Showcase ─── */}
+      {/* ─── 8. Official YouTube Channel & Documentaries Showcase ─── */}
       <div className="content-auto">
         <YouTubeSection />
       </div>

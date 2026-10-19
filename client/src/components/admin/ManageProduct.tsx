@@ -67,11 +67,10 @@ const AdminManageProduct: React.FC = () => {
   const [priceUpdate, setPriceUpdate] = useState<number>(0);
   const [stockUpdate, setStockUpdate] = useState<number>(0);
   const [descriptionUpdate, setDescriptionUpdate] = useState<string>('');
-  const [photoUpdate, setPhotoUpdate] = useState<string>('');
+  // Photos state (any N photos)
+  const [photosList, setPhotosList] = useState<{ id: string; url: string; file?: File }[]>([]);
   const [isFeatured, setIsFeatured] = useState<boolean>(false);
   const [variantsState, setVariantsState] = useState<CandleVariantItem[]>([]);
-
-  const [photoFileUpdate, setPhotoFileUpdate] = useState<File | null>(null);
   const [uploadingImage, setUploadingImage] = useState<boolean>(false);
 
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
@@ -87,8 +86,18 @@ const AdminManageProduct: React.FC = () => {
       setPriceUpdate(p.price || 0);
       setStockUpdate(p.stock ?? 0);
       setDescriptionUpdate(p.description || '');
-      setPhotoUpdate(p.photo || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png');
       setIsFeatured(p.featured || false);
+
+      const existingPhotos: string[] = Array.isArray(p.photos) && p.photos.length > 0
+        ? p.photos
+        : Array.isArray(p.gallery) && p.gallery.length > 0
+        ? p.gallery
+        : p.photo
+        ? [p.photo]
+        : [];
+
+      const cleanExisting = existingPhotos.filter(Boolean);
+      setPhotosList(cleanExisting.map((url, i) => ({ id: `existing_${i}_${Date.now()}`, url })));
 
       if (p.variants && Array.isArray(p.variants) && p.variants.length > 0) {
         const normalized: CandleVariantItem[] = p.variants.map((v: any, index: number) => ({
@@ -109,18 +118,40 @@ const AdminManageProduct: React.FC = () => {
     }
   }, [data]);
 
-  const changeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    const file: File | undefined = e.target.files?.[0];
-    if (file) {
-      setPhotoFileUpdate(file);
-      const reader: FileReader = new FileReader();
+  const handleAddPhotos = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    files.forEach((file) => {
+      const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setPhotoUpdate(reader.result);
+        if (typeof reader.result === 'string') {
+          setPhotosList((prev) => [
+            ...prev,
+            {
+              id: `new_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+              url: reader.result as string,
+              file,
+            },
+          ]);
         }
       };
-    }
+    });
+    e.target.value = '';
+  };
+
+  const removePhotoItem = (indexToRemove: number) => {
+    setPhotosList((prev) => prev.filter((_, i) => i !== indexToRemove));
+  };
+
+  const setAsCoverPhoto = (indexToPromote: number) => {
+    setPhotosList((prev) => {
+      if (indexToPromote === 0 || indexToPromote >= prev.length) return prev;
+      const target = prev[indexToPromote];
+      const rest = prev.filter((_, i) => i !== indexToPromote);
+      return [target, ...rest];
+    });
   };
 
   // Variant operations
@@ -180,12 +211,17 @@ const AdminManageProduct: React.FC = () => {
     }
 
     try {
-      let uploadedPhotoUrl = photoUpdate;
-      if (photoFileUpdate) {
-        setUploadingImage(true);
-        const { url } = await uploadToCloudinary(photoFileUpdate);
-        uploadedPhotoUrl = url;
-      }
+      setUploadingImage(true);
+      // Upload any newly selected files to Cloudinary, retain existing URLs
+      const finalPhotoUrls = await Promise.all(
+        photosList.map(async (item) => {
+          if (item.file) {
+            const res = await uploadToCloudinary(item.file);
+            return res.url;
+          }
+          return item.url;
+        })
+      );
 
       const formattedVariants = variantsState.map(v => ({
         id: v.id,
@@ -214,7 +250,8 @@ const AdminManageProduct: React.FC = () => {
         price: calculatedBasePrice,
         stock: calculatedTotalStock,
         description: descriptionUpdate.trim(),
-        photo: uploadedPhotoUrl,
+        photo: finalPhotoUrls[0] || '',
+        photos: finalPhotoUrls,
         variants: formattedVariants
       };
 
@@ -288,17 +325,23 @@ const AdminManageProduct: React.FC = () => {
       <div className="bg-white p-6 md:p-8 rounded-3xl border border-neutral-200 shadow-2xs space-y-6">
         <div className="flex flex-col md:flex-row gap-8">
           
-          {/* Left Column: Image preview & Meta */}
+          {/* Left Column: Multi-Photo Gallery & Meta */}
           <div className="w-full md:w-1/3 space-y-4">
+            {/* Main Cover Photo Display */}
             <div className="relative group rounded-2xl border border-neutral-200 bg-neutral-50 overflow-hidden aspect-square flex items-center justify-center shadow-2xs">
               <img 
-                src={photoUpdate} 
+                src={photosList[0]?.url || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png'} 
                 alt={nameUpdate} 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png';
                 }}
               />
+              <div className="absolute top-3 left-3">
+                <span className="bg-amber-600 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full shadow-xs flex items-center gap-1">
+                  <FaStar className="text-[8px]" /> Main Cover
+                </span>
+              </div>
               <div className="absolute top-3 right-3">
                 <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider ${
                   isFeatured ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-neutral-100 text-neutral-600 border border-neutral-200'
@@ -308,14 +351,76 @@ const AdminManageProduct: React.FC = () => {
               </div>
             </div>
 
-            {/* Replace Image Button */}
+            {/* Gallery Thumbnails (All N Photos) */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-neutral-700 uppercase tracking-wider">
+                  Product Gallery
+                </span>
+                <span className="text-[11px] font-semibold text-neutral-500">
+                  {photosList.length} {photosList.length === 1 ? 'Photo' : 'Photos'}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2">
+                {photosList.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    className={`relative aspect-square rounded-xl overflow-hidden border bg-neutral-100 group shadow-2xs ${
+                      idx === 0 ? 'border-amber-600 ring-2 ring-amber-500/20' : 'border-neutral-200'
+                    }`}
+                  >
+                    <img src={item.url} alt={`Angle ${idx + 1}`} className="w-full h-full object-cover" />
+                    <span className="absolute top-1 left-1 bg-black/60 backdrop-blur-md text-white text-[9px] font-bold px-1 rounded">
+                      #{idx + 1}
+                    </span>
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                      {idx !== 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setAsCoverPhoto(idx)}
+                          title="Make Main Cover"
+                          className="p-1 rounded bg-white text-amber-700 hover:bg-amber-50 text-[10px]"
+                        >
+                          <FaStar />
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => removePhotoItem(idx)}
+                        title="Remove photo"
+                        className="p-1 rounded bg-white text-rose-600 hover:bg-rose-50 text-[10px]"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Add Photos Button */}
+                <label className="aspect-square rounded-xl border-2 border-dashed border-neutral-300 hover:border-neutral-800 bg-neutral-50 hover:bg-neutral-100/70 transition-all cursor-pointer flex flex-col items-center justify-center text-center p-1 group">
+                  <FaPlus className="text-sm text-neutral-500 group-hover:text-black mb-0.5 group-hover:scale-110 transition-transform" />
+                  <span className="text-[10px] font-bold text-neutral-700">Add</span>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleAddPhotos}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+            </div>
+
+            {/* Quick Upload Action Button */}
             <div>
               <label className="cursor-pointer block text-center bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-200 px-4 py-2.5 rounded-xl font-semibold text-xs transition shadow-2xs">
-                <FaUpload className="inline mr-2" /> Upload New Photo
+                <FaUpload className="inline mr-2" /> Add More Photos (Select Any N)
                 <input
                   type="file"
+                  multiple
                   accept="image/*"
-                  onChange={changeImageHandler}
+                  onChange={handleAddPhotos}
                   className="hidden"
                 />
               </label>

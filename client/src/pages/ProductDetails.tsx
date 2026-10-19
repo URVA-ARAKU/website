@@ -76,43 +76,19 @@ const ProductDetails: React.FC = () => {
       }));
     }
 
-    // 2. Default pack varieties for standard products
-    const basePrice = resolvedProduct.price || 299;
+    // 2. No multi-variants configured in admin dashboard — single standard product at exact admin base price
+    const basePrice = Number(resolvedProduct.price || 0);
     return [
       {
-        id: 'std-250',
-        name: 'Standard Pack (Regular)',
-        label: 'Standard Pack',
+        id: 'standard-item',
+        name: resolvedProduct.name,
+        label: 'Standard',
         price: basePrice,
-        mrp: Math.round(basePrice * 1.25),
-        unitPrice: `₹${basePrice} / unit`,
+        mrp: basePrice,
+        unitPrice: `₹${basePrice}`,
         image: resolvedProduct.photo,
-        sku: `URVA-${resolvedProduct._id?.slice(-4) || 'STD'}-1`,
-        inStock: true,
-      },
-      {
-        id: 'eco-500',
-        name: 'Family Pack (2x Bundle)',
-        label: 'Family Pack (2x)',
-        price: Math.round(basePrice * 1.85),
-        mrp: Math.round(basePrice * 2.5),
-        savingsBadge: 'SAVE 15% - POPULAR',
-        unitPrice: `₹${Math.round(basePrice * 0.92)} / unit`,
-        image: resolvedProduct.photo,
-        sku: `URVA-${resolvedProduct._id?.slice(-4) || 'STD'}-2`,
-        inStock: true,
-      },
-      {
-        id: 'val-1kg',
-        name: 'Value Harvest Bundle (Bulk)',
-        label: 'Value Bundle',
-        price: Math.round(basePrice * 3.2),
-        mrp: Math.round(basePrice * 4.6),
-        savingsBadge: 'BEST VALUE - SAVE 30%',
-        unitPrice: `₹${Math.round(basePrice * 0.8)} / unit`,
-        image: resolvedProduct.photo,
-        sku: `URVA-${resolvedProduct._id?.slice(-4) || 'STD'}-3`,
-        inStock: true,
+        sku: `URVA-${resolvedProduct._id?.slice(-4) || 'STD'}`,
+        inStock: resolvedProduct.stock !== undefined ? resolvedProduct.stock > 0 : true,
       },
     ];
   }, [resolvedProduct]);
@@ -130,14 +106,15 @@ const ProductDetails: React.FC = () => {
     return availableVarieties.find((v) => v.id === selectedVarietyId) || availableVarieties[0];
   }, [availableVarieties, selectedVarietyId]);
 
-  // Gallery state
+  // Gallery state — strictly the exact photos added for this product
   const galleryImages = useMemo(() => {
     if (!resolvedProduct) return [];
-    const list = (resolvedProduct as any)?.gallery || (resolvedProduct.photo ? [resolvedProduct.photo] : []);
-    if (selectedVariety?.image && !list.includes(selectedVariety.image)) {
-      return [selectedVariety.image, ...list];
+    const list: string[] = resolvedProduct.photos || (resolvedProduct as any)?.gallery || (resolvedProduct.photo ? [resolvedProduct.photo] : []);
+    const uniqueList = list.filter((v, i, a) => Boolean(v) && a.indexOf(v) === i);
+    if (selectedVariety?.image && !uniqueList.includes(selectedVariety.image) && selectedVariety.image !== resolvedProduct.photo) {
+      return [selectedVariety.image, ...uniqueList];
     }
-    return list;
+    return uniqueList;
   }, [resolvedProduct, selectedVariety]);
 
   const [activeImage, setActiveImage] = useState<string>('');
@@ -176,11 +153,12 @@ const ProductDetails: React.FC = () => {
     if (!resolvedProduct) return;
     if (e) e.preventDefault();
     const qtyToAdd = overrideQuantity || quantity;
+    const varietyLabel = availableVarieties.length > 1 ? ` (${selectedVariety?.label || 'Option'})` : '';
 
     dispatch(
       addToCart({
         productId: activeCartItemId,
-        name: `${resolvedProduct.name} (${selectedVariety?.label || 'Standard'})`,
+        name: `${resolvedProduct.name}${varietyLabel}`,
         price: price,
         quantity: qtyToAdd,
         stock: resolvedProduct.stock || 50,
@@ -188,7 +166,7 @@ const ProductDetails: React.FC = () => {
       })
     );
 
-    toast.success(`Added ${selectedVariety?.label || 'Item'} to basket!`, {
+    toast.success(`Added ${availableVarieties.length > 1 ? selectedVariety?.label || 'Item' : resolvedProduct.name} to basket!`, {
       position: 'bottom-center',
       autoClose: 2000,
     });
@@ -553,75 +531,77 @@ const ProductDetails: React.FC = () => {
                 {resolvedProduct.description}
               </p>
 
-              {/* ─── Clickable Variety Cards (Differ dynamically on click) ─── */}
-              <div className="space-y-3 pt-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-700">
-                    SELECT PACK / VARIETY:
-                  </span>
-                  {selectedVariety?.sku && (
-                    <span className="text-[10px] text-neutral-400 font-mono">
-                      SKU: {selectedVariety.sku}
+              {/* ─── Clickable Variety Cards (Only shown when admin configured multiple variants) ─── */}
+              {availableVarieties.length > 1 && (
+                <div className="space-y-3 pt-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-700">
+                      SELECT PACK / VARIETY:
                     </span>
-                  )}
-                </div>
+                    {selectedVariety?.sku && (
+                      <span className="text-[10px] text-neutral-400 font-mono">
+                        SKU: {selectedVariety.sku}
+                      </span>
+                    )}
+                  </div>
 
-                <div className="space-y-2">
-                  {availableVarieties.map((variety) => {
-                    const isSelected = variety.id === selectedVarietyId;
-                    return (
-                      <div
-                        key={variety.id}
-                        onClick={() => {
-                          setSelectedVarietyId(variety.id);
-                          if (variety.image) setActiveImage(variety.image);
-                        }}
-                        className={`cursor-pointer rounded-xl p-3.5 border transition-all duration-200 ${
-                          isSelected
-                            ? 'border-[#5A3825] bg-[#FAF8F4] shadow-xs ring-1 ring-[#5A3825]'
-                            : 'border-[#E2D9CC] bg-[#FAF8F4]/60 hover:border-[#8B5A2B]'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between gap-3">
-                          {/* Radio Dot & Label */}
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div
-                              className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                                isSelected ? 'border-[#5A3825] bg-[#5A3825]' : 'border-[#C8BCAB] bg-white'
-                              }`}
-                            >
-                              {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                  <div className="space-y-2">
+                    {availableVarieties.map((variety) => {
+                      const isSelected = variety.id === selectedVarietyId;
+                      return (
+                        <div
+                          key={variety.id}
+                          onClick={() => {
+                            setSelectedVarietyId(variety.id);
+                            if (variety.image) setActiveImage(variety.image);
+                          }}
+                          className={`cursor-pointer rounded-xl p-3.5 border transition-all duration-200 ${
+                            isSelected
+                              ? 'border-[#5A3825] bg-[#FAF8F4] shadow-xs ring-1 ring-[#5A3825]'
+                              : 'border-[#E2D9CC] bg-[#FAF8F4]/60 hover:border-[#8B5A2B]'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            {/* Radio Dot & Label */}
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div
+                                className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                                  isSelected ? 'border-[#5A3825] bg-[#5A3825]' : 'border-[#C8BCAB] bg-white'
+                                }`}
+                              >
+                                {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                              </div>
+
+                              <div className="min-w-0">
+                                <span className="text-xs sm:text-sm font-bold text-[#5A3825] block truncate font-sans">
+                                  {variety.name}
+                                </span>
+                                {variety.savingsBadge && (
+                                  <span className="inline-block bg-[#8B5A2B] text-white text-[9px] font-semibold px-2 py-0.5 rounded mt-0.5 tracking-tight uppercase">
+                                    {variety.savingsBadge}
+                                  </span>
+                                )}
+                              </div>
                             </div>
 
-                            <div className="min-w-0">
-                              <span className="text-xs sm:text-sm font-bold text-[#5A3825] block truncate font-sans">
-                                {variety.name}
+                            {/* Price & Unit Price */}
+                            <div className="text-right shrink-0">
+                              <span className="text-xs sm:text-sm font-bold text-[#5A3825] block font-sans">
+                                ₹{variety.price}
                               </span>
-                              {variety.savingsBadge && (
-                                <span className="inline-block bg-[#8B5A2B] text-white text-[9px] font-semibold px-2 py-0.5 rounded mt-0.5 tracking-tight uppercase">
-                                  {variety.savingsBadge}
+                              {variety.unitPrice && (
+                                <span className="text-[10px] text-[#8C7364] block font-sans">
+                                  {variety.unitPrice}
                                 </span>
                               )}
                             </div>
                           </div>
-
-                          {/* Price & Unit Price */}
-                          <div className="text-right shrink-0">
-                            <span className="text-xs sm:text-sm font-bold text-[#5A3825] block font-sans">
-                              ₹{variety.price}
-                            </span>
-                            {variety.unitPrice && (
-                              <span className="text-[10px] text-[#8C7364] block font-sans">
-                                {variety.unitPrice}
-                              </span>
-                            )}
-                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Quantity Stepper & Main Action Buttons */}
               <div className="space-y-3 pt-2">

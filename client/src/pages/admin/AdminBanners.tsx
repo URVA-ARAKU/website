@@ -27,7 +27,7 @@ import {
 import { BannerType, StoreBanner } from '../../types/api-types';
 import { uploadToCloudinary } from '../../utils/cloudinary';
 import { notify } from '../../utils/util';
-import { getYouTubeId } from '../../components/CommunityVideos';
+import { getYouTubeId } from '../../utils/youtube';
 
 const BANNER_TYPES: { type: BannerType; label: string; icon: any; description: string }[] = [
   { 
@@ -50,9 +50,9 @@ const BANNER_TYPES: { type: BannerType; label: string; icon: any; description: s
   },
   { 
     type: 'story_video', 
-    label: 'Village Videos', 
+    label: 'YouTube Showcase', 
     icon: FaVideo, 
-    description: 'YouTube Shorts and vertical reels displayed in the Village Stories reel' 
+    description: 'Videos and documentaries displayed in the YouTube Section on homepage' 
   },
   { 
     type: 'announcement', 

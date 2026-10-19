@@ -14,8 +14,7 @@ import {
   FaTimesCircle, 
   FaRupeeSign, 
   FaLayerGroup,
-  FaUpload,
-  FaImage
+  FaStar
 } from 'react-icons/fa';
 
 export interface ProductVariantItem {
@@ -54,8 +53,9 @@ const AdminAddProduct: React.FC = () => {
 
   const [hasVariants, setHasVariants] = useState(false);
   const [variants, setVariants] = useState<ProductVariantItem[]>([]);
-  const [photoFile, setPhotoFile] = useState<File | null>(null);
-  const [photoPreview, setPhotoPreview] = useState<string>('');
+  
+  // Multiple Photos state (any N photos)
+  const [photos, setPhotos] = useState<{ id: string; file: File; preview: string }[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
 
   const [newProduct, { isError, error }] = useNewProductMutation();
@@ -65,18 +65,40 @@ const AdminAddProduct: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPhotoFile(file);
+  const handleFilesChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    files.forEach((file) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () => {
         if (typeof reader.result === 'string') {
-          setPhotoPreview(reader.result);
+          setPhotos((prev) => [
+            ...prev,
+            {
+              id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+              file,
+              preview: reader.result as string,
+            },
+          ]);
         }
       };
-    }
+    });
+    e.target.value = '';
+  };
+
+  const removePhoto = (indexToRemove: number) => {
+    setPhotos((prev) => prev.filter((_, i) => i !== indexToRemove));
+  };
+
+  const setAsCoverPhoto = (indexToPromote: number) => {
+    setPhotos((prev) => {
+      if (indexToPromote === 0 || indexToPromote >= prev.length) return prev;
+      const target = prev[indexToPromote];
+      const rest = prev.filter((_, i) => i !== indexToPromote);
+      return [target, ...rest];
+    });
   };
 
   // Add empty variant
@@ -142,8 +164,8 @@ const AdminAddProduct: React.FC = () => {
       notify('Please enter a product name', 'error');
       return;
     }
-    if (!photoFile) {
-      notify('Please upload a product photo', 'error');
+    if (photos.length === 0) {
+      notify('Please upload at least one product photo', 'error');
       return;
     }
     if (!formData.description.trim()) {
@@ -178,7 +200,10 @@ const AdminAddProduct: React.FC = () => {
 
     try {
       setUploadingImage(true);
-      const { url: cloudinaryUrl } = await uploadToCloudinary(photoFile);
+      // Upload each photo to Cloudinary in parallel
+      const uploadedUrls = await Promise.all(
+        photos.map((p) => uploadToCloudinary(p.file).then((res) => res.url))
+      );
 
       const productData = {
         name: formData.name.trim(),
@@ -186,12 +211,13 @@ const AdminAddProduct: React.FC = () => {
         stock: totalStock,
         price: basePrice,
         description: formData.description.trim(),
-        photo: cloudinaryUrl,
+        photo: uploadedUrls[0],
+        photos: uploadedUrls,
         variants: hasVariants && formattedVariants.length > 0 ? formattedVariants : []
       };
 
       await newProduct({ productData }).unwrap();
-      notify('Product added successfully to catalog!', 'success');
+      notify(`Product added successfully with ${uploadedUrls.length} photos!`, 'success');
       navigate('/admin/products');
     } catch (err: any) {
       const customError = err as CustomError;
@@ -301,32 +327,85 @@ const AdminAddProduct: React.FC = () => {
             />
           </div>
 
-          {/* Product Photo Upload */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase text-neutral-600 tracking-wider block">
-              Product Imagery (Cloudinary Direct) *
-            </label>
-            <div className="flex items-center gap-4 flex-wrap">
-              {photoPreview ? (
-                <div className="relative w-24 h-24 rounded-2xl border border-neutral-200 overflow-hidden shadow-2xs shrink-0 bg-neutral-50">
-                  <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+          {/* Multiple Product Photos Upload (N Photos) */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <label className="text-xs font-semibold uppercase text-neutral-600 tracking-wider block">
+                  Product Photos (Add Any N Photos) *
+                </label>
+                <p className="text-[11px] text-neutral-400 mt-0.5">
+                  Upload multiple angles, packaging, or texture photos. The first image marked "Main Cover" will be used as the primary catalog photo.
+                </p>
+              </div>
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-neutral-100 text-neutral-700 border border-neutral-200">
+                {photos.length} {photos.length === 1 ? 'Photo' : 'Photos'} Selected
+              </span>
+            </div>
+
+            {/* Photo Preview Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
+              {photos.map((item, idx) => (
+                <div
+                  key={item.id}
+                  className={`relative aspect-square rounded-2xl overflow-hidden border-2 bg-neutral-50 shadow-2xs group transition-all ${
+                    idx === 0 ? 'border-amber-600 ring-2 ring-amber-500/20' : 'border-neutral-200 hover:border-neutral-400'
+                  }`}
+                >
+                  <img src={item.preview} alt={`Product ${idx + 1}`} className="w-full h-full object-cover" />
+
+                  {/* Primary Badge */}
+                  <div className="absolute top-2 left-2 z-10">
+                    {idx === 0 ? (
+                      <span className="bg-amber-600 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full shadow-xs flex items-center gap-1">
+                        <FaStar className="text-[8px]" /> Main Cover
+                      </span>
+                    ) : (
+                      <span className="bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                        #{idx + 1}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Hover Action Buttons */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
+                    {idx !== 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setAsCoverPhoto(idx)}
+                        title="Set as Main Cover Photo"
+                        className="p-2 rounded-xl bg-white text-amber-700 hover:bg-amber-50 text-xs font-bold shadow-md transition hover:scale-105"
+                      >
+                        <FaStar />
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(idx)}
+                      title="Remove this photo"
+                      className="p-2 rounded-xl bg-white text-rose-600 hover:bg-rose-50 text-xs font-bold shadow-md transition hover:scale-105"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
                 </div>
-              ) : (
-                <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-neutral-200 bg-neutral-50 flex flex-col items-center justify-center text-neutral-400 text-xs shrink-0">
-                  <FaImage className="text-xl mb-1 text-neutral-300" />
-                  <span className="text-[10px]">No Photo</span>
+              ))}
+
+              {/* Add Photos Dropzone / Button Card */}
+              <label className="aspect-square rounded-2xl border-2 border-dashed border-neutral-300 hover:border-neutral-900 bg-neutral-50 hover:bg-neutral-100/70 transition-all cursor-pointer flex flex-col items-center justify-center text-center p-3 group">
+                <div className="w-10 h-10 rounded-full bg-white shadow-2xs border border-neutral-200 flex items-center justify-center mb-1.5 text-neutral-600 group-hover:text-black group-hover:scale-110 transition-transform">
+                  <FaPlus className="text-sm" />
                 </div>
-              )}
-              <label className="cursor-pointer bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-200 px-4 py-2.5 rounded-xl font-semibold text-xs transition shadow-2xs flex items-center gap-2">
-                <FaUpload /> Choose Photo
+                <span className="text-xs font-bold text-neutral-800">Add Photos</span>
+                <span className="text-[10px] text-neutral-400 mt-0.5">Select any N photos</span>
                 <input
                   type="file"
+                  multiple
                   accept="image/*"
-                  onChange={handleFileChange}
+                  onChange={handleFilesChange}
                   className="hidden"
                 />
               </label>
-              <p className="text-[11px] text-neutral-400">High-resolution JPEG or PNG. Automatically optimized on Cloudinary.</p>
             </div>
           </div>
 

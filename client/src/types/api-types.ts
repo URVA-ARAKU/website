@@ -54,6 +54,9 @@ export interface Product {
     category: string;
     stock: number;
     photo: string;
+    photos?: string[];
+    gallery?: string[];
+    images?: string[];
     price: number;
     description: string;
     featured: boolean;

@@ -1,29 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { FaYoutube, FaPlay, FaExternalLinkAlt, FaCheckCircle, FaTv } from 'react-icons/fa';
 import { useGetStoreSettingsQuery } from '../redux/api/settings.api';
+import { useGetBannersQuery } from '../redux/api/banner.api';
 import { YouTubeVideoItem } from '../types/api-types';
 import { parseYouTubeVideoId, getYouTubeEmbedUrl, getYouTubeThumbnailUrl } from '../utils/youtube';
 
-const defaultVideos: YouTubeVideoItem[] = [
-  {
-    id: 'aN2sDNVf-Js',
-    title: 'Araku Valley Tribal Honey & Coffee Harvesting Heritage',
-    subtitle: 'Step into Araku hills to witness how indigenous tribes ethically collect wild forest honey and shade-grown Arabica coffee.',
-  },
-  {
-    id: 'BeNpZc_SULs',
-    title: 'Godavari Traditional Delta Craftsmanship & Artisans',
-    subtitle: 'Generations of rural families preserving indigenous palm crafts, handloom weaving, and heritage pottery.',
-  },
-  {
-    id: 'bgq_DG7ptsE',
-    title: 'From Rural Heartlands Directly to Your Kitchen',
-    subtitle: 'URVA’s One Village One Product journey bringing unadulterated foods straight from farmer cooperatives.',
-  },
-];
-
 export const YouTubeSection: React.FC = () => {
   const { data: settingsData } = useGetStoreSettingsQuery();
+  const { data: bannerData } = useGetBannersQuery('story_video');
   const settings = settingsData?.settings;
 
   // Sanitize YouTube channel URL
@@ -35,33 +19,71 @@ export const YouTubeSection: React.FC = () => {
     : `https://www.youtube.com/@${rawChannelUrl}`;
 
   const channelName = settings?.youtubeChannelName || 'URVA Swadeshi Official';
-  const videoList: YouTubeVideoItem[] =
-    settings?.youtubeVideos && settings.youtubeVideos.length > 0
-      ? settings.youtubeVideos
-      : defaultVideos;
 
-  const initialVideoId = parseYouTubeVideoId(settings?.featuredYoutubeVideoId) || parseYouTubeVideoId(videoList[0]?.id) || 'aN2sDNVf-Js';
+  // 1. Prioritize videos managed from Admin Dashboard -> Banners -> YouTube Showcase (story_video)
+  const rawBanners = bannerData?.banners || [];
+  const dynamicVideos: YouTubeVideoItem[] = rawBanners
+    .filter((b) => b.isActive !== false)
+    .map((b) => ({
+      id: parseYouTubeVideoId(b.linkUrl || b.imageUrl || ''),
+      title: b.title || 'URVA Heritage Video',
+      subtitle: b.subtitle || '',
+    }))
+    .filter((v) => Boolean(v.id));
+
+  // 2. Fall back to settings.youtubeVideos if any, otherwise empty (ZERO hardcoded dummy videos)
+  const videoList: YouTubeVideoItem[] =
+    dynamicVideos.length > 0
+      ? dynamicVideos
+      : settings?.youtubeVideos && settings.youtubeVideos.length > 0
+      ? settings.youtubeVideos
+      : [];
+
+  // Determine initial active video ID from admin settings featured ID or first video in list
+  const initialFeaturedId = parseYouTubeVideoId(settings?.featuredYoutubeVideoId);
+  const initialVideoId =
+    (initialFeaturedId && videoList.some((v) => parseYouTubeVideoId(v.id) === initialFeaturedId))
+      ? initialFeaturedId
+      : videoList[0]?.id
+      ? parseYouTubeVideoId(videoList[0].id)
+      : initialFeaturedId || '';
 
   const [activeVideoId, setActiveVideoId] = useState<string>(initialVideoId);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // Sync state whenever settings load/update from backend
+  // Sync state whenever videos from admin dashboard load or update
   useEffect(() => {
-    if (settings?.featuredYoutubeVideoId) {
+    if (videoList.length > 0) {
+      const featuredClean = parseYouTubeVideoId(settings?.featuredYoutubeVideoId);
+      const isFeaturedInList = featuredClean && videoList.some((v) => parseYouTubeVideoId(v.id) === featuredClean);
+      const currentClean = parseYouTubeVideoId(activeVideoId);
+      const isCurrentInList = currentClean && videoList.some((v) => parseYouTubeVideoId(v.id) === currentClean);
+
+      if (isFeaturedInList) {
+        setActiveVideoId(featuredClean);
+      } else if (!isCurrentInList && videoList[0]?.id) {
+        setActiveVideoId(parseYouTubeVideoId(videoList[0].id));
+      }
+    } else if (settings?.featuredYoutubeVideoId) {
       const cleanId = parseYouTubeVideoId(settings.featuredYoutubeVideoId);
       if (cleanId) {
         setActiveVideoId(cleanId);
       }
     }
-  }, [settings?.featuredYoutubeVideoId]);
+  }, [bannerData, settings?.featuredYoutubeVideoId]);
 
-  const currentVideoId = parseYouTubeVideoId(activeVideoId) || 'aN2sDNVf-Js';
+  const currentVideoId = parseYouTubeVideoId(activeVideoId) || (videoList[0] ? parseYouTubeVideoId(videoList[0].id) : '');
+
+  // If no videos exist at all in admin dashboard and no featured video is configured, don't show an artificial section
+  if (!currentVideoId && videoList.length === 0) {
+    return null;
+  }
 
   const activeVideo =
     videoList.find((v) => parseYouTubeVideoId(v.id) === currentVideoId) || {
       id: currentVideoId,
-      title: 'Discover URVA’s Heritage Stories',
-      subtitle: 'Watch real rural artisans and farmer cooperatives across India.',
+      title: 'Experience Our Rural Heritage in Motion',
+      subtitle: 'Authentic documentary glimpses and conversations with rural artisans behind URVA.',
     };
 
   const handleSelectVideo = (rawId: string) => {
@@ -69,6 +91,8 @@ export const YouTubeSection: React.FC = () => {
     setActiveVideoId(cleanId);
     setIsPlaying(true);
   };
+
+  const hasMultipleVideos = videoList.length > 1;
 
   return (
     <section className="bg-[#FAF8F4] border-t border-b border-[#E2D9CC] py-10 sm:py-16 font-sans">
@@ -107,9 +131,9 @@ export const YouTubeSection: React.FC = () => {
         </div>
 
         {/* Featured Player & Playlist Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Main 16:9 Featured Video Display */}
-          <div className="lg:col-span-8 bg-black rounded-3xl overflow-hidden shadow-xl border border-[#E2D9CC]/50">
+        <div className={`grid grid-cols-1 ${hasMultipleVideos ? 'lg:grid-cols-12' : 'max-w-4xl mx-auto'} gap-6 items-start`}>
+          {/* Main Featured Video Display */}
+          <div className={`${hasMultipleVideos ? 'lg:col-span-8' : 'w-full'} bg-black rounded-3xl overflow-hidden shadow-xl border border-[#E2D9CC]/50`}>
             <div className="relative aspect-video w-full bg-black">
               {isPlaying ? (
                 <iframe
@@ -177,100 +201,102 @@ export const YouTubeSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Side Playlist: Other Stories */}
-          <div className="lg:col-span-4 flex flex-col gap-3">
-            <div className="flex items-center justify-between px-1 mb-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#5A3825] flex items-center gap-1.5">
-                <FaTv className="text-sm text-[#8B5A2B]" />
-                <span>Featured Documentaries</span>
-              </span>
-              <span className="text-[11px] text-[#8C7364] font-medium">
-                {videoList.length} Videos
-              </span>
-            </div>
+          {/* Side Playlist: Videos added from Admin Dashboard */}
+          {hasMultipleVideos && (
+            <div className="lg:col-span-4 flex flex-col gap-3">
+              <div className="flex items-center justify-between px-1 mb-1">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#5A3825] flex items-center gap-1.5">
+                  <FaTv className="text-sm text-[#8B5A2B]" />
+                  <span>Featured Documentaries</span>
+                </span>
+                <span className="text-[11px] text-[#8C7364] font-medium">
+                  {videoList.length} Videos
+                </span>
+              </div>
 
-            <div className="space-y-2.5 sm:space-y-3">
-              {videoList.map((video) => {
-                const cleanId = parseYouTubeVideoId(video.id);
-                const isSelected = cleanId === currentVideoId;
-                return (
-                  <button
-                    key={video.id}
-                    type="button"
-                    onClick={() => handleSelectVideo(cleanId)}
-                    className={`w-full text-left p-2.5 sm:p-3 rounded-2xl border transition-all duration-300 flex items-center gap-3 group ${
-                      isSelected
-                        ? 'bg-[#FAF8F4] border-[#8B5A2B] ring-2 ring-[#8B5A2B]/20 shadow-md'
-                        : 'bg-[#FAF8F4] border-[#E2D9CC] hover:bg-[#F4F1EA] hover:border-[#8C7364]'
-                    }`}
-                  >
-                    {/* Thumbnail */}
-                    <div className="relative w-20 sm:w-28 aspect-video rounded-xl overflow-hidden shrink-0 bg-black">
-                      <img
-                        src={getYouTubeThumbnailUrl(cleanId, 'mq')}
-                        alt={video.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                      />
-                      <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
-                        <div
-                          className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center ${
-                            isSelected ? 'bg-red-600 text-white' : 'bg-white/80 text-black'
-                          }`}
-                        >
-                          <FaPlay className="text-[8px] sm:text-[9px] ml-0.5" />
+              <div className="space-y-2.5 sm:space-y-3">
+                {videoList.map((video) => {
+                  const cleanId = parseYouTubeVideoId(video.id);
+                  const isSelected = cleanId === currentVideoId;
+                  return (
+                    <button
+                      key={video.id}
+                      type="button"
+                      onClick={() => handleSelectVideo(cleanId)}
+                      className={`w-full text-left p-2.5 sm:p-3 rounded-2xl border transition-all duration-300 flex items-center gap-3 group ${
+                        isSelected
+                          ? 'bg-[#FAF8F4] border-[#8B5A2B] ring-2 ring-[#8B5A2B]/20 shadow-md'
+                          : 'bg-[#FAF8F4] border-[#E2D9CC] hover:bg-[#F4F1EA] hover:border-[#8C7364]'
+                      }`}
+                    >
+                      {/* Thumbnail */}
+                      <div className="relative w-20 sm:w-28 aspect-video rounded-xl overflow-hidden shrink-0 bg-black">
+                        <img
+                          src={getYouTubeThumbnailUrl(cleanId, 'mq')}
+                          alt={video.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                        <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
+                          <div
+                            className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center ${
+                              isSelected ? 'bg-red-600 text-white' : 'bg-white/80 text-black'
+                            }`}
+                          >
+                            <FaPlay className="text-[8px] sm:text-[9px] ml-0.5" />
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Metadata */}
-                    <div className="flex-1 min-w-0">
-                      <p
-                        className={`text-xs font-bold line-clamp-2 leading-tight ${
-                          isSelected ? 'text-[#8B5A2B]' : 'text-[#5A3825]'
-                        }`}
-                      >
-                        {video.title}
-                      </p>
-                      {video.subtitle && (
-                        <p className="text-[11px] text-[#8C7364] line-clamp-1 mt-1">
-                          {video.subtitle}
+                      {/* Metadata */}
+                      <div className="flex-1 min-w-0">
+                        <p
+                          className={`text-xs font-bold line-clamp-2 leading-tight ${
+                            isSelected ? 'text-[#8B5A2B]' : 'text-[#5A3825]'
+                          }`}
+                        >
+                          {video.title}
                         </p>
-                      )}
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[10px] font-semibold text-red-600 flex items-center gap-1">
-                          <FaYoutube className="text-xs" /> Watch
-                        </span>
-                        {isSelected && (
-                          <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded">
-                            Playing
-                          </span>
+                        {video.subtitle && (
+                          <p className="text-[11px] text-[#8C7364] line-clamp-1 mt-1">
+                            {video.subtitle}
+                          </p>
                         )}
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-[10px] font-semibold text-red-600 flex items-center gap-1">
+                            <FaYoutube className="text-xs" /> Watch
+                          </span>
+                          {isSelected && (
+                            <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded">
+                              Playing
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+                    </button>
+                  );
+                })}
+              </div>
 
-            {/* Subscribe Banner Card */}
-            <div className="mt-2 bg-[#F4F1EA] border border-[#E2D9CC] rounded-2xl p-4 text-center">
-              <p className="text-xs font-bold text-[#5A3825]">
-                Want to see more rural stories & recipes?
-              </p>
-              <p className="text-[11px] text-[#8C7364] mt-1 mb-3">
-                Join our YouTube community celebrating Indian traditional crafts and organic farming.
-              </p>
-              <a
-                href={channelUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[#5A3825] hover:bg-[#3F2618] text-[#F4F1EA] text-xs font-bold uppercase tracking-wider transition-colors"
-              >
-                <FaYoutube className="text-red-400 text-sm" />
-                <span>Visit YouTube Channel</span>
-              </a>
+              {/* Subscribe Banner Card */}
+              <div className="mt-2 bg-[#F4F1EA] border border-[#E2D9CC] rounded-2xl p-4 text-center">
+                <p className="text-xs font-bold text-[#5A3825]">
+                  Want to see more rural stories & recipes?
+                </p>
+                <p className="text-[11px] text-[#8C7364] mt-1 mb-3">
+                  Join our YouTube community celebrating Indian traditional crafts and organic farming.
+                </p>
+                <a
+                  href={channelUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[#5A3825] hover:bg-[#3F2618] text-[#F4F1EA] text-xs font-bold uppercase tracking-wider transition-colors"
+                >
+                  <FaYoutube className="text-red-400 text-sm" />
+                  <span>Visit YouTube Channel</span>
+                </a>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </section>

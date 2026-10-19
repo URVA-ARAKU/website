@@ -379,9 +379,25 @@ function mapProduct(row) {
     } catch (e) {}
   }
 
-  const cleanDescription = row.description ? row.description.split('__VARIANTS__=')[0].trim() : '';
+  // Extract custom N photos uploaded by admin
+  let photos = [];
+  if (row.description && row.description.includes('__PHOTOS__=')) {
+    try {
+      const photoPart = row.description.split('__PHOTOS__=')[1].split('__VARIANTS__=')[0];
+      const parsed = JSON.parse(photoPart);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        photos = parsed.filter(Boolean);
+      }
+    } catch (e) {}
+  }
 
-  let photo = row.photo || '';
+  // Strip internal encoding tags from clean user-facing description
+  const cleanDescription = (row.description || '')
+    .split('__PHOTOS__=')[0]
+    .split('__VARIANTS__=')[0]
+    .trim();
+
+  let photo = (photos.length > 0 ? photos[0] : row.photo) || '';
   if (!photo || photo.includes('v1791904263') || photo.includes('/urvaa/products/')) {
     const raw = (photo + ' ' + (row.name || '')).toLowerCase();
     if (raw.includes('araku') || raw.includes('coffee')) {
@@ -409,11 +425,8 @@ function mapProduct(row) {
     }
   }
 
-  const gallery = [
-    photo,
-    'https://res.cloudinary.com/idi6k3ue/image/upload/v1791905009/urvaa/images/hero/from-our-villages.jpg',
-    'https://res.cloudinary.com/idi6k3ue/image/upload/v1791905012/urvaa/images/hero/rural-heritage.jpg',
-  ].filter((v, i, a) => a.indexOf(v) === i);
+  // EXACT GALLERY: Use strictly the photos uploaded for this product with ZERO injected extra hero images
+  const gallery = photos.length > 0 ? photos : (photo ? [photo] : []);
 
   return {
     _id: row.id,
@@ -424,7 +437,9 @@ function mapProduct(row) {
     price: Number(row.price),
     stock: Number(row.stock),
     photo: photo,
+    photos: gallery,
     gallery: gallery,
+    images: gallery,
     photoPublicId: row.photo_public_id,
     featured: Boolean(row.featured),
     isActive: row.is_active !== false,
@@ -1792,13 +1807,26 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, message: 'Invalid product category: only authentic URVA rural & regional products are permitted.' });
       }
 
+      const rawPhotos = Array.isArray(req.body?.photos)
+        ? req.body.photos.filter(Boolean)
+        : Array.isArray(req.body?.images)
+        ? req.body.images.filter(Boolean)
+        : (photo ? [photo] : []);
+
+      const primaryPhoto = rawPhotos[0] || photo || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png';
+
+      let finalDescription = (description || '').trim();
+      if (rawPhotos.length > 0) {
+        finalDescription += `\n\n__PHOTOS__=${JSON.stringify(rawPhotos)}`;
+      }
+
       const insertData = {
         name,
         category: category,
         price: Number(price),
         stock: Number(stock),
-        description,
-        photo: photo || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png',
+        description: finalDescription,
+        photo: primaryPhoto,
         variants: variants || [],
         featured: false,
         is_active: true,
@@ -1965,7 +1993,7 @@ export default async function handler(req, res) {
 
       // Parse JSON body (sent from admin panel)
       const body = req.body || {};
-      const { name, category, price, stock, description, variants, photo } = body;
+      const { name, category, price, stock, description, variants, photo, photos, images } = body;
 
       // Find the product first
       const { data: product, error: fetchError } = await supabase
@@ -1978,15 +2006,42 @@ export default async function handler(req, res) {
         return res.status(404).json({ success: false, message: 'Product not found' });
       }
 
+      // Handle custom photos array
+      const rawPhotos = Array.isArray(photos)
+        ? photos.filter(Boolean)
+        : Array.isArray(images)
+        ? images.filter(Boolean)
+        : undefined;
+
+      let cleanDesc = description !== undefined
+        ? description
+        : (product.description || '');
+
+      cleanDesc = cleanDesc.split('__PHOTOS__=')[0].split('__VARIANTS__=')[0].trim();
+
       // Prepare update data — only include fields that were sent
       const updateData = {};
       if (name !== undefined) updateData.name = name;
       if (category !== undefined) updateData.category = category;
       if (price !== undefined) updateData.price = Number(price);
       if (stock !== undefined) updateData.stock = Number(stock);
-      if (description !== undefined) updateData.description = description;
       if (variants !== undefined) updateData.variants = variants;
-      if (photo !== undefined) updateData.photo = photo;
+
+      if (rawPhotos !== undefined) {
+        if (rawPhotos.length > 0) {
+          updateData.photo = rawPhotos[0];
+          cleanDesc += `\n\n__PHOTOS__=${JSON.stringify(rawPhotos)}`;
+        }
+        updateData.description = cleanDesc;
+      } else if (description !== undefined) {
+        if (product.description && product.description.includes('__PHOTOS__=')) {
+          const photoPart = product.description.split('__PHOTOS__=')[1].split('__VARIANTS__=')[0];
+          cleanDesc += `\n\n__PHOTOS__=${photoPart}`;
+        }
+        updateData.description = cleanDesc;
+      }
+
+      if (photo !== undefined && rawPhotos === undefined) updateData.photo = photo;
       updateData.updated_at = new Date().toISOString();
 
       const { data: updatedProduct, error: updateError } = await supabase
