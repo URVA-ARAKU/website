@@ -95,7 +95,7 @@ export function ShopByCategory({
   className,
   heading = 'Shop by Category',
   subheading,
-  eyebrow = 'CURATED REGIONAL COLLECTIONS',
+  eyebrow,
 }: ShopByCategoryProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { data: catData } = useGetCategoriesQuery();
@@ -152,9 +152,11 @@ export function ShopByCategory({
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-4 sm:mb-5 gap-3">
           <div className="text-center md:text-left">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C7364] block mb-1">
-              {eyebrow}
-            </span>
+            {eyebrow && (
+              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C7364] block mb-1">
+                {eyebrow}
+              </span>
+            )}
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#5A3825] tracking-tight font-sans">
               {heading}
             </h2>

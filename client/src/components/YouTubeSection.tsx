@@ -112,10 +112,6 @@ export const YouTubeSection: React.FC = () => {
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[#5A3825] leading-tight">
               Experience Our Rural Heritage in Motion
             </h2>
-            <p className="mt-2 text-xs sm:text-sm text-[#8C7364] max-w-2xl leading-relaxed">
-              Authentic documentary glimpses, harvest traditions, and conversations with the rural
-              artisans behind your favorite URVA products.
-            </p>
           </div>
 
           <a

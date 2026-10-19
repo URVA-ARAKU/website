@@ -61,15 +61,9 @@ export const ExploreProducts: React.FC<ExploreProductsProps> = ({ products = [] 
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 gap-4">
           <div className="text-center md:text-left">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C7364] block mb-1">
-              OUR COMPLETE CURATION • REGIONAL SPECIALTIES
-            </span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#5A3825] tracking-tight font-sans">
               Explore All Products
             </h2>
-            <p className="mt-1 text-xs sm:text-sm text-[#8C7364] font-normal max-w-xl">
-              Authentic regional foods, tribal coffee and honey, handlooms, plants, and sustainable essentials.
-            </p>
           </div>
 
           {/* Quick Sort Options */}
