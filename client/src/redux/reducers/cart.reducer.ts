@@ -1,15 +1,21 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { CartReducerIntialState, CartItem, ShippingInfo } from "../../types/api-types";
 
-const initialState: CartReducerIntialState = {
-    loading: false,
-    cartItems: JSON.parse(localStorage.getItem('cartItems') || '[]'),
-    subTotal: 0,
-    tax: 0,
-    shippingCharges: 0,
-    discount: 0,
-    total: 0,
-    shippingInfo: JSON.parse(localStorage.getItem('shippingInfo') || JSON.stringify({
+const getInitialCartItems = (): CartItem[] => {
+    try {
+        const item = localStorage.getItem('cartItems');
+        return item ? JSON.parse(item) : [];
+    } catch {
+        return [];
+    }
+};
+
+const getInitialShippingInfo = (): ShippingInfo => {
+    try {
+        const info = localStorage.getItem('shippingInfo');
+        if (info) return JSON.parse(info);
+    } catch {}
+    return {
         name: '',
         email: '',
         address: '',
@@ -22,7 +28,39 @@ const initialState: CartReducerIntialState = {
         latitude: undefined,
         longitude: undefined,
         deliveryType: 'current_location'
-    }))
+    };
+};
+
+const initialCartItems = getInitialCartItems();
+const initialSubTotal = initialCartItems.reduce(
+    (acc, item) => acc + (Number(item.price) || 0) * (Number(item.quantity) || 1),
+    0
+);
+const initialShipping = initialCartItems.length > 0 ? 80 : 0;
+
+const initialState: CartReducerIntialState = {
+    loading: false,
+    cartItems: initialCartItems,
+    subTotal: initialSubTotal,
+    tax: 0,
+    shippingCharges: initialShipping,
+    discount: 0,
+    total: Math.max(0, initialSubTotal + initialShipping),
+    shippingInfo: getInitialShippingInfo()
+};
+
+const updateCartTotals = (state: CartReducerIntialState) => {
+    const subTotal = state.cartItems.reduce(
+        (acc, item) => acc + (Number(item.price) || 0) * (Number(item.quantity) || 1),
+        0
+    );
+    state.subTotal = subTotal;
+    state.shippingCharges = state.cartItems.length > 0 ? 80 : 0; // Flat ₹80 shipping charges for AP & Telangana
+    state.tax = 0;
+    if (state.discount > subTotal) {
+        state.discount = subTotal;
+    }
+    state.total = Math.max(0, subTotal + state.shippingCharges - (state.discount || 0));
 };
 
 const saveToLocalStorage = (state: CartReducerIntialState) => {
@@ -42,18 +80,23 @@ export const cartReducer = createSlice({
             if (index !== -1) {
                 // If the item already exists in the cart, increment its quantity
                 // Limit the quantity to the stock available
-                state.cartItems[index].quantity = Math.min(state.cartItems[index].quantity + action.payload.quantity, action.payload.stock);
+                state.cartItems[index].quantity = Math.min(
+                    state.cartItems[index].quantity + action.payload.quantity,
+                    action.payload.stock
+                );
             } else {
                 // If the item doesn't exist in the cart, add it
                 state.cartItems.push(action.payload);
             }
 
+            updateCartTotals(state);
             state.loading = false;
             saveToLocalStorage(state); // Save to localStorage
         },
         removeCartItem: (state, action: PayloadAction<string>) => {
             state.loading = true;
             state.cartItems = state.cartItems.filter(item => item.productId !== action.payload);
+            updateCartTotals(state);
             state.loading = false;
             saveToLocalStorage(state); // Save to localStorage
         },
@@ -61,6 +104,7 @@ export const cartReducer = createSlice({
             const item = state.cartItems.find(item => item.productId === action.payload);
             if (item && item.quantity < item.stock) {
                 item.quantity += 1;
+                updateCartTotals(state);
                 saveToLocalStorage(state); // Save to localStorage
             }
         },
@@ -68,40 +112,35 @@ export const cartReducer = createSlice({
             const item = state.cartItems.find(item => item.productId === action.payload);
             if (item && item.quantity > 1) {
                 item.quantity -= 1;
+                updateCartTotals(state);
                 saveToLocalStorage(state); // Save to localStorage
             } else if (item && item.quantity === 1) {
                 state.cartItems = state.cartItems.filter(item => item.productId !== action.payload);
+                updateCartTotals(state);
                 saveToLocalStorage(state); // Save to localStorage
             }
         },
         calculatePrice: (state) => {
-            const subTotal = state.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-            state.subTotal = subTotal;
-            state.shippingCharges = 0;
-            state.tax = 0;
-            state.total = state.subTotal - state.discount;
-            // If the discount is greater than the total price, limit the discount to the total price
-            if (state.total < 0) {
-                state.discount = state.subTotal;
-                state.total = 0;
-            }
+            updateCartTotals(state);
         },
         discountApplied: (state, action: PayloadAction<number>) => {
-            state.discount = action.payload;
-            // If the discount is greater than the total price, limit the discount to the total price
-            if (state.discount > state.total) {
-                state.discount = state.total;
-            }
+            state.discount = Number(action.payload) || 0;
+            updateCartTotals(state);
             saveToLocalStorage(state); // Save to localStorage
         },
         saveShippingInfo: (state, action: PayloadAction<ShippingInfo>) => {
             state.shippingInfo = action.payload;
             saveToLocalStorage(state); // Save to localStorage
         },
-        resetCart: () => {
+        resetCart: (state) => {
             localStorage.removeItem('cartItems');
             localStorage.removeItem('shippingInfo');
-            return initialState;
+            state.cartItems = [];
+            state.subTotal = 0;
+            state.tax = 0;
+            state.shippingCharges = 0;
+            state.discount = 0;
+            state.total = 0;
         }
     }
 });

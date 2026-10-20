@@ -20,7 +20,7 @@ import {
 import ProductReviews from '../components/ProductReviews';
 import { useProductDetailsQuery } from '../redux/api/product.api';
 import { useGetReviewsQuery } from '../redux/api/review.api';
-import { addToCart, decrementCartItem, incrementCartItem } from '../redux/reducers/cart.reducer';
+import { addToCart, calculatePrice, decrementCartItem, incrementCartItem } from '../redux/reducers/cart.reducer';
 import { RootState } from '../redux/store';
 import { usePageSEO } from '../hooks/usePageSEO';
 import { productSchema, breadcrumbSchema, webPageSchema } from '../seo/schemas';
@@ -165,17 +165,18 @@ const ProductDetails: React.FC = () => {
   const handleAddToCart = (e?: React.MouseEvent, overrideQuantity?: number) => {
     if (!resolvedProduct) return;
     if (e) e.preventDefault();
-    const qtyToAdd = overrideQuantity || quantity;
+    const qtyToAdd = Math.max(1, Number(overrideQuantity || quantity) || 1);
+    const unitPrice = Number(price) || 299;
     const varietyLabel = availableVarieties.length > 1 ? ` (${selectedVariety?.label || 'Option'})` : '';
 
     dispatch(
       addToCart({
         productId: activeCartItemId,
         name: `${resolvedProduct.name}${varietyLabel}`,
-        price: price,
+        price: unitPrice,
         quantity: qtyToAdd,
-        stock: resolvedProduct.stock || 50,
-        photo: activeImage || resolvedProduct.photo,
+        stock: Number(resolvedProduct.stock) || 50,
+        photo: activeImage || resolvedProduct.photo || '',
       })
     );
 
@@ -189,6 +190,7 @@ const ProductDetails: React.FC = () => {
     if (!resolvedProduct) return;
     e.preventDefault();
     handleAddToCart(undefined, quantity);
+    dispatch(calculatePrice());
     navigate('/shipping');
   };
 

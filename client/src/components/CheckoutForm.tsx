@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import BackButton from '../components/common/BackBtn';
 import { useNewOrderMutation } from '../redux/api/order.api';
-import { resetCart } from '../redux/reducers/cart.reducer';
+import { calculatePrice, resetCart } from '../redux/reducers/cart.reducer';
 import { RootState } from '../redux/store';
 import { NewOrderRequest } from '../types/api-types';
 import { notify } from '../utils/util';
@@ -41,8 +41,27 @@ const CheckoutForm: React.FC = () => {
     total,
   } = useSelector((state: RootState) => state.cart);
 
+  // Recalculate price on mount and redirect if cart is empty
+  useEffect(() => {
+    if (cartItems.length === 0) {
+      notify('Your basket is empty. Please select products first.', 'info');
+      navigate('/products');
+    } else {
+      dispatch(calculatePrice());
+    }
+  }, [cartItems.length, dispatch, navigate]);
+
   const [newOrder] = useNewOrderMutation();
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+
+  // Fallback calculation to guarantee positive total if cart has items
+  const itemsSubTotal = cartItems.reduce(
+    (acc, item) => acc + (Number(item.price) || 0) * (Number(item.quantity) || 1),
+    0
+  );
+  const effectiveSubTotal = subTotal > 0 ? subTotal : itemsSubTotal;
+  const effectiveShipping = shippingCharges !== undefined && shippingCharges !== null && shippingCharges > 0 ? shippingCharges : (cartItems.length > 0 ? 80 : 0);
+  const effectiveTotal = total > 0 ? total : Math.max(0, effectiveSubTotal + effectiveShipping - (discount || 0));
 
   // UPI Payment States
   const [transactionId, setTransactionId] = useState<string>('');
@@ -55,11 +74,8 @@ const CheckoutForm: React.FC = () => {
   const UPI_ID = '9346422451@ybl';
   const MERCHANT_NAME = 'URVA Rural Aura';
 
-  // Construct standard & app-specific UPI Payment URLs
-  const upiDeepLink = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent('URVA Order Payment')}`;
-  const phonePeDeepLink = `phonepe://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent('URVA Order Payment')}`;
-  const gPayDeepLink = `tez://upi/pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent('URVA Order Payment')}`;
-  const paytmDeepLink = `paytmmp://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent('URVA Order Payment')}`;
+  // Construct standard UPI Payment URL with guaranteed accurate effectiveTotal
+  const upiDeepLink = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${effectiveTotal.toFixed(2)}&cu=INR&tn=${encodeURIComponent('URVA Order Payment')}`;
 
   // Official merchant PhonePe QR Code image
   const qrCodeUrl = '/qr.jpeg';
@@ -143,19 +159,19 @@ const CheckoutForm: React.FC = () => {
     const finalScreenshot = screenshotUrl || screenshotPreview || '';
 
     const orderData: NewOrderRequest = {
-      shippingCharges,
+      shippingCharges: effectiveShipping,
       shippingInfo: {
         ...shippingInfo,
         paymentMethod: 'UPI_QR',
         transactionId: trimmedTxnId,
         paymentScreenshot: finalScreenshot,
-        paidAmount: total,
+        paidAmount: effectiveTotal,
         clientOrigin: window.location.origin,
       } as any,
       tax,
       discount,
-      total,
-      subTotal,
+      total: effectiveTotal,
+      subTotal: effectiveSubTotal,
       orderItems: cartItems,
       userId: guestUserId,
     };
@@ -202,6 +218,48 @@ const CheckoutForm: React.FC = () => {
           </p>
         </div>
 
+        {/* Selected Products in Order */}
+        {cartItems.length > 0 && (
+          <div className="bg-[#F4F1EA] p-4 sm:p-5 rounded-2xl border border-[#E2D9CC] space-y-3">
+            <div className="flex items-center justify-between border-b border-[#E2D9CC] pb-2.5">
+              <p className="font-bold text-[#8B5A2B] uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                <span>🛍️</span> Selected Products in Order ({cartItems.reduce((acc, it) => acc + (it.quantity || 1), 0)} items)
+              </p>
+              <button
+                type="button"
+                onClick={() => navigate('/cart')}
+                className="text-[11px] text-[#8B5A2B] hover:text-[#5A3825] font-semibold underline cursor-pointer"
+              >
+                Modify Basket
+              </button>
+            </div>
+            <div className="divide-y divide-[#E2D9CC]/60 max-h-56 overflow-y-auto space-y-2 pr-1">
+              {cartItems.map((item, idx) => (
+                <div key={item.productId || idx} className="pt-2 first:pt-0 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <img
+                      src={item.photo || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png'}
+                      alt={item.name}
+                      className="w-12 h-12 object-cover rounded-lg border border-[#E2D9CC] bg-white flex-shrink-0"
+                    />
+                    <div className="min-w-0">
+                      <p className="font-semibold text-xs text-[#5A3825] truncate">{item.name}</p>
+                      <p className="text-[11px] text-[#8C7364]">
+                        Qty: <span className="font-semibold text-[#5A3825]">{item.quantity}</span> × ₹{(Number(item.price) || 0).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <p className="font-bold text-xs text-[#5A3825]">
+                      ₹{((Number(item.price) || 0) * (Number(item.quantity) || 1)).toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Order Price & Shipping Summary */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Shipping Summary */}
@@ -227,7 +285,7 @@ const CheckoutForm: React.FC = () => {
               </p>
               <div className="flex justify-between text-[#8C7364]">
                 <span>Items Subtotal:</span>
-                <span className="font-semibold text-[#5A3825]">₹ {subTotal.toFixed(2)}</span>
+                <span className="font-semibold text-[#5A3825]">₹ {effectiveSubTotal.toFixed(2)}</span>
               </div>
               {discount > 0 && (
                 <div className="flex justify-between text-emerald-800 font-semibold">
@@ -236,15 +294,15 @@ const CheckoutForm: React.FC = () => {
                 </div>
               )}
               <div className="flex justify-between text-[#8C7364]">
-                <span>Shipping Fee:</span>
+                <span>Shipping Charges (AP & Telangana):</span>
                 <span className="font-semibold text-[#5A3825]">
-                  {shippingCharges === 0 ? 'FREE' : `₹ ${shippingCharges.toFixed(2)}`}
+                  ₹ {effectiveShipping.toFixed(2)}
                 </span>
               </div>
             </div>
             <div className="pt-2 border-t border-[#E2D9CC] flex justify-between items-baseline font-bold">
               <span className="text-[#5A3825]">Total Payable:</span>
-              <span className="text-xl sm:text-2xl font-serif text-[#5A3825]">₹ {total.toFixed(2)}</span>
+              <span className="text-xl sm:text-2xl font-serif text-[#5A3825]">₹ {effectiveTotal.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -260,63 +318,41 @@ const CheckoutForm: React.FC = () => {
             </span>
           </div>
 
-          {/* PRIMARY "PAY WITH UPI >" HERO BUTTON */}
-          <div className="space-y-3">
+          {/* PRIMARY "PAY WITH UPI" BUTTON */}
+          <div className="space-y-2">
             <a
               href={upiDeepLink}
-              onClick={() => notify('Opening UPI App... Complete payment and enter your 12-digit UTR below.', 'info')}
-              className="w-full flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-[#5A3825] hover:bg-[#8B5A2B] text-white shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer border border-[#3F2618]"
+              onClick={() => notify('Opening your UPI app... Complete payment and enter the 12-digit UTR below.', 'info')}
+              className="w-full flex items-center justify-between p-4 sm:p-4.5 rounded-xl bg-[#8B5A2B] hover:bg-[#6F441E] text-white shadow-sm hover:shadow-md transition-all duration-150 cursor-pointer group"
+              style={{ color: '#ffffff' }}
             >
-              <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-lg bg-white/15 flex items-center justify-center text-white text-lg shrink-0" style={{ color: '#ffffff' }}>
                   <FaMobileScreenButton />
                 </div>
-                <div className="text-left">
-                  <span className="block text-base sm:text-lg font-serif font-bold text-white leading-tight">
-                    Pay with UPI &gt;
+                <div className="text-left min-w-0">
+                  <span className="block text-base sm:text-lg font-bold text-white tracking-wide leading-tight truncate" style={{ color: '#ffffff' }}>
+                    Pay with UPI
                   </span>
-                  <span className="block text-[11px] sm:text-xs text-[#E2D9CC] font-normal">
-                    Google Pay, PhonePe, Paytm, BHIM or any UPI app
+                  <span className="block text-xs text-white/80 font-normal truncate" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                    Google Pay · PhonePe · Paytm · BHIM & all apps
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-base sm:text-xl font-bold font-serif text-white">
-                  ₹ {total.toFixed(2)}
+
+              <div className="flex items-center gap-2.5 shrink-0 pl-2">
+                <span className="text-lg sm:text-xl font-bold text-white font-serif" style={{ color: '#ffffff' }}>
+                  ₹ {effectiveTotal.toFixed(2)}
                 </span>
-                <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold text-white group-hover:translate-x-1 transition-transform">
-                  &gt;
+                <span className="text-white text-base group-hover:translate-x-1 transition-transform" style={{ color: '#ffffff' }}>
+                  ➔
                 </span>
               </div>
             </a>
 
-            {/* Quick 1-Tap App Triggers */}
-            <div className="grid grid-cols-3 gap-2">
-              <a
-                href={phonePeDeepLink}
-                onClick={() => notify('Opening PhonePe...', 'info')}
-                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FAF8F4] hover:bg-[#EAE5D9] border border-[#E2D9CC] text-xs font-bold text-[#5A3825] transition shadow-2xs hover:border-[#8B5A2B]"
-              >
-                <span>PhonePe</span>
-                <span className="text-[11px] text-[#8B5A2B] font-bold">&gt;</span>
-              </a>
-              <a
-                href={gPayDeepLink}
-                onClick={() => notify('Opening Google Pay...', 'info')}
-                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FAF8F4] hover:bg-[#EAE5D9] border border-[#E2D9CC] text-xs font-bold text-[#5A3825] transition shadow-2xs hover:border-[#8B5A2B]"
-              >
-                <span>Google Pay</span>
-                <span className="text-[11px] text-[#8B5A2B] font-bold">&gt;</span>
-              </a>
-              <a
-                href={paytmDeepLink}
-                onClick={() => notify('Opening Paytm...', 'info')}
-                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FAF8F4] hover:bg-[#EAE5D9] border border-[#E2D9CC] text-xs font-bold text-[#5A3825] transition shadow-2xs hover:border-[#8B5A2B]"
-              >
-                <span>Paytm</span>
-                <span className="text-[11px] text-[#8B5A2B] font-bold">&gt;</span>
-              </a>
-            </div>
+            <p className="text-xs text-center text-[#8C7364]">
+              Tap above to pay directly via your UPI app, or scan the QR code below.
+            </p>
           </div>
 
           {/* DIVIDER: OR SCAN QR CODE */}
@@ -333,13 +369,13 @@ const CheckoutForm: React.FC = () => {
             <div className="p-3.5 bg-white rounded-2xl border-2 border-[#5A3825] shadow-md transition-transform hover:scale-[1.02]">
               <img
                 src={qrCodeUrl}
-                alt={`Scan to pay ₹${total} to ${UPI_ID}`}
+                alt={`Scan to pay ₹${effectiveTotal.toFixed(2)} to ${UPI_ID}`}
                 className="w-52 h-52 sm:w-60 sm:h-60 object-contain rounded-lg"
               />
             </div>
             <div className="mt-3 text-center">
               <span className="text-xs font-semibold text-[#8C7364] block">Scan using any UPI App Camera</span>
-              <span className="text-lg font-bold text-[#5A3825] font-serif">₹ {total.toFixed(2)}</span>
+              <span className="text-lg font-bold text-[#5A3825] font-serif">₹ {effectiveTotal.toFixed(2)}</span>
             </div>
           </div>
 
@@ -468,7 +504,7 @@ const CheckoutForm: React.FC = () => {
                 <span>Confirming Order...</span>
               </>
             ) : (
-              <span>Submit Payment & Place Order (₹ {total.toFixed(2)}) ➔</span>
+              <span>Submit Payment & Place Order (₹ {effectiveTotal.toFixed(2)}) ➔</span>
             )}
           </button>
         </form>

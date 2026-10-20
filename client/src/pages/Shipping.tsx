@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { saveShippingInfo } from '../redux/reducers/cart.reducer';
+import { calculatePrice, saveShippingInfo } from '../redux/reducers/cart.reducer';
 import { RootState } from '../redux/store';
 import { notify } from '../utils/util';
 import BackButton from '../components/common/BackBtn';
@@ -9,12 +9,8 @@ import { FaTruck, FaShieldAlt } from 'react-icons/fa';
 import { usePageSEO } from '../hooks/usePageSEO';
 
 const INDIAN_STATES = [
-    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana",
-    "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
-    "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
-    "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal",
-    "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
-    "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
+    "Andhra Pradesh",
+    "Telangana"
 ];
 
 const Shipping: React.FC = () => {
@@ -29,21 +25,27 @@ const Shipping: React.FC = () => {
     const navigate = useNavigate();
 
     const { user } = useSelector((state: RootState) => state.user);
-    const { shippingInfo, cartItems } = useSelector((state: RootState) => state.cart);
+    const { shippingInfo, cartItems, subTotal, total } = useSelector((state: RootState) => state.cart);
 
-    // Redirect if cart is empty
+    // Ensure price is calculated and redirect if cart is empty
     useEffect(() => {
         if (cartItems.length === 0) {
             navigate('/cart');
+        } else {
+            dispatch(calculatePrice());
         }
-    }, [cartItems.length, navigate]);
+    }, [cartItems.length, navigate, dispatch]);
 
     const [name, setName] = useState(shippingInfo.name || user?.name || '');
     const [email, setEmail] = useState(shippingInfo.email || user?.email || '');
     const [address, setAddress] = useState(shippingInfo.address || '');
     const [landmark, setLandmark] = useState(shippingInfo.landmark || '');
     const [city, setCity] = useState(shippingInfo.city || '');
-    const [state, setState] = useState(shippingInfo.state || 'Telangana');
+    const [state, setState] = useState(
+        shippingInfo.state && ["Andhra Pradesh", "Telangana"].includes(shippingInfo.state)
+            ? shippingInfo.state
+            : 'Telangana'
+    );
     const [pinCode, setPinCode] = useState(shippingInfo.pinCode || '');
     const [phone, setPhone] = useState(shippingInfo.phone || '');
 
@@ -106,6 +108,35 @@ const Shipping: React.FC = () => {
                         Enter your shipping details for order delivery
                     </p>
                 </div>
+
+                {/* Selected Items Quick Preview */}
+                {cartItems.length > 0 && (
+                    <div className="bg-[#FAF8F4] rounded-2xl border border-[#E2D9CC] p-4 mb-4 shadow-sm">
+                        <div className="flex items-center justify-between text-xs border-b border-[#E2D9CC] pb-2 mb-2.5">
+                            <span className="font-bold text-[#8B5A2B] uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                                <span>🛍️</span> Selected Products ({cartItems.reduce((acc, it) => acc + (it.quantity || 1), 0)} items)
+                            </span>
+                            <span className="font-bold text-[#5A3825]">
+                                Total: ₹{(total > 0 ? total : subTotal > 0 ? subTotal + 80 : cartItems.reduce((acc, it) => acc + (Number(it.price) || 0) * (Number(it.quantity) || 1), 0) + 80).toFixed(2)} (incl. ₹80 shipping)
+                            </span>
+                        </div>
+                        <div className="flex gap-2 overflow-x-auto pb-1">
+                            {cartItems.map((item, idx) => (
+                                <div key={item.productId || idx} className="flex items-center gap-2.5 bg-[#F4F1EA] px-3 py-2 rounded-xl border border-[#E2D9CC] flex-shrink-0">
+                                    <img
+                                        src={item.photo || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png'}
+                                        alt={item.name}
+                                        className="w-10 h-10 rounded-lg object-cover border border-[#E2D9CC] bg-white flex-shrink-0"
+                                    />
+                                    <div className="text-[11px] leading-tight max-w-[160px]">
+                                        <p className="font-semibold text-[#5A3825] truncate">{item.name}</p>
+                                        <p className="text-[#8C7364] mt-0.5">Qty: {item.quantity} · ₹{(Number(item.price) || 0).toFixed(0)}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* Main Form Box */}
                 <div className="bg-[#FAF8F4] rounded-2xl border border-[#E2D9CC] p-6 shadow-sm">
@@ -222,7 +253,7 @@ const Shipping: React.FC = () => {
                         {/* Security / Delivery Trust Info */}
                         <div className="pt-2 flex items-center justify-between text-xs text-[#8C7364] border-t border-[#E2D9CC]">
                             <span className="flex items-center gap-1.5 text-[#5A3825] font-semibold">
-                                <FaTruck /> Fast & Secure Pan-India Shipping
+                                <FaTruck /> Fast Delivery in AP & Telangana (Flat ₹80 Shipping)
                             </span>
                             <span className="flex items-center gap-1 text-emerald-800 font-semibold">
                                 <FaShieldAlt /> Safe Checkout
