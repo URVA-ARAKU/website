@@ -51,7 +51,7 @@ const PopularProducts: React.FC<PopularProductsProps> = ({ products = [] }) => {
   };
 
   return (
-    <section className="pt-2 pb-12 sm:pt-4 sm:pb-16 bg-[#F4F1EA] border-b border-[#E2D9CC] font-sans">
+    <section className="pt-2 pb-2 sm:pt-4 sm:pb-6 bg-[#F4F1EA] font-sans">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-row items-center justify-between mb-4 sm:mb-6 gap-2">
@@ -116,7 +116,7 @@ const PopularProducts: React.FC<PopularProductsProps> = ({ products = [] }) => {
         <div className="relative">
           <div
             ref={scrollRef}
-            className="flex snap-x snap-mandatory items-stretch gap-4 sm:gap-6 overflow-x-auto scrollbar-hide pb-4 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0"
+            className="flex snap-x snap-mandatory items-stretch gap-4 sm:gap-6 overflow-x-auto scrollbar-hide pb-1 sm:pb-2 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0"
           >
             {filteredProducts.map((product) => (
               <div
@@ -127,11 +127,6 @@ const PopularProducts: React.FC<PopularProductsProps> = ({ products = [] }) => {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Mobile Swipe Cue */}
-        <div className="mt-2 flex sm:hidden justify-center items-center gap-1.5 text-[11px] text-gray-400 font-light">
-          <span>&larr; Swipe to view more best sellers &rarr;</span>
         </div>
       </div>
     </section>

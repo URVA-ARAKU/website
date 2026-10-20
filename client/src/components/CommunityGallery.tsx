@@ -24,8 +24,11 @@ const CommunityGallery: React.FC = () => (
   <section aria-labelledby="community-gallery-heading" className="overflow-hidden bg-[#F4F1EA] border-t border-[#E2D9CC] py-10 md:py-14">
     <div className="mx-auto mb-8 max-w-7xl px-4 text-center sm:mb-10 sm:px-6">
       <h2 id="community-gallery-heading" className="font-sans text-2xl font-semibold tracking-tight text-[#5A3825] sm:text-3xl lg:text-4xl">
-        Life Across India's Villages
+        Snaps of the URVA Community
       </h2>
+      <p className="mt-2 text-xs sm:text-sm text-[#8C7364] max-w-xl mx-auto">
+        Everyday moments of craft, harvest, and tradition from our artisans and growers
+      </p>
     </div>
 
     <div className="overflow-hidden">

@@ -19,25 +19,6 @@
     "updatedAt": "2026-10-13T18:55:58.448+00:00"
   },
   {
-    "id": "7b7f0576-fc18-4448-a3c8-4d824ddf5f9d",
-    "type": "hero",
-    "title": "Delivering the Authentic Rural Aura",
-    "subtitle": "Discover pure harvests, indigenous crafts, and ancestral traditions directly from India's rural cooperatives.",
-    "tagline": "ONE VILLAGE ONE PRODUCT",
-    "imageUrl": "https://res.cloudinary.com/idi6k3ue/image/upload/v1791905009/urvaa/images/hero/from-our-villages.jpg",
-    "mobileImageUrl": "https://res.cloudinary.com/idi6k3ue/image/upload/v1791905009/urvaa/images/hero/from-our-villages.jpg",
-    "linkUrl": "/products",
-    "buttonText": "Explore All",
-    "badge": "AUTHENTIC RURAL",
-    "theme": "dark",
-    "backgroundColor": "#111111",
-    "textColor": "#FFFFFF",
-    "displayOrder": 1,
-    "isActive": true,
-    "createdAt": "2026-10-13T18:56:01.781064+00:00",
-    "updatedAt": "2026-10-13T18:55:57.694+00:00"
-  },
-  {
     "id": "bb780d08-c69e-4a8f-aca0-19b123d54095",
     "type": "story_video",
     "title": "Pure Honey Harvested by Araku Tribes",
@@ -114,25 +95,6 @@
     "updatedAt": "2026-10-13T18:55:58.541+00:00"
   },
   {
-    "id": "ab6ed7ad-1a32-4019-b487-5399b24c11a0",
-    "type": "hero",
-    "title": "Untouched Heritage of Mana Godavari",
-    "subtitle": "Artisanal palm jaggery, melt-in-mouth Bellam Putharekulu, and traditional sweets crafted with zero chemicals.",
-    "tagline": "DELTA SWEETS & HARVESTS",
-    "imageUrl": "https://res.cloudinary.com/idi6k3ue/image/upload/v1791905012/urvaa/images/hero/rural-heritage.jpg",
-    "mobileImageUrl": "https://res.cloudinary.com/idi6k3ue/image/upload/v1791905012/urvaa/images/hero/rural-heritage.jpg",
-    "linkUrl": "/category/mana-godavari-foods",
-    "buttonText": "Taste Godavari Sweets",
-    "badge": "HERITAGE RECIPES",
-    "theme": "dark",
-    "backgroundColor": "#111111",
-    "textColor": "#FFFFFF",
-    "displayOrder": 2,
-    "isActive": true,
-    "createdAt": "2026-10-13T18:56:01.943141+00:00",
-    "updatedAt": "2026-10-13T18:55:57.982+00:00"
-  },
-  {
     "id": "47f306b0-c7a3-44af-a1a5-7b31bc2807d6",
     "type": "story_video",
     "title": "Sorting Fresh Native Harvest",
@@ -150,25 +112,6 @@
     "isActive": true,
     "createdAt": "2026-10-13T18:56:02.789321+00:00",
     "updatedAt": "2026-10-13T18:55:58.893+00:00"
-  },
-  {
-    "id": "b3312ccb-4a90-4aa4-ac63-9467d808207b",
-    "type": "hero",
-    "title": "Wild Araku Tribal Coffee & Forest Honey",
-    "subtitle": "Shade-grown Arabica coffee beans and raw cliff honey sourced directly from indigenous forest tribes.",
-    "tagline": "SUSTAINABLE & FAIR TRADE",
-    "imageUrl": "https://res.cloudinary.com/idi6k3ue/image/upload/v1791905011/urvaa/images/hero/rooted-in-rural-life.jpg",
-    "mobileImageUrl": "https://res.cloudinary.com/idi6k3ue/image/upload/v1791905011/urvaa/images/hero/rooted-in-rural-life.jpg",
-    "linkUrl": "/category/tribal-araku-products",
-    "buttonText": "Discover Tribal Araku",
-    "badge": "ORGANIC HARVEST",
-    "theme": "dark",
-    "backgroundColor": "#111111",
-    "textColor": "#FFFFFF",
-    "displayOrder": 3,
-    "isActive": true,
-    "createdAt": "2026-10-13T18:56:02.054328+00:00",
-    "updatedAt": "2026-10-13T18:55:58.144+00:00"
   },
   {
     "id": "32035bfb-0089-4010-b22e-0c2129b65915",

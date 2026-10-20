@@ -84,22 +84,55 @@ const ProductsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F1EA] px-4 py-8 sm:px-8">
-      <div className="mx-auto max-w-7xl space-y-8">
-        <header className="rounded-2xl bg-[#5A3825] px-6 py-10 text-white sm:px-10 border border-[#3F2618] shadow-sm">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#CCA887]">
-            One Village – One Product
-          </p>
-          <h1 className="mt-2 font-sans text-3xl font-semibold sm:text-4xl text-[#F4F1EA] tracking-tight">
-            Explore the URVA Collection
-          </h1>
-          <p className="mt-2.5 max-w-2xl text-xs sm:text-sm leading-relaxed text-[#E2D9CC]">
-            Discover authentic regional foods, tribal harvests, handlooms, and everyday essentials.
-          </p>
+    <div className="min-h-screen bg-[#F4F1EA] px-4 py-3 sm:py-6 sm:px-8">
+      <div className="mx-auto max-w-7xl space-y-3.5 sm:space-y-6">
+        {/* Compact, Premium Banner */}
+        <header className="rounded-2xl bg-[#5A3825] px-4 py-3 sm:px-8 sm:py-5 text-white border border-[#3F2618] shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4">
+            <div>
+              <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] text-[#CCA887]">
+                One Village – One Product
+              </p>
+              <h1 className="mt-0.5 sm:mt-1 font-sans text-lg sm:text-2xl md:text-3xl font-bold text-[#F4F1EA] tracking-tight">
+                Explore the URVA Collection
+              </h1>
+            </div>
+            <p className="hidden sm:block text-xs text-[#E2D9CC] max-w-xs text-right">
+              Discover authentic regional foods, tribal harvests, handlooms, and everyday essentials.
+            </p>
+          </div>
         </header>
 
-        <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
-          <aside className="rounded-xl border border-[#E2D9CC] bg-[#FAF8F4] p-5 self-start shadow-xs">
+        {/* Mobile Horizontal Category Filter Pills (saves ~250px vertical screen space on mobile) */}
+        <div className="lg:hidden flex items-center gap-2 overflow-x-auto scrollbar-hide py-0.5 -mx-4 px-4 sm:mx-0 sm:px-0">
+          <button
+            onClick={() => handleCategoryClick('')}
+            className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-medium transition-all shrink-0 ${
+              selectedCategory === ''
+                ? 'bg-[#5A3825] text-[#F4F1EA] shadow-xs'
+                : 'bg-[#FAF8F4] text-[#5A3825] border border-[#E2D9CC] hover:border-[#8B5A2B]'
+            }`}
+          >
+            All Products
+          </button>
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => handleCategoryClick(category)}
+              className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-medium transition-all shrink-0 ${
+                selectedCategory === category
+                  ? 'bg-[#5A3825] text-[#F4F1EA] shadow-xs'
+                  : 'bg-[#FAF8F4] text-[#5A3825] border border-[#E2D9CC] hover:border-[#8B5A2B]'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid gap-4 lg:gap-8 lg:grid-cols-[240px_1fr]">
+          {/* Desktop Sidebar (hidden on mobile to keep products visible above the fold) */}
+          <aside className="hidden lg:block rounded-xl border border-[#E2D9CC] bg-[#FAF8F4] p-5 self-start shadow-xs sticky top-24">
             <h2 className="border-b border-[#E2D9CC] pb-3 font-sans text-sm font-semibold uppercase tracking-wider text-[#5A3825]">
               Categories
             </h2>
@@ -133,10 +166,10 @@ const ProductsPage: React.FC = () => {
             </ul>
           </aside>
 
-          <main className="space-y-6">
-            <div className="flex flex-col items-center justify-between gap-4 rounded-xl border border-[#E2D9CC] bg-[#FAF8F4] p-3.5 sm:flex-row shadow-xs">
-              <label className="relative w-full max-w-md">
-                <FaSearch aria-hidden="true" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-[#8C7364]" />
+          <main className="space-y-4 sm:space-y-6">
+            <div className="flex flex-row items-center justify-between gap-3 rounded-xl border border-[#E2D9CC] bg-[#FAF8F4] p-2.5 sm:p-3.5 shadow-xs">
+              <label className="relative flex-1">
+                <FaSearch aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#8C7364]" />
                 <span className="sr-only">Search products</span>
                 <input
                   type="search"
@@ -146,15 +179,15 @@ const ProductsPage: React.FC = () => {
                     setSearch(event.target.value);
                     setPage(1);
                   }}
-                  className="w-full rounded-full border border-[#E2D9CC] bg-[#F4F1EA] py-2 pl-9 pr-4 text-xs text-[#5A3825] placeholder:text-[#8C7364] focus:outline-none focus:border-[#8B5A2B] focus:ring-1 focus:ring-[#8B5A2B]"
+                  className="w-full rounded-full border border-[#E2D9CC] bg-[#F4F1EA] py-1.5 pl-8 pr-3 text-xs text-[#5A3825] placeholder:text-[#8C7364] focus:outline-none focus:border-[#8B5A2B] focus:ring-1 focus:ring-[#8B5A2B]"
                 />
               </label>
-              <label className="flex items-center gap-2 text-xs text-[#8C7364]">
-                <span>Sort by:</span>
+              <label className="flex items-center gap-1.5 text-xs text-[#8C7364] shrink-0">
+                <span className="hidden sm:inline">Sort:</span>
                 <select
                   value={sort}
                   onChange={(event) => setSort(event.target.value as 'asc' | 'desc' | 'relevance')}
-                  className="rounded-lg border border-[#E2D9CC] bg-[#FAF8F4] px-3 py-1.5 text-xs font-medium text-[#5A3825] focus:outline-none focus:border-[#8B5A2B]"
+                  className="rounded-lg border border-[#E2D9CC] bg-[#F4F1EA] px-2.5 py-1.5 text-xs font-medium text-[#5A3825] focus:outline-none focus:border-[#8B5A2B]"
                 >
                   <option value="relevance">Recommended</option>
                   <option value="asc">Price: Low to High</option>

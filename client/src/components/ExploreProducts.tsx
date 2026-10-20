@@ -55,7 +55,7 @@ export const ExploreProducts: React.FC<ExploreProductsProps> = ({ products = [] 
   return (
     <section
       aria-label="Explore All Products"
-      className="py-12 sm:py-16 bg-[#F4F1EA] border-b border-[#E2D9CC] font-sans"
+      className="pt-3 pb-12 sm:pt-6 sm:pb-16 bg-[#F4F1EA] border-b border-[#E2D9CC] font-sans"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}

@@ -52,40 +52,60 @@ const HomePage: React.FC = () => {
       <PopularProducts products={products} />
 
       {/* ─── 5. UrvAA Rural Marketplace Showcase Banner (Dynamic Admin Managed) ─── */}
-      <section className="w-full bg-[#FAF7F2] border-y border-[#EBE3D5] my-2">
-        {showcaseBanner?.linkUrl ? (
-          <Link to={showcaseBanner.linkUrl} className="block group">
-            <img
-              src={optimizeCloudinaryUrl(
-                showcaseBanner.imageUrl ||
-                'https://res.cloudinary.com/idi6k3ue/image/upload/v1791905013/urvaa/images/urvaa-rural-marketplace-showcase.png',
-                1200
-              )}
-              alt={showcaseBanner.title || 'UrvAA Rural Marketplace Showcase'}
-              className="block w-full h-auto object-contain mx-auto transition-transform duration-300 group-hover:opacity-95"
-              loading="lazy"
-              decoding="async"
-            />
-          </Link>
-        ) : (
-          <img
-            src={optimizeCloudinaryUrl(
-              showcaseBanner?.imageUrl ||
-              'https://res.cloudinary.com/idi6k3ue/image/upload/v1791905013/urvaa/images/urvaa-rural-marketplace-showcase.png',
-              1200
+      <section className="w-full bg-[#F4F1EA] py-2 sm:py-5 font-sans">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-2xl border border-[#E2D9CC] bg-[#FAF8F4] shadow-xs transition-all hover:border-[#8B5A2B]/40 group">
+            {showcaseBanner?.linkUrl ? (
+              <Link to={showcaseBanner.linkUrl} className="block w-full">
+                <picture>
+                  {showcaseBanner.mobileImageUrl && showcaseBanner.mobileImageUrl !== showcaseBanner.imageUrl && (
+                    <source
+                      media="(max-width: 639px)"
+                      srcSet={optimizeCloudinaryUrl(showcaseBanner.mobileImageUrl, 800)}
+                    />
+                  )}
+                  <img
+                    src={optimizeCloudinaryUrl(
+                      showcaseBanner.imageUrl ||
+                      'https://res.cloudinary.com/idi6k3ue/image/upload/v1791905013/urvaa/images/urvaa-rural-marketplace-showcase.png',
+                      1400
+                    )}
+                    alt={showcaseBanner.title || 'UrvAA Rural Marketplace Showcase'}
+                    className="w-full h-auto object-cover sm:object-contain mx-auto transition-transform duration-500 group-hover:scale-[1.01]"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
+              </Link>
+            ) : (
+              <picture>
+                {showcaseBanner?.mobileImageUrl && showcaseBanner.mobileImageUrl !== showcaseBanner.imageUrl && (
+                  <source
+                    media="(max-width: 639px)"
+                    srcSet={optimizeCloudinaryUrl(showcaseBanner.mobileImageUrl, 800)}
+                  />
+                )}
+                <img
+                  src={optimizeCloudinaryUrl(
+                    showcaseBanner?.imageUrl ||
+                    'https://res.cloudinary.com/idi6k3ue/image/upload/v1791905013/urvaa/images/urvaa-rural-marketplace-showcase.png',
+                    1400
+                  )}
+                  alt={showcaseBanner?.title || 'UrvAA Rural Marketplace Showcase'}
+                  className="w-full h-auto object-cover sm:object-contain mx-auto"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
             )}
-            alt={showcaseBanner?.title || 'UrvAA Rural Marketplace Showcase'}
-            className="block w-full h-auto object-contain mx-auto"
-            loading="lazy"
-            decoding="async"
-          />
-        )}
+          </div>
+        </div>
       </section>
 
       {/* ─── 6. Explore All Products Grid ─── */}
       <ExploreProducts products={products} />
 
-      {/* ─── 7. Life Across Urva Community  (Artisans & Field Gallery) ─── */}
+      {/* ─── 7. Snaps of the URVA Community (Artisans & Field Gallery) ─── */}
       <div className="content-auto">
         <CommunityGallery />
       </div>

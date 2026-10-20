@@ -310,10 +310,10 @@ const ProductDetails: React.FC = () => {
           {/* ════ 1. VISUALS / GALLERY (Order 1 on Mobile, Left Column Row 1 on Desktop) ════ */}
           <div className="order-1 lg:col-span-7 lg:col-start-1 lg:row-start-1 space-y-4">
             
-            {/* Main Stage Image */}
-            <div className="relative bg-white rounded-2xl p-4 sm:p-6 border border-neutral-200/90 shadow-xs overflow-hidden group">
+            {/* Main Stage Image — Direct 1:1 canvas without white padded border frame */}
+            <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-[#FAF8F4] border border-[#E2D9CC] shadow-xs group">
               {/* Category/Origin Pill Badge */}
-              <div className="absolute top-4 left-4 z-10 bg-neutral-900 text-white text-[10px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
+              <div className="absolute top-4 left-4 z-10 bg-neutral-900/90 backdrop-blur-xs text-white text-[10px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
                 {resolvedProduct.category}
               </div>
 
@@ -327,17 +327,14 @@ const ProductDetails: React.FC = () => {
                 <FaExpand className="text-xs" />
               </button>
 
-              {/* Large Image Canvas — 1:1 square ratio matching 1024x1024 images */}
-              <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-neutral-50 flex items-center justify-center">
-                <img
-                  src={activeImage || resolvedProduct.photo}
-                  alt={resolvedProduct.name}
-                  className="w-full h-full object-cover transition-opacity duration-300"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png';
-                  }}
-                />
-              </div>
+              <img
+                src={activeImage || resolvedProduct.photo}
+                alt={resolvedProduct.name}
+                className="w-full h-full object-cover transition-opacity duration-300"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png';
+                }}
+              />
             </div>
 
             {/* Thumbnail Gallery Strip */}
@@ -352,8 +349,8 @@ const ProductDetails: React.FC = () => {
                       onClick={() => setActiveImage(img)}
                       className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden border-2 shrink-0 transition-all ${
                         isActive
-                          ? 'border-black shadow-xs scale-102 bg-white'
-                          : 'border-neutral-200 bg-white hover:border-neutral-400 opacity-80 hover:opacity-100'
+                          ? 'border-[#5A3825] shadow-xs scale-102 bg-[#FAF8F4]'
+                          : 'border-[#E2D9CC] bg-[#FAF8F4] hover:border-[#8B5A2B] opacity-80 hover:opacity-100'
                       }`}
                     >
                       <img

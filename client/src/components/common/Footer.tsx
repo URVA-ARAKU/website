@@ -4,7 +4,10 @@ import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-[#3F2618] text-[#F4F1EA] font-sans border-t border-[#5A3825]">
+    <footer className="w-full bg-[#3F2618] text-[#F4F1EA] font-sans rounded-t-[32px] sm:rounded-t-[48px] lg:rounded-t-[60px] border-t border-[#6B4423]/60 shadow-[0_-8px_30px_rgba(63,38,24,0.12)] relative overflow-hidden">
+      {/* Subtle top edge glow accent */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#CCA887]/30 to-transparent pointer-events-none" />
+
       {/* ─── Main Footer Content Grid ─── */}
       <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12">
         {/* Column 1: Brand & Social (4 cols) */}

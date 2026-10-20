@@ -46,19 +46,19 @@ const ShippingPolicy: React.FC = () => {
               <p className="text-[11px] text-neutral-500 mt-0.5">Dispatched quickly from origin</p>
             </div>
 
-            <div className="bg-[#FAF7F2] p-4 rounded-2xl border border-neutral-200/80 text-center">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#E57A22] block mb-1">
-                FREE DELIVERY
+            <div className="bg-[#F4F1EA] p-4 rounded-2xl border border-[#E2D9CC] text-center">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B5A2B] block mb-1">
+                COVERAGE
               </span>
-              <p className="text-sm font-extrabold text-neutral-900">Orders Over ₹999</p>
-              <p className="text-[11px] text-neutral-500 mt-0.5">Across all major Indian PIN codes</p>
+              <p className="text-sm font-extrabold text-[#5A3825]">Pan-India Delivery</p>
+              <p className="text-[11px] text-neutral-500 mt-0.5">Across 19,000+ PIN codes</p>
             </div>
 
-            <div className="bg-[#FAF7F2] p-4 rounded-2xl border border-neutral-200/80 text-center">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#E57A22] block mb-1">
+            <div className="bg-[#F4F1EA] p-4 rounded-2xl border border-[#E2D9CC] text-center">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B5A2B] block mb-1">
                 TRANSIT TIME
               </span>
-              <p className="text-sm font-extrabold text-neutral-900">2 – 6 Business Days</p>
+              <p className="text-sm font-extrabold text-[#5A3825]">2 – 6 Business Days</p>
               <p className="text-[11px] text-neutral-500 mt-0.5">Express courier networks</p>
             </div>
           </div>
@@ -140,18 +140,10 @@ const ShippingPolicy: React.FC = () => {
             {/* Section 4 */}
             <section className="space-y-3">
               <h2 className="text-base sm:text-lg font-bold text-neutral-900">
-                4. Shipping Charges & Free Delivery Threshold
+                4. Shipping Charges
               </h2>
-              <div className="bg-[#FAF7F2] p-4 rounded-xl border border-neutral-200/80 space-y-2">
-                <p className="font-bold text-neutral-900 text-xs">
-                  🚚 Free Express Delivery:
-                </p>
-                <p className="text-xs text-neutral-600">
-                  All domestic orders with a basket value of <strong>₹999 or more</strong> qualify for <strong>FREE standard shipping</strong> across India.
-                </p>
-              </div>
               <p>
-                For orders below ₹999, an economical shipping fee (typically ₹49 to ₹79 depending on order weight and destination) is calculated automatically and clearly shown at checkout before you complete payment. No hidden delivery surcharges are levied thereafter.
+                Shipping fees are calculated transparently based on destination and package weight, and are displayed clearly at checkout prior to payment completion. No hidden delivery surcharges are levied thereafter.
               </p>
             </section>
 

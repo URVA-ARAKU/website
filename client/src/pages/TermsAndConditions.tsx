@@ -101,7 +101,7 @@ const TermsAndConditions: React.FC = () => {
                   All prices listed on the website are in Indian National Rupees (INR) and are inclusive of applicable GST unless explicitly stated otherwise at checkout.
                 </li>
                 <li>
-                  Shipping fees are calculated transparently and displayed prior to payment completion. Orders exceeding our free delivery threshold (e.g., ₹999) qualify for free standard shipping across eligible pin codes.
+                  Shipping fees are calculated transparently based on weight and destination, and are displayed clearly prior to payment completion.
                 </li>
                 <li>
                   Promotional coupons (such as festive codes like <code className="bg-neutral-100 px-1.5 py-0.5 rounded text-neutral-800 font-mono">URVA10</code>) are valid for specified timeframes and cannot be clubbed with unapproved offers or exchanged for cash.
