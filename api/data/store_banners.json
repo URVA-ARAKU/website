@@ -202,10 +202,10 @@
     "theme": "dark",
     "backgroundColor": "#111111",
     "textColor": "#FFFFFF",
-    "displayOrder": 1,
+    "displayOrder": 13,
     "isActive": true,
     "createdAt": "2026-10-20T14:28:42.372597+00:00",
-    "updatedAt": "2026-10-20T14:47:25.214Z",
+    "updatedAt": "2026-10-20T15:18:01.725Z",
     "id": "376c5ed6-de32-4d01-9a0c-b781c8c595e0"
   },
   {
@@ -226,5 +226,24 @@
     "createdAt": "2026-10-20T14:48:11.603219+00:00",
     "updatedAt": "2026-10-20T14:53:37.374Z",
     "id": "063fd90e-31f6-4269-9ad9-ba7fcd2fc87b"
+  },
+  {
+    "type": "hero",
+    "title": "diwali",
+    "subtitle": "",
+    "tagline": "",
+    "imageUrl": "https://res.cloudinary.com/idi6k3ue/image/upload/v1792509438/urvaa/products/etny7rn2kgywdxqqhjni.jpg",
+    "mobileImageUrl": "https://res.cloudinary.com/idi6k3ue/image/upload/v1792509438/urvaa/products/etny7rn2kgywdxqqhjni.jpg",
+    "linkUrl": "/products",
+    "buttonText": "Explore Now",
+    "badge": "",
+    "theme": "dark",
+    "backgroundColor": "#111111",
+    "textColor": "#FFFFFF",
+    "displayOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-10-20T15:17:14.073Z",
+    "updatedAt": "2026-10-20T15:17:14.073Z",
+    "id": "c5f9ae87-cdef-4d9a-8e95-4874ef047785"
   }
 ]
