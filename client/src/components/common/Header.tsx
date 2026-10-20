@@ -9,7 +9,6 @@ const defaultPromoOffers = [
   '🌾 URVA — Delivering the Authentic Rural Aura',
   '✨ Festive Season Sale: Use Code URVA10 for 10% Off',
   '🌱 Discover regional products, makers, and traditions',
-  '🚚 Free Shipping across India on orders over ₹999',
   '🛍️ One Village – One Product',
 ];
 

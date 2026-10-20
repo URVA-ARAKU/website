@@ -424,7 +424,7 @@ const ProductDetails: React.FC = () => {
               </div>
 
               {/* Dynamic Price Display */}
-              <div className="bg-neutral-50/80 rounded-xl p-4 border border-neutral-200/80 flex items-baseline justify-between">
+              <div className="bg-neutral-50/80 rounded-xl p-4 border border-neutral-200/80 flex items-center justify-between">
                 <div>
                   <span className="text-2xl sm:text-3xl font-sans font-bold text-[#111111]">
                     ₹{price}
@@ -434,9 +434,6 @@ const ProductDetails: React.FC = () => {
                       MRP ₹{mrp}
                     </span>
                   )}
-                  <span className="text-[11px] text-neutral-500 block mt-0.5">
-                    Inclusive of all taxes • Free shipping on orders over ₹999
-                  </span>
                 </div>
 
                 {discountPercent > 0 && (
@@ -631,13 +628,6 @@ const ProductDetails: React.FC = () => {
               <div className="flex items-center gap-2 text-xs font-medium text-emerald-900 bg-emerald-50/80 border border-emerald-200 px-3.5 py-2.5 rounded-xl">
                 <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
                 <span>In Stock — Dispatched within 24 to 48 hours</span>
-              </div>
-
-              {/* Tiered Bulk Discount Banner */}
-              <div className="bg-[#FAF8F4] p-3.5 rounded-xl border border-[#E2D9CC] text-[11px] text-[#5A3825] space-y-1">
-                <span className="font-semibold text-[#5A3825] block">Tiered Bulk Discounts:</span>
-                <p>• Shop for ₹3,000 or more & get extra 5% off automatically.</p>
-                <p>• Shop for ₹5,000 or more & get extra 10% off automatically.</p>
               </div>
 
               {/* Direct WhatsApp Support */}

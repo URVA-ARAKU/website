@@ -163,7 +163,6 @@ const AdminOrderDetails: React.FC = () => {
                     <div className="p-4 rounded-2xl bg-[#F4F1EA] border border-[#E2D9CC]">
                         <strong className="block text-[10px] uppercase text-[#8B5A2B] mb-1 tracking-wider font-semibold">Total Value</strong>
                         <span className="text-[#5A3825] font-bold text-lg block">₹{data?.order?.total.toFixed(2)}</span>
-                        <span className="text-[#5A3825]/70 text-[11px] block mt-0.5">Inclusive of taxes & delivery</span>
                     </div>
                     <div className="p-4 rounded-2xl bg-[#F4F1EA] border border-[#E2D9CC]">
                         <strong className="block text-[10px] uppercase text-[#8B5A2B] mb-1 tracking-wider font-semibold">Shipping Details</strong>
