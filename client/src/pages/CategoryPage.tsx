@@ -134,34 +134,7 @@ const CategoryPage: React.FC = () => {
           </div>
         </header>
 
-        <section
-          aria-label={`${category.title} products and order information`}
-          className="grid gap-5 rounded-xl border border-[#E2D9CC] bg-[#FAF8F4] p-5 sm:p-6 lg:grid-cols-[1.3fr_0.7fr] shadow-xs"
-        >
-          <div>
-            <h2 className="font-sans text-base font-semibold text-[#5A3825]">Available in this collection</h2>
-            <ul className="mt-3 grid gap-2 text-xs text-[#5A3825] sm:grid-cols-2">
-              {category.products.map((product) => (
-                <li key={product} className="flex items-start gap-2">
-                  <span aria-hidden="true" className="mt-0.5 text-[#8B5A2B]">•</span>
-                  <span>{product}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="space-y-2 border-t border-[#E2D9CC] pt-4 text-xs sm:pt-4 lg:border-l lg:border-t-0 lg:pl-5">
-            <p>
-              <span className="font-semibold text-[#5A3825]">Minimum order:</span>{' '}
-              <span className="text-[#8C7364]">{category.minimumOrder}</span>
-            </p>
-            {'bulkPricing' in category && (
-              <p>
-                <span className="font-semibold text-[#5A3825]">Bulk pricing:</span>{' '}
-                <span className="text-[#8C7364]">{category.bulkPricing}</span>
-              </p>
-            )}
-          </div>
-        </section>
+
 
         <section aria-labelledby="category-products-heading" className="space-y-6">
           <div className="flex flex-wrap items-end justify-between gap-3">

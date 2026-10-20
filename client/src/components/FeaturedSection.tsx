@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaArrowRight } from 'react-icons/fa6';
 import { useGetBannersQuery } from '../redux/api/banner.api';
 
 const FeaturedSection: React.FC = () => {
@@ -76,71 +75,19 @@ const FeaturedSection: React.FC = () => {
 
         if (!imgSrc) return null;
 
-        const hasOverlayContent = Boolean(
-          banner.title || banner.subtitle || banner.buttonText || banner.badge || banner.tagline
-        );
-
         const slideContent = (
-          <div className="relative h-full w-full">
-            <picture className="block h-full w-full">
-              {mobileSrc && mobileSrc !== imgSrc && (
-                <source media="(max-width: 640px)" srcSet={mobileSrc} />
-              )}
-              <img
-                src={imgSrc}
-                alt={banner.title || 'URVA hero banner'}
-                className="h-full w-full object-cover object-center"
-                loading={index === 0 ? 'eager' : 'lazy'}
-                decoding={index === 0 ? 'sync' : 'async'}
-              />
-            </picture>
-
-            {/* Delicate transparent gradient only when text is present to ensure readability without heavy black scrims */}
-            {hasOverlayContent && (
-              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent sm:bg-gradient-to-r sm:from-black/55 sm:via-black/15 sm:to-transparent pointer-events-none" />
+          <picture className="block h-full w-full">
+            {mobileSrc && mobileSrc !== imgSrc && (
+              <source media="(max-width: 640px)" srcSet={mobileSrc} />
             )}
-
-            {/* Clean, light text overlay dynamically loaded from Admin Dashboard */}
-            {hasOverlayContent && (
-              <div className="absolute inset-0 z-20 flex flex-col justify-end p-5 sm:p-10 md:p-14 max-w-2xl text-left pointer-events-none">
-                {(banner.badge || banner.tagline) && (
-                  <span
-                    style={{ color: '#E8C587' }}
-                    className="inline-block text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase mb-1.5 drop-shadow-xs"
-                  >
-                    {banner.badge || banner.tagline}
-                  </span>
-                )}
-
-                {banner.title && (
-                  <h2
-                    style={{ color: '#FFFFFF' }}
-                    className="font-serif text-2xl sm:text-4xl md:text-5xl font-semibold !text-white tracking-tight leading-snug drop-shadow-md"
-                  >
-                    {banner.title}
-                  </h2>
-                )}
-
-                {banner.subtitle && (
-                  <p
-                    style={{ color: '#F4F1EA' }}
-                    className="mt-2 text-xs sm:text-sm text-white/90 font-light leading-relaxed max-w-xl line-clamp-2 drop-shadow-xs"
-                  >
-                    {banner.subtitle}
-                  </p>
-                )}
-
-                {banner.buttonText && (
-                  <div className="mt-3.5 sm:mt-5">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-[#8B5A2B] hover:bg-[#724820] !text-white px-5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-medium tracking-wide shadow-md transition-all">
-                      <span>{banner.buttonText}</span>
-                      <FaArrowRight className="text-[10px] sm:text-xs !text-white" />
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+            <img
+              src={imgSrc}
+              alt={banner.title || 'URVA hero banner'}
+              className="h-full w-full object-cover object-center"
+              loading={index === 0 ? 'eager' : 'lazy'}
+              decoding={index === 0 ? 'sync' : 'async'}
+            />
+          </picture>
         );
 
         return (
