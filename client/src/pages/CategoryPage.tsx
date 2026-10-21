@@ -7,7 +7,7 @@ import { useGetCategoriesQuery } from '../redux/api/category.api';
 import { Product } from '../types/api-types';
 import { usePageSEO } from '../hooks/usePageSEO';
 import { urvaaCategories } from '../data/categories';
-import { collectionPageSchema, breadcrumbSchema, itemListSchema } from '../seo/schemas';
+import { collectionPageSchema, breadcrumbSchema, itemListSchema, faqSchema } from '../seo/schemas';
 
 const CategoryPage: React.FC = () => {
   const { categorySlug } = useParams<{ categorySlug: string }>();
@@ -60,17 +60,19 @@ const CategoryPage: React.FC = () => {
 
   const productList = data?.products || [];
 
+  const categoryFaqs = (category as any)?.faqs;
+
   usePageSEO({
-    title: category ? `${category.title} – Buy Authentic Rural Specialties | URVA` : 'Category | URVA',
-    description: category?.description 
+    title: (category as any)?.seoTitle || (category ? `${category.title} – Buy Authentic Rural Specialties | URVA` : 'Category | URVA'),
+    description: (category as any)?.seoDescription || (category?.description 
       ? `${category.description} 100% authentic, farmer & artisan direct with nationwide delivery across India on URVA.` 
-      : 'Explore curated regional collections from URVA.',
+      : 'Explore curated regional collections from URVA.'),
     canonical: categorySlug ? `/category/${categorySlug}` : '/products',
     ogImage: category?.image,
     ogType: 'website',
-    keywords: category 
+    keywords: (category as any)?.seoKeywords || (category 
       ? `${category.title}, buy ${category.title} online, URVA, ${category.products.join(', ')}, swadeshi, authentic rural India` 
-      : 'URVA, regional products, swadeshi',
+      : 'URVA, regional products, swadeshi'),
     schema: category ? [
       collectionPageSchema({
         url: `/category/${categorySlug}`,
@@ -98,6 +100,7 @@ const CategoryPage: React.FC = () => {
           }))
         )
       ] : []),
+      ...(categoryFaqs && categoryFaqs.length > 0 ? [faqSchema(categoryFaqs)] : []),
     ] : [],
   });
 
@@ -210,9 +213,53 @@ const CategoryPage: React.FC = () => {
             </>
           )}
         </section>
+
+        {/* ─── SEO Content: Heritage Story & Craft Provenance ─── */}
+        {(category as any)?.detailedStory && (
+          <section aria-label="About this collection" className="rounded-2xl bg-[#FAF8F4] p-6 sm:p-8 border border-[#E2D9CC] space-y-3">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[#8B5A2B] bg-[#F4F1EA] px-2.5 py-1 rounded-full border border-[#E2D9CC] inline-block">
+              One Village One Product
+            </span>
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#5A3825]">
+              The Heritage & Authenticity of {category.title}
+            </h2>
+            <p className="text-xs sm:text-sm leading-relaxed text-[#8C7364]">
+              {(category as any).detailedStory}
+            </p>
+          </section>
+        )}
+
+        {/* ─── SEO Content: Frequently Asked Questions (FAQ) Accordion ─── */}
+        {categoryFaqs && categoryFaqs.length > 0 && (
+          <section aria-label="Frequently Asked Questions" className="rounded-2xl bg-[#FAF8F4] p-6 sm:p-8 border border-[#E2D9CC] space-y-4">
+            <div className="border-b border-[#E2D9CC] pb-3">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-[#8B5A2B]">Customer Queries</span>
+              <h2 className="text-lg sm:text-xl font-serif font-bold text-[#5A3825] mt-0.5">
+                Frequently Asked Questions about {category.title}
+              </h2>
+              <p className="text-xs text-[#8C7364] mt-0.5">
+                Learn more about origin, purity, preparation, and fast regional delivery across Andhra Pradesh & Telangana.
+              </p>
+            </div>
+            <div className="divide-y divide-[#E2D9CC]/70 space-y-2">
+              {categoryFaqs.map((faq: { question: string; answer: string }, idx: number) => (
+                <details key={idx} className="group pt-3 cursor-pointer">
+                  <summary className="font-semibold text-xs sm:text-sm text-[#5A3825] flex justify-between items-center select-none group-hover:text-[#8B5A2B] transition-colors">
+                    <span>{faq.question}</span>
+                    <span className="text-[10px] text-[#8C7364] transition-transform group-open:rotate-180">▼</span>
+                  </summary>
+                  <p className="text-xs sm:text-sm text-[#8C7364] mt-2 leading-relaxed pl-1 pb-1">
+                    {faq.answer}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </main>
   );
 };
 
 export default CategoryPage;
+

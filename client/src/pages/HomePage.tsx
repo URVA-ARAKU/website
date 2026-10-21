@@ -22,18 +22,18 @@ const HomePage: React.FC = () => {
   const showcaseBanner = showcaseData?.banners?.find((b) => b.isActive !== false);
 
   usePageSEO({
-    title: 'URVA | Delivering the Authentic Rural Aura',
+    title: 'URVA – Buy Authentic Araku Coffee, Godavari Sweets & Rural Goods Online',
     description:
-      'Discover regional products, traditional foods, indigenous craftsmanship, handlooms, plants, and thoughtful everyday goods with URVA.',
+      'Shop 100% authentic Araku Arabica coffee powder, Atreyapuram Bellam Putharekulu, pure forest honey, cotton handlooms, and Kadiyam live plants online. Direct from rural cooperatives with fast delivery in AP & Telangana.',
     canonical: '/',
     keywords:
-      'URVA, rural products India, regional products, One Village One Product, Indian artisans, regional foods, handlooms, nursery plants',
+      'buy araku coffee online, atreyapuram putharekulu online, raw honey andhra, thati bellam palm jaggery, kadiyam plants hyderabad, pure cotton handloom sarees, tribal millets vizag, URVA rural aura, one village one product india, urva swadeshi',
     schema: [
       webPageSchema({
         url: '/',
         name: 'URVA | Delivering the Authentic Rural Aura',
         description:
-          'A rural-products commerce brand built around One Village – One Product and the regional stories behind India’s goods.',
+          'Authentic Indian regional commerce built around One Village – One Product, direct farmer sourcing, and certified purity.',
         breadcrumb: [{ name: 'Home', url: '/' }],
       }),
       faqSchema(faqData),

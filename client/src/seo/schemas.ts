@@ -58,6 +58,8 @@ export function productSchema({
   price,
   mrp,
   availability = 'https://schema.org/InStock',
+  ratingValue,
+  reviewCount,
 }: {
   name: string;
   description: string;
@@ -67,6 +69,8 @@ export function productSchema({
   price: number;
   mrp?: number;
   availability?: string;
+  ratingValue?: number | string | null;
+  reviewCount?: number;
 }) {
   return {
     '@context': 'https://schema.org',
@@ -85,7 +89,16 @@ export function productSchema({
     },
     itemCondition: 'https://schema.org/NewCondition',
     category: 'Regional Products',
-    keywords: 'regional products, rural products, India, URVA, swadeshi',
+    keywords: 'regional products, rural products, India, URVA, swadeshi, andhra pradesh, telangana',
+    ...(ratingValue && reviewCount && Number(reviewCount) > 0 ? {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: String(ratingValue),
+        reviewCount: Number(reviewCount),
+        bestRating: '5',
+        worstRating: '1',
+      },
+    } : {}),
     offers: {
       '@type': 'Offer',
       url: `${BASE}${url}`,
@@ -95,6 +108,36 @@ export function productSchema({
       ...(mrp ? { highPrice: mrp.toFixed(2) } : {}),
       availability,
       seller: { '@id': ORG_ID },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: '80.00',
+          currency: 'INR',
+        },
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'IN',
+          addressRegion: ['Andhra Pradesh', 'Telangana'],
+        },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          transitTime: {
+            '@type': 'QuantitativeValue',
+            minValue: 2,
+            maxValue: 5,
+            unitCode: 'd',
+          },
+        },
+      },
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'IN',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 2,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/FreeReturn',
+      },
     },
   };
 }
