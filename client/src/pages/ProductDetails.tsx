@@ -452,6 +452,21 @@ const ProductDetails: React.FC = () => {
                 )}
               </div>
 
+              {/* Product Details Section (Directly Below Product Title) */}
+              <div className="bg-[#FAF8F4] rounded-xl p-4 sm:p-4.5 border border-[#E2D9CC] space-y-2">
+                <div className="flex items-center justify-between border-b border-[#E2D9CC]/70 pb-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#5A3825] flex items-center gap-1.5 font-sans">
+                    <span>🌾</span> Product Details
+                  </span>
+                  <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full border border-emerald-200">
+                    Direct Rural Sourcing
+                  </span>
+                </div>
+                <div className="text-xs sm:text-sm text-[#5A3825]/90 leading-relaxed font-normal whitespace-pre-line">
+                  {resolvedProduct.description}
+                </div>
+              </div>
+
               {/* Dynamic Price Display */}
               <div className="bg-neutral-50/80 rounded-xl p-4 border border-neutral-200/80 flex items-center justify-between">
                 <div>
@@ -470,21 +485,6 @@ const ProductDetails: React.FC = () => {
                     SAVE {discountPercent}%
                   </span>
                 )}
-              </div>
-
-              {/* Product Details Section (Directly Below Product Title & Pricing) */}
-              <div className="bg-[#FAF8F4] rounded-xl p-4 sm:p-4.5 border border-[#E2D9CC] space-y-2">
-                <div className="flex items-center justify-between border-b border-[#E2D9CC]/70 pb-2">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#5A3825] flex items-center gap-1.5 font-sans">
-                    <span>🌾</span> Product Details
-                  </span>
-                  <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full border border-emerald-200">
-                    Direct Rural Sourcing
-                  </span>
-                </div>
-                <div className="text-xs sm:text-sm text-[#5A3825]/90 leading-relaxed font-normal whitespace-pre-line">
-                  {resolvedProduct.description}
-                </div>
               </div>
 
               {/* ─── Clickable Variety Cards (Only shown when admin configured multiple variants) ─── */}
@@ -608,27 +608,27 @@ const ProductDetails: React.FC = () => {
                 </div>
 
                 {/* Primary CTA Buttons - Directly Next to Each Other */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div className="grid grid-cols-2 gap-2.5 sm:gap-3 pt-1">
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="w-full bg-[#FAF8F4] hover:bg-[#EFEAE1] text-[#5A3825] border-2 border-[#5A3825] font-bold text-xs py-3.5 px-3 rounded-xl uppercase tracking-wider shadow-sm hover:shadow transition-all flex items-center justify-center gap-2"
+                    className="w-full bg-[#FAF8F4] hover:bg-[#EFEAE1] text-[#5A3825] border-2 border-[#5A3825] font-bold text-[11px] sm:text-xs py-3 sm:py-3.5 px-2 sm:px-3 rounded-xl uppercase tracking-wider shadow-xs hover:shadow transition-all flex items-center justify-center gap-1.5 sm:gap-2"
                   >
-                    <FaShoppingBag className="text-sm text-[#5A3825]" />
-                    <span>
+                    <FaShoppingBag className="text-xs sm:text-sm text-[#5A3825] shrink-0" />
+                    <span className="truncate">
                       {existingCartItem
                         ? `Add More`
-                        : `Add To Cart • ₹${price * quantity}`}
+                        : `Add To Cart`}
                     </span>
                   </button>
 
                   <button
                     type="button"
                     onClick={handleBuyNow}
-                    className="w-full bg-[#8B5A2B] hover:bg-[#70441E] text-white font-bold text-xs py-3.5 px-3 rounded-xl uppercase tracking-wider shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 group"
+                    className="w-full bg-[#8B5A2B] hover:bg-[#70441E] text-white font-bold text-[11px] sm:text-xs py-3 sm:py-3.5 px-2 sm:px-3 rounded-xl uppercase tracking-wider shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-1.5 sm:gap-2 group"
                   >
-                    <FaBolt className="text-sm text-amber-300 group-hover:scale-110 transition-transform" />
-                    <span>Buy Now</span>
+                    <FaBolt className="text-xs sm:text-sm text-amber-300 group-hover:scale-110 transition-transform shrink-0" />
+                    <span className="truncate">Buy Now</span>
                   </button>
                 </div>
 
