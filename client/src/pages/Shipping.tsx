@@ -5,7 +5,6 @@ import { calculatePrice, saveShippingInfo, updateShippingFee } from '../redux/re
 import { RootState } from '../redux/store';
 import { notify } from '../utils/util';
 import BackButton from '../components/common/BackBtn';
-import { FaTruck, FaShieldAlt } from 'react-icons/fa';
 import { usePageSEO } from '../hooks/usePageSEO';
 import { useGetStoreSettingsQuery } from '../redux/api/settings.api';
 
@@ -47,8 +46,6 @@ const Shipping: React.FC = () => {
     const activeShippingFee = settingsData?.settings?.standardShippingFee !== undefined
         ? Number(settingsData.settings.standardShippingFee)
         : (shippingCharges || 80);
-
-    const activeDeliveryNote = settingsData?.settings?.deliveryNote || `Fast Delivery in AP & Telangana (Flat ₹${activeShippingFee} Shipping)`;
 
     const [name, setName] = useState(shippingInfo.name || user?.name || '');
     const [email, setEmail] = useState(shippingInfo.email || user?.email || '');
@@ -131,7 +128,7 @@ const Shipping: React.FC = () => {
                                 <span>🛍️</span> Selected Products ({cartItems.reduce((acc, it) => acc + (it.quantity || 1), 0)} items)
                             </span>
                             <span className="font-bold text-[#5A3825]">
-                                Total: ₹{(total > 0 ? total : subTotal > 0 ? subTotal + activeShippingFee : cartItems.reduce((acc, it) => acc + (Number(it.price) || 0) * (Number(it.quantity) || 1), 0) + activeShippingFee).toFixed(2)} (incl. ₹{activeShippingFee} shipping)
+                                Total: ₹{(total > 0 ? total : subTotal > 0 ? subTotal + activeShippingFee : cartItems.reduce((acc, it) => acc + (Number(it.price) || 0) * (Number(it.quantity) || 1), 0) + activeShippingFee).toFixed(2)}
                             </span>
                         </div>
                         <div className="flex gap-2 overflow-x-auto pb-1">
@@ -262,16 +259,6 @@ const Shipping: React.FC = () => {
                                     required
                                 />
                             </div>
-                        </div>
-
-                        {/* Security / Delivery Trust Info */}
-                        <div className="pt-2 flex items-center justify-between text-xs text-[#8C7364] border-t border-[#E2D9CC]">
-                            <span className="flex items-center gap-1.5 text-[#5A3825] font-semibold">
-                                <FaTruck /> {activeDeliveryNote}
-                            </span>
-                            <span className="flex items-center gap-1 text-emerald-800 font-semibold">
-                                <FaShieldAlt /> Safe Checkout
-                            </span>
                         </div>
 
                         {/* Submit Button */}

@@ -217,7 +217,7 @@ const ProductDetails: React.FC = () => {
       },
       {
         question: `How fast is delivery for ${resolvedProduct.name} in Andhra Pradesh & Telangana?`,
-        answer: `Orders are packed and dispatched within 24 to 48 hours. Typical doorstep delivery takes 2 to 4 business days across Hyderabad, Visakhapatnam, Vijayawada, Guntur, and all major towns in AP & Telangana with flat ₹80 shipping.`,
+        answer: `Orders are packed and dispatched within 24 to 48 hours. Typical doorstep delivery takes 2 to 4 business days across Hyderabad, Visakhapatnam, Vijayawada, Guntur, and all major towns with fast and safe doorstep delivery.`,
       },
       {
         question: `What is the return or replacement policy for ${resolvedProduct.name}?`,

@@ -274,7 +274,7 @@ const CheckoutForm: React.FC = () => {
                   </div>
                 )}
                 <div className="flex justify-between text-[#8C7364]">
-                  <span>Shipping Charges (AP & Telangana):</span>
+                  <span>Shipping Charges:</span>
                   <span className="font-semibold text-[#5A3825]">₹ {effectiveShipping.toFixed(2)}</span>
                 </div>
                 <div className="pt-1.5 border-t border-[#E2D9CC] flex justify-between font-bold text-xs text-[#5A3825]">
@@ -549,7 +549,7 @@ const CheckoutForm: React.FC = () => {
                   </div>
                 )}
                 <div className="flex justify-between text-[#8C7364]">
-                  <span>Shipping (AP & Telangana):</span>
+                  <span>Shipping Charges:</span>
                   <span className="font-semibold text-[#5A3825]">₹ {effectiveShipping.toFixed(2)}</span>
                 </div>
                 <div className="pt-2 border-t border-[#E2D9CC] flex justify-between items-baseline font-bold">
