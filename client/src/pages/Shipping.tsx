@@ -47,6 +47,9 @@ const Shipping: React.FC = () => {
         ? Number(settingsData.settings.standardShippingFee)
         : (shippingCharges || 80);
 
+    const itemsSubTotal = subTotal > 0 ? subTotal : cartItems.reduce((acc, it) => acc + (Number(it.price) || 0) * (Number(it.quantity) || 1), 0);
+    const finalTotal = total > 0 ? total : Math.max(0, itemsSubTotal + activeShippingFee);
+
     const [name, setName] = useState(shippingInfo.name || user?.name || '');
     const [email, setEmail] = useState(shippingInfo.email || user?.email || '');
     const [address, setAddress] = useState(shippingInfo.address || '');
@@ -128,7 +131,7 @@ const Shipping: React.FC = () => {
                                 <span>🛍️</span> Selected Products ({cartItems.reduce((acc, it) => acc + (it.quantity || 1), 0)} items)
                             </span>
                             <span className="font-bold text-[#5A3825]">
-                                Total: ₹{(total > 0 ? total : subTotal > 0 ? subTotal + activeShippingFee : cartItems.reduce((acc, it) => acc + (Number(it.price) || 0) * (Number(it.quantity) || 1), 0) + activeShippingFee).toFixed(2)}
+                                Total: ₹{finalTotal.toFixed(2)}
                             </span>
                         </div>
                         <div className="flex gap-2 overflow-x-auto pb-1">
@@ -145,6 +148,11 @@ const Shipping: React.FC = () => {
                                     </div>
                                 </div>
                             ))}
+                        </div>
+                        <div className="pt-2.5 mt-2.5 border-t border-[#E2D9CC] flex flex-wrap items-center justify-between text-xs text-[#8C7364] gap-2">
+                            <span>Items Subtotal: <strong className="text-[#5A3825]">₹{itemsSubTotal.toFixed(2)}</strong></span>
+                            <span>Delivery Charges: <strong className="text-[#5A3825]">{activeShippingFee === 0 ? 'FREE' : `₹${activeShippingFee.toFixed(2)}`}</strong></span>
+                            <span className="font-bold text-[#5A3825] text-sm">Total: ₹{finalTotal.toFixed(2)}</span>
                         </div>
                     </div>
                 )}
@@ -262,12 +270,17 @@ const Shipping: React.FC = () => {
                         </div>
 
                         {/* Submit Button */}
-                        <button
-                            type="submit"
-                            className="w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-semibold py-3.5 px-4 rounded-lg uppercase tracking-wider transition-colors shadow-sm text-xs mt-4 flex items-center justify-center gap-2 cursor-pointer"
-                        >
-                            <span>Proceed to Pay with UPI &gt;</span>
-                        </button>
+                        <div className="space-y-1.5 pt-2">
+                            <button
+                                type="submit"
+                                className="w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-semibold py-3.5 px-4 rounded-lg uppercase tracking-wider transition-colors shadow-sm text-xs flex items-center justify-center gap-2 cursor-pointer"
+                            >
+                                <span>Proceed to Pay with UPI (₹{finalTotal.toFixed(2)}) &gt;</span>
+                            </button>
+                            <p className="text-[11px] text-center text-[#8C7364]">
+                                Includes ₹{itemsSubTotal.toFixed(0)} items + {activeShippingFee === 0 ? 'FREE delivery' : `₹${activeShippingFee} delivery charges`}
+                            </p>
+                        </div>
                     </form>
                 </div>
             </div>

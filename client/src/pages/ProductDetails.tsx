@@ -16,10 +16,12 @@ import {
   FaTimes,
   FaShoppingBag,
   FaBolt,
+  FaTruck,
 } from 'react-icons/fa';
 import ProductReviews from '../components/ProductReviews';
 import { useProductDetailsQuery } from '../redux/api/product.api';
 import { useGetReviewsQuery } from '../redux/api/review.api';
+import { useGetStoreSettingsQuery } from '../redux/api/settings.api';
 import { addToCart, calculatePrice, decrementCartItem, incrementCartItem } from '../redux/reducers/cart.reducer';
 import { RootState } from '../redux/store';
 import { usePageSEO } from '../hooks/usePageSEO';
@@ -51,6 +53,12 @@ const ProductDetails: React.FC = () => {
   const { data, isLoading, isError } = useProductDetailsQuery(baseProductId, {
     skip: !baseProductId,
   });
+
+  // Store Settings (Dynamic Delivery Charges & Threshold)
+  const { data: settingsData } = useGetStoreSettingsQuery();
+  const storeSettings = settingsData?.settings;
+  const standardShippingFee = typeof storeSettings?.standardShippingFee === 'number' ? storeSettings.standardShippingFee : 80;
+  const freeShippingThreshold = typeof storeSettings?.freeShippingThreshold === 'number' ? storeSettings.freeShippingThreshold : 999;
 
   // Resolve Product Data strictly from Database
   const resolvedProduct = data?.product;
@@ -607,25 +615,23 @@ const ProductDetails: React.FC = () => {
                   )}
                 </div>
 
-                {/* Primary CTA Buttons - Directly Next to Each Other */}
-                <div className="grid grid-cols-2 gap-2.5 sm:gap-3 pt-1">
+                {/* Primary CTA Buttons - Guaranteed Side-by-Side on all screen sizes */}
+                <div className="flex flex-row items-center gap-2 sm:gap-3 pt-1 w-full">
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="w-full bg-[#FAF8F4] hover:bg-[#EFEAE1] text-[#5A3825] border-2 border-[#5A3825] font-bold text-[11px] sm:text-xs py-3 sm:py-3.5 px-2 sm:px-3 rounded-xl uppercase tracking-wider shadow-xs hover:shadow transition-all flex items-center justify-center gap-1.5 sm:gap-2"
+                    className="flex-1 min-w-0 bg-[#FAF8F4] hover:bg-[#EFEAE1] text-[#5A3825] border-2 border-[#5A3825] font-bold text-[11px] sm:text-xs py-3.5 px-1.5 sm:px-3 rounded-xl uppercase tracking-wider shadow-xs hover:shadow transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap cursor-pointer"
                   >
                     <FaShoppingBag className="text-xs sm:text-sm text-[#5A3825] shrink-0" />
                     <span className="truncate">
-                      {existingCartItem
-                        ? `Add More`
-                        : `Add To Cart`}
+                      {existingCartItem ? 'Add More' : 'Add to Cart'}
                     </span>
                   </button>
 
                   <button
                     type="button"
                     onClick={handleBuyNow}
-                    className="w-full bg-[#8B5A2B] hover:bg-[#70441E] text-white font-bold text-[11px] sm:text-xs py-3 sm:py-3.5 px-2 sm:px-3 rounded-xl uppercase tracking-wider shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-1.5 sm:gap-2 group"
+                    className="flex-1 min-w-0 bg-[#8B5A2B] hover:bg-[#70441E] text-white font-bold text-[11px] sm:text-xs py-3.5 px-1.5 sm:px-3 rounded-xl uppercase tracking-wider shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-1 sm:gap-1.5 group whitespace-nowrap cursor-pointer"
                   >
                     <FaBolt className="text-xs sm:text-sm text-amber-300 group-hover:scale-110 transition-transform shrink-0" />
                     <span className="truncate">Buy Now</span>
@@ -678,10 +684,29 @@ const ProductDetails: React.FC = () => {
                 </div>
               </div>
 
-              {/* In-Stock & Dispatch Banner */}
-              <div className="flex items-center gap-2 text-xs font-medium text-emerald-900 bg-emerald-50/80 border border-emerald-200 px-3.5 py-2.5 rounded-xl">
-                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-                <span>In Stock — Dispatched within 24 to 48 hours</span>
+              {/* Delivery Charges & Shipping Clarity Card */}
+              <div className="bg-[#FAF8F4] border border-[#E2D9CC] rounded-xl p-3.5 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-[#5A3825] flex items-center gap-1.5 uppercase tracking-wide text-[11px]">
+                    <FaTruck className="text-[#8B5A2B] text-sm shrink-0" /> Delivery Charges
+                  </span>
+                  <span className="font-bold text-xs">
+                    {standardShippingFee === 0 ? (
+                      <span className="text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[11px]">FREE Delivery</span>
+                    ) : (
+                      <span className="text-[#5A3825] bg-[#F4F1EA] px-2 py-0.5 rounded border border-[#E2D9CC] text-[11px]">₹{standardShippingFee} Standard</span>
+                    )}
+                  </span>
+                </div>
+                <div className="text-[11px] text-[#8C7364] leading-relaxed">
+                  {freeShippingThreshold > 0
+                    ? `✨ Free doorstep delivery on orders above ₹${freeShippingThreshold}.`
+                    : 'Safe doorstep delivery across all cities & towns.'}
+                </div>
+                <div className="pt-2 border-t border-[#E2D9CC]/70 flex items-center gap-2 text-[11px] text-emerald-900 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse shrink-0" />
+                  <span>In Stock — Dispatched within 24 to 48 hours</span>
+                </div>
               </div>
 
               {/* Direct WhatsApp Support */}

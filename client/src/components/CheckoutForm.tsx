@@ -220,7 +220,7 @@ const CheckoutForm: React.FC = () => {
                   Order Summary ({totalItemCount} {totalItemCount === 1 ? 'item' : 'items'})
                 </span>
                 <span className="text-[11px] text-[#8C7364] truncate block">
-                  {shippingInfo.city ? `Delivering to ${shippingInfo.city}` : 'Delivery to AP / Telangana'}
+                  Items: ₹{effectiveSubTotal.toFixed(0)} + {effectiveShipping === 0 ? 'FREE Delivery' : `₹${effectiveShipping} Delivery`} · {shippingInfo.city || 'India'}
                 </span>
               </div>
             </div>
@@ -348,7 +348,7 @@ const CheckoutForm: React.FC = () => {
                 </a>
 
                 <p className="text-[11px] text-center text-[#8C7364]">
-                  Tap above to open your UPI app directly, or scan the QR code below.
+                  Total: ₹{effectiveTotal.toFixed(2)} (Items ₹{effectiveSubTotal.toFixed(0)} + {effectiveShipping === 0 ? 'FREE delivery' : `₹${effectiveShipping} delivery charges`}) · Tap above to pay via any UPI app
                 </p>
               </div>
 

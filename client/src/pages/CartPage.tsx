@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import BackButton from '../components/common/BackBtn';
 import { useApplyCouponMutation } from '../redux/api/coupon.api';
+import { useGetStoreSettingsQuery } from '../redux/api/settings.api';
 import { calculatePrice, decrementCartItem, discountApplied, incrementCartItem, removeCartItem, resetCart } from '../redux/reducers/cart.reducer';
 import { RootState } from '../redux/store';
 import { notify } from '../utils/util';
@@ -18,7 +19,11 @@ const Cart: React.FC = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { cartItems, subTotal, total, discount } = useSelector((state: RootState) => state.cart);
+  const { cartItems, subTotal, total, discount, shippingCharges } = useSelector((state: RootState) => state.cart);
+  const { data: settingsData } = useGetStoreSettingsQuery();
+  const freeShippingThreshold = settingsData?.settings?.freeShippingThreshold ?? 999;
+  const isFreeShipping = shippingCharges === 0 || subTotal >= freeShippingThreshold;
+  const amountNeededForFreeShipping = Math.max(0, freeShippingThreshold - subTotal);
 
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState('');
@@ -250,10 +255,31 @@ const Cart: React.FC = () => {
                     </div>
                   )}
 
-                  <div className="flex justify-between text-[#8C7364]">
-                    <span>Shipping Charges</span>
-                    <span className="text-[#5A3825] font-medium">Calculated at Checkout</span>
+                  <div className="flex justify-between text-[#8C7364] items-center">
+                    <span>Delivery Charges</span>
+                    <span className="font-semibold">
+                      {isFreeShipping ? (
+                        <span className="text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2 py-0.5 rounded text-xs font-bold">
+                          FREE
+                        </span>
+                      ) : (
+                        <span className="text-[#5A3825]">₹ {shippingCharges.toFixed(2)}</span>
+                      )}
+                    </span>
                   </div>
+
+                  {amountNeededForFreeShipping > 0 && cartItems.length > 0 && (
+                    <div className="bg-amber-50 border border-amber-200/80 rounded-lg p-2.5 text-[11px] text-[#5A3825] leading-relaxed">
+                      🚚 Add <span className="font-bold text-[#8B5A2B]">₹{amountNeededForFreeShipping.toFixed(0)}</span> more to qualify for <span className="font-bold text-emerald-800">FREE Delivery</span>!
+                    </div>
+                  )}
+
+                  {isFreeShipping && subTotal > 0 && (
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-[11px] text-emerald-900 font-medium flex items-center gap-1.5">
+                      <span>🎉</span>
+                      <span>You've unlocked <strong>FREE Delivery</strong> on this order!</span>
+                    </div>
+                  )}
 
                   <div className="pt-3 border-t border-[#E2D9CC] flex justify-between items-baseline font-bold text-base text-[#5A3825]">
                     <span>Total Amount</span>
