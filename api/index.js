@@ -379,6 +379,20 @@ function mapProduct(row) {
     } catch (e) {}
   }
 
+  // Normalize variants so name, label, and pack are always synchronized to the true variant title
+  if (Array.isArray(variants) && variants.length > 0) {
+    variants = variants.map((v, idx) => {
+      if (!v || typeof v !== 'object') return v;
+      const trueTitle = (v.name || v.label || v.pack || `Option ${idx + 1}`).trim();
+      return {
+        ...v,
+        name: trueTitle,
+        label: trueTitle,
+        pack: trueTitle,
+      };
+    });
+  }
+
   // Extract custom N photos uploaded by admin
   let photos = [];
   if (row.description && row.description.includes('__PHOTOS__=')) {
@@ -1827,10 +1841,13 @@ export default async function handler(req, res) {
         stock: Number(stock),
         description: finalDescription,
         photo: primaryPhoto,
-        variants: variants || [],
+        variants: Array.isArray(variants) ? variants.map((v, idx) => {
+          if (!v || typeof v !== 'object') return v;
+          const trueTitle = (v.name || v.label || v.pack || `Option ${idx + 1}`).trim();
+          return { ...v, name: trueTitle, label: trueTitle, pack: trueTitle };
+        }) : [],
         featured: false,
         is_active: true,
-        event_id: req.body?.event_id || '00000000-0000-0000-0000-000000000000',
       };
 
       const { data: newProduct, error } = await supabase
@@ -2025,7 +2042,13 @@ export default async function handler(req, res) {
       if (category !== undefined) updateData.category = category;
       if (price !== undefined) updateData.price = Number(price);
       if (stock !== undefined) updateData.stock = Number(stock);
-      if (variants !== undefined) updateData.variants = variants;
+      if (variants !== undefined) {
+        updateData.variants = Array.isArray(variants) ? variants.map((v, idx) => {
+          if (!v || typeof v !== 'object') return v;
+          const trueTitle = (v.name || v.label || v.pack || `Option ${idx + 1}`).trim();
+          return { ...v, name: trueTitle, label: trueTitle, pack: trueTitle };
+        }) : variants;
+      }
 
       if (rawPhotos !== undefined) {
         if (rawPhotos.length > 0) {
@@ -2855,9 +2878,13 @@ export default async function handler(req, res) {
     if ((url.includes('/api/v1/store/settings') || url.includes('/api/v1/admin/settings')) && req.method === 'GET') {
       let settings = {};
       try {
-        const { data, error } = await supabase.from('store_settings').select('settings').single();
-        if (!error && data?.settings) {
-          settings = data.settings;
+        const { data } = await supabase
+          .from('store_banners')
+          .select('tagline')
+          .eq('title', '__STORE_SETTINGS__')
+          .single();
+        if (data?.tagline) {
+          settings = JSON.parse(data.tagline);
         }
       } catch (e) {}
 
@@ -2879,13 +2906,31 @@ export default async function handler(req, res) {
       };
 
       try {
-        await supabase.from('store_settings').upsert({ id: 'primary_settings', settings: updated });
+        const { data: existing } = await supabase
+          .from('store_banners')
+          .select('id')
+          .eq('title', '__STORE_SETTINGS__')
+          .single();
+
+        if (existing?.id) {
+          await supabase
+            .from('store_banners')
+            .update({ tagline: JSON.stringify(updated), updated_at: new Date().toISOString() })
+            .eq('id', existing.id);
+        } else {
+          await supabase.from('store_banners').insert({
+            type: 'announcement',
+            title: '__STORE_SETTINGS__',
+            tagline: JSON.stringify(updated),
+            is_active: false,
+          });
+        }
       } catch (e) {}
 
       saveLocalSettings(updated);
       if (global.fastApiCache) global.fastApiCache.clear();
 
-      return res.status(200).json({ success: true, settings: updated, message: 'Store preferences and administrative controls saved successfully' });
+      return res.status(200).json({ success: true, settings: updated, message: 'Store preferences and delivery charges saved successfully' });
     }
 
     // ─── Fallback: Return all products ───

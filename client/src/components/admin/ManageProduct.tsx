@@ -37,6 +37,7 @@ export interface ProductVariantItem {
   stock: number;
   inStock: boolean;
   pack?: string;
+  savingsBadge?: string;
 }
 export type CandleVariantItem = ProductVariantItem;
 
@@ -103,13 +104,14 @@ const AdminManageProduct: React.FC = () => {
         const normalized: CandleVariantItem[] = p.variants.map((v: any, index: number) => ({
           id: v.id || `var_${index}_${Date.now()}`,
           name: v.name || v.label || `Option ${index + 1}`,
-          label: v.label || v.name || `Option ${index + 1}`,
+          label: v.name || v.label || `Option ${index + 1}`,
           salePrice: Number(v.salePrice || v.price || p.price || 0),
           price: Number(v.salePrice || v.price || p.price || 0),
           mrp: Number(v.mrp || (v.salePrice ? Math.round(v.salePrice * 1.25) : p.price)),
           stock: Number(v.stock ?? p.stock ?? 20),
           inStock: v.inStock !== false,
-          pack: v.pack || v.label
+          pack: v.name || v.label || v.pack,
+          savingsBadge: v.savingsBadge || ''
         }));
         setVariantsState(normalized);
       } else {
@@ -164,7 +166,8 @@ const AdminManageProduct: React.FC = () => {
       price: Number(priceUpdate || 199),
       mrp: Number(priceUpdate ? Number(priceUpdate) * 1.25 : 249),
       stock: 25,
-      inStock: true
+      inStock: true,
+      savingsBadge: ''
     };
     setVariantsState(prev => [...prev, newVar]);
   };
@@ -189,8 +192,9 @@ const AdminManageProduct: React.FC = () => {
       if (field === 'salePrice') {
         current.price = Number(value);
       }
-      if (field === 'name' && !current.label) {
+      if (field === 'name') {
         current.label = value;
+        current.pack = value;
       }
       updated[index] = current;
       return updated;
@@ -223,17 +227,21 @@ const AdminManageProduct: React.FC = () => {
         })
       );
 
-      const formattedVariants = variantsState.map(v => ({
-        id: v.id,
-        name: v.name.trim() || v.label.trim(),
-        label: v.label.trim() || v.name.trim(),
-        salePrice: Number(v.salePrice || 0),
-        price: Number(v.salePrice || 0),
-        mrp: Number(v.mrp || v.salePrice || 0),
-        stock: Number(v.stock || 0),
-        inStock: v.inStock !== false,
-        pack: v.pack || v.label
-      }));
+      const formattedVariants = variantsState.map(v => {
+        const variantName = (v.name || v.label || '').trim();
+        return {
+          id: v.id,
+          name: variantName,
+          label: variantName,
+          salePrice: Number(v.salePrice || 0),
+          price: Number(v.salePrice || 0),
+          mrp: Number(v.mrp || v.salePrice || 0),
+          stock: Number(v.stock || 0),
+          inStock: v.inStock !== false,
+          pack: variantName,
+          savingsBadge: (v.savingsBadge || '').trim()
+        };
+      });
 
       let calculatedBasePrice = Number(priceUpdate || 0);
       let calculatedTotalStock = Number(stockUpdate || 0);
@@ -615,7 +623,7 @@ const AdminManageProduct: React.FC = () => {
                           </div>
 
                           {/* Variant Inputs */}
-                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-xs">
                             <div className="col-span-2 sm:col-span-1 space-y-1">
                               <label className="text-[10px] font-semibold uppercase text-neutral-400">Size / Pack Label</label>
                               <input
@@ -655,6 +663,17 @@ const AdminManageProduct: React.FC = () => {
                                 min="0"
                                 value={v.stock}
                                 onChange={(e) => updateVariant(idx, 'stock', parseInt(e.target.value) || 0)}
+                                className="w-full px-3 py-1.5 rounded-lg border border-neutral-200 text-xs font-medium text-neutral-800 focus:outline-none focus:border-neutral-900 bg-neutral-50 focus:bg-white"
+                              />
+                            </div>
+
+                            <div className="col-span-2 sm:col-span-1 space-y-1">
+                              <label className="text-[10px] font-semibold uppercase text-neutral-400">Discount Tag / Badge</label>
+                              <input
+                                type="text"
+                                placeholder="e.g. SAVE 20%, BEST VALUE"
+                                value={v.savingsBadge || ''}
+                                onChange={(e) => updateVariant(idx, 'savingsBadge', e.target.value)}
                                 className="w-full px-3 py-1.5 rounded-lg border border-neutral-200 text-xs font-medium text-neutral-800 focus:outline-none focus:border-neutral-900 bg-neutral-50 focus:bg-white"
                               />
                             </div>

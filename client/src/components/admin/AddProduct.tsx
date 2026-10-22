@@ -27,6 +27,7 @@ export interface ProductVariantItem {
   stock: number;
   inStock: boolean;
   pack?: string;
+  savingsBadge?: string;
 }
 export type CandleVariantItem = ProductVariantItem;
 
@@ -111,7 +112,8 @@ const AdminAddProduct: React.FC = () => {
       price: Number(formData.price || 199),
       mrp: Number(formData.price ? Number(formData.price) * 1.2 : 249),
       stock: 25,
-      inStock: true
+      inStock: true,
+      savingsBadge: ''
     };
     setVariants(prev => [...prev, newVar]);
     setHasVariants(true);
@@ -139,8 +141,9 @@ const AdminAddProduct: React.FC = () => {
       if (field === 'salePrice') {
         current.price = Number(value);
       }
-      if (field === 'name' && !current.label) {
+      if (field === 'name') {
         current.label = value;
+        current.pack = value;
       }
       updated[index] = current;
       return updated;
@@ -177,17 +180,21 @@ const AdminAddProduct: React.FC = () => {
     let basePrice = Number(formData.price || 0);
     let totalStock = Number(formData.stock || 0);
 
-    const formattedVariants = variants.map(v => ({
-      id: v.id,
-      name: v.name.trim() || v.label.trim(),
-      label: v.label.trim() || v.name.trim(),
-      salePrice: Number(v.salePrice || 0),
-      price: Number(v.salePrice || 0),
-      mrp: Number(v.mrp || v.salePrice || 0),
-      stock: Number(v.stock || 0),
-      inStock: v.inStock !== false,
-      pack: v.pack || v.label
-    }));
+    const formattedVariants = variants.map(v => {
+      const variantName = (v.name || v.label || '').trim();
+      return {
+        id: v.id,
+        name: variantName,
+        label: variantName,
+        salePrice: Number(v.salePrice || 0),
+        price: Number(v.salePrice || 0),
+        mrp: Number(v.mrp || v.salePrice || 0),
+        stock: Number(v.stock || 0),
+        inStock: v.inStock !== false,
+        pack: variantName,
+        savingsBadge: (v.savingsBadge || '').trim()
+      };
+    });
 
     if (hasVariants && formattedVariants.length > 0) {
       const prices = formattedVariants.map(v => v.salePrice);
@@ -511,7 +518,7 @@ const AdminAddProduct: React.FC = () => {
                       </div>
 
                       {/* Variant Inputs Grid */}
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
                         {/* Variant Title */}
                         <div className="col-span-2 sm:col-span-1 space-y-1">
                           <label className="text-[10px] font-semibold uppercase text-neutral-400">
@@ -565,6 +572,20 @@ const AdminAddProduct: React.FC = () => {
                             min="0"
                             value={v.stock}
                             onChange={(e) => updateVariant(idx, 'stock', parseInt(e.target.value) || 0)}
+                            className="w-full px-3 py-2 rounded-xl border border-neutral-200 text-xs font-medium text-neutral-800 focus:outline-none focus:border-neutral-900 bg-neutral-50 focus:bg-white"
+                          />
+                        </div>
+
+                        {/* Discount Tag / Badge */}
+                        <div className="col-span-2 sm:col-span-1 space-y-1">
+                          <label className="text-[10px] font-semibold uppercase text-neutral-400">
+                            Discount Tag / Badge
+                          </label>
+                          <input
+                            type="text"
+                            value={v.savingsBadge || ''}
+                            onChange={(e) => updateVariant(idx, 'savingsBadge', e.target.value)}
+                            placeholder="e.g. SAVE 20%, BEST VALUE"
                             className="w-full px-3 py-2 rounded-xl border border-neutral-200 text-xs font-medium text-neutral-800 focus:outline-none focus:border-neutral-900 bg-neutral-50 focus:bg-white"
                           />
                         </div>

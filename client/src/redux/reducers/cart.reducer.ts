@@ -31,12 +31,21 @@ const getInitialShippingInfo = (): ShippingInfo => {
     };
 };
 
+const getSavedShippingFee = (): number => {
+    if (typeof window === 'undefined') return 80;
+    try {
+        const saved = localStorage.getItem('standardShippingFee');
+        if (saved !== null && !isNaN(Number(saved))) return Number(saved);
+    } catch {}
+    return 80;
+};
+
 const initialCartItems = getInitialCartItems();
 const initialSubTotal = initialCartItems.reduce(
     (acc, item) => acc + (Number(item.price) || 0) * (Number(item.quantity) || 1),
     0
 );
-const initialShipping = initialCartItems.length > 0 ? 80 : 0;
+const initialShipping = initialCartItems.length > 0 ? getSavedShippingFee() : 0;
 
 const initialState: CartReducerIntialState = {
     loading: false,
@@ -55,7 +64,8 @@ const updateCartTotals = (state: CartReducerIntialState) => {
         0
     );
     state.subTotal = subTotal;
-    state.shippingCharges = state.cartItems.length > 0 ? 80 : 0; // Flat ₹80 shipping charges for AP & Telangana
+    const fee = getSavedShippingFee();
+    state.shippingCharges = state.cartItems.length > 0 ? fee : 0;
     state.tax = 0;
     if (state.discount > subTotal) {
         state.discount = subTotal;
@@ -132,6 +142,16 @@ export const cartReducer = createSlice({
             state.shippingInfo = action.payload;
             saveToLocalStorage(state); // Save to localStorage
         },
+        updateShippingFee: (state, action: PayloadAction<number>) => {
+            const fee = Math.max(0, Number(action.payload) || 0);
+            if (typeof window !== 'undefined') {
+                try {
+                    localStorage.setItem('standardShippingFee', fee.toString());
+                } catch {}
+            }
+            updateCartTotals(state);
+            saveToLocalStorage(state);
+        },
         resetCart: (state) => {
             localStorage.removeItem('cartItems');
             localStorage.removeItem('shippingInfo');
@@ -145,5 +165,5 @@ export const cartReducer = createSlice({
     }
 });
 
-export const { addToCart, removeCartItem, incrementCartItem, decrementCartItem, calculatePrice, discountApplied, resetCart, saveShippingInfo } = cartReducer.actions;
+export const { addToCart, removeCartItem, incrementCartItem, decrementCartItem, calculatePrice, discountApplied, resetCart, saveShippingInfo, updateShippingFee } = cartReducer.actions;
 export default cartReducer.reducer;

@@ -451,6 +451,7 @@ export interface StoreSettings {
     standardShippingFee: number;
     expressShippingFee?: number;
     shippingPartner?: string;
+    deliveryNote?: string;
     
     youtubeChannelUrl: string;
     youtubeChannelName?: string;

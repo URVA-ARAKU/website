@@ -73,18 +73,24 @@ const ProductDetails: React.FC = () => {
     // 1. If DB has raw variants
     const rawVariants = (resolvedProduct as any)?.variants;
     if (Array.isArray(rawVariants) && rawVariants.length > 0) {
-      return rawVariants.map((v: any, index: number) => ({
-        id: v.id || `var-${index}`,
-        name: v.name || v.label || `Option ${index + 1}`,
-        label: v.label || v.name || `${v.pack || 'Standard'}`,
-        price: v.salePrice || v.price || resolvedProduct.price || 299,
-        mrp: v.mrp || (v.price ? Math.round(v.price * 1.25) : 399),
-        pack: v.pack,
-        savingsBadge: v.savingsBadge || (index === 1 ? 'SAVE 20% - Most Popular' : index === 2 ? 'BEST VALUE' : undefined),
-        image: v.photo || (resolvedProduct.photos && resolvedProduct.photos.length > 0 ? resolvedProduct.photos[0] : resolvedProduct.photo),
-        sku: v.sku || `URVA-${index}`,
-        inStock: v.inStock !== false,
-      }));
+      return rawVariants.map((v: any, index: number) => {
+        const autoSavings = (v.mrp && v.salePrice && v.mrp > v.salePrice)
+          ? `SAVE ${Math.round(((v.mrp - v.salePrice) / v.mrp) * 100)}%`
+          : undefined;
+
+        return {
+          id: v.id || `var-${index}`,
+          name: v.name || v.label || `Option ${index + 1}`,
+          label: v.name || v.label || `${v.pack || 'Standard'}`,
+          price: v.salePrice || v.price || resolvedProduct.price || 299,
+          mrp: v.mrp || (v.price ? Math.round(v.price * 1.25) : 399),
+          pack: v.pack,
+          savingsBadge: v.savingsBadge || autoSavings,
+          image: v.photo || (resolvedProduct.photos && resolvedProduct.photos.length > 0 ? resolvedProduct.photos[0] : resolvedProduct.photo),
+          sku: v.sku || `URVA-${index}`,
+          inStock: v.inStock !== false,
+        };
+      });
     }
 
     // 2. No multi-variants configured in admin dashboard — single standard product at exact admin base price
@@ -466,10 +472,20 @@ const ProductDetails: React.FC = () => {
                 )}
               </div>
 
-              {/* Short Story / Description snippet */}
-              <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal line-clamp-3">
-                {resolvedProduct.description}
-              </p>
+              {/* Product Details Section (Directly Below Product Title & Pricing) */}
+              <div className="bg-[#FAF8F4] rounded-xl p-4 sm:p-4.5 border border-[#E2D9CC] space-y-2">
+                <div className="flex items-center justify-between border-b border-[#E2D9CC]/70 pb-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#5A3825] flex items-center gap-1.5 font-sans">
+                    <span>🌾</span> Product Details
+                  </span>
+                  <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full border border-emerald-200">
+                    Direct Rural Sourcing
+                  </span>
+                </div>
+                <div className="text-xs sm:text-sm text-[#5A3825]/90 leading-relaxed font-normal whitespace-pre-line">
+                  {resolvedProduct.description}
+                </div>
+              </div>
 
               {/* ─── Clickable Variety Cards (Only shown when admin configured multiple variants) ─── */}
               {availableVarieties.length > 1 && (

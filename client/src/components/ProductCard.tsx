@@ -24,7 +24,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showDescription = fa
   // Selected variant state
   const [selectedVariantId, setSelectedVariantId] = useState<string>(() => {
     if (hasVariants) {
-      return rawVariants[0].id || rawVariants[0].label || rawVariants[0].name || '0';
+      return rawVariants[0].id || rawVariants[0].name || rawVariants[0].label || '0';
     }
     return '';
   });
@@ -33,7 +33,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showDescription = fa
   const selectedVariant = hasVariants
     ? rawVariants.find(
         (v: any, idx: number) =>
-          (v.id || v.label || v.name || idx.toString()) === selectedVariantId
+          (v.id || v.name || v.label || idx.toString()) === selectedVariantId
       ) || rawVariants[0]
     : null;
 
@@ -62,7 +62,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showDescription = fa
 
   // Cart operations
   const activeCartItemId = hasVariants && selectedVariant
-    ? `${product._id}_${selectedVariant.id || selectedVariant.label || selectedVariant.name}`
+    ? `${product._id}_${selectedVariant.id || selectedVariant.name || selectedVariant.label}`
     : product._id;
 
   const cartItem = cartItems.find((item) => item.productId === activeCartItemId);
@@ -72,7 +72,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showDescription = fa
     if (isOutOfStock) return;
 
     const variantLabel = hasVariants && selectedVariant
-      ? ` (${selectedVariant.label || selectedVariant.name || selectedVariant.pack || 'Standard'})`
+      ? ` (${selectedVariant.name || selectedVariant.label || selectedVariant.pack || 'Standard'})`
       : '';
 
     dispatch(
@@ -183,8 +183,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showDescription = fa
               className="w-full bg-white border border-neutral-300 hover:border-[#5A3825] text-neutral-800 font-medium text-xs sm:text-sm rounded-full px-3.5 py-1.5 pr-8 appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#5A3825] transition-all shadow-2xs"
             >
               {rawVariants.map((v: any, index: number) => {
-                const vId = v.id || v.label || v.name || index.toString();
-                const vLabel = v.label || v.name || v.pack || `Option ${index + 1}`;
+                const vId = v.id || v.name || v.label || index.toString();
+                const vLabel = v.name || v.label || v.pack || `Option ${index + 1}`;
                 return (
                   <option key={vId} value={vId} className="text-neutral-800 py-1">
                     {vLabel}

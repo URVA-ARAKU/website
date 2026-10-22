@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { calculatePrice, saveShippingInfo } from '../redux/reducers/cart.reducer';
+import { calculatePrice, saveShippingInfo, updateShippingFee } from '../redux/reducers/cart.reducer';
 import { RootState } from '../redux/store';
 import { notify } from '../utils/util';
 import BackButton from '../components/common/BackBtn';
 import { FaTruck, FaShieldAlt } from 'react-icons/fa';
 import { usePageSEO } from '../hooks/usePageSEO';
+import { useGetStoreSettingsQuery } from '../redux/api/settings.api';
 
 const INDIAN_STATES = [
     "Andhra Pradesh",
@@ -25,7 +26,14 @@ const Shipping: React.FC = () => {
     const navigate = useNavigate();
 
     const { user } = useSelector((state: RootState) => state.user);
-    const { shippingInfo, cartItems, subTotal, total } = useSelector((state: RootState) => state.cart);
+    const { shippingInfo, cartItems, subTotal, total, shippingCharges } = useSelector((state: RootState) => state.cart);
+    const { data: settingsData } = useGetStoreSettingsQuery();
+
+    useEffect(() => {
+        if (settingsData?.settings?.standardShippingFee !== undefined) {
+            dispatch(updateShippingFee(settingsData.settings.standardShippingFee));
+        }
+    }, [settingsData, dispatch]);
 
     // Ensure price is calculated and redirect if cart is empty
     useEffect(() => {
@@ -35,6 +43,12 @@ const Shipping: React.FC = () => {
             dispatch(calculatePrice());
         }
     }, [cartItems.length, navigate, dispatch]);
+
+    const activeShippingFee = settingsData?.settings?.standardShippingFee !== undefined
+        ? Number(settingsData.settings.standardShippingFee)
+        : (shippingCharges || 80);
+
+    const activeDeliveryNote = settingsData?.settings?.deliveryNote || `Fast Delivery in AP & Telangana (Flat ₹${activeShippingFee} Shipping)`;
 
     const [name, setName] = useState(shippingInfo.name || user?.name || '');
     const [email, setEmail] = useState(shippingInfo.email || user?.email || '');
@@ -117,7 +131,7 @@ const Shipping: React.FC = () => {
                                 <span>🛍️</span> Selected Products ({cartItems.reduce((acc, it) => acc + (it.quantity || 1), 0)} items)
                             </span>
                             <span className="font-bold text-[#5A3825]">
-                                Total: ₹{(total > 0 ? total : subTotal > 0 ? subTotal + 80 : cartItems.reduce((acc, it) => acc + (Number(it.price) || 0) * (Number(it.quantity) || 1), 0) + 80).toFixed(2)} (incl. ₹80 shipping)
+                                Total: ₹{(total > 0 ? total : subTotal > 0 ? subTotal + activeShippingFee : cartItems.reduce((acc, it) => acc + (Number(it.price) || 0) * (Number(it.quantity) || 1), 0) + activeShippingFee).toFixed(2)} (incl. ₹{activeShippingFee} shipping)
                             </span>
                         </div>
                         <div className="flex gap-2 overflow-x-auto pb-1">
@@ -253,7 +267,7 @@ const Shipping: React.FC = () => {
                         {/* Security / Delivery Trust Info */}
                         <div className="pt-2 flex items-center justify-between text-xs text-[#8C7364] border-t border-[#E2D9CC]">
                             <span className="flex items-center gap-1.5 text-[#5A3825] font-semibold">
-                                <FaTruck /> Fast Delivery in AP & Telangana (Flat ₹80 Shipping)
+                                <FaTruck /> {activeDeliveryNote}
                             </span>
                             <span className="flex items-center gap-1 text-emerald-800 font-semibold">
                                 <FaShieldAlt /> Safe Checkout

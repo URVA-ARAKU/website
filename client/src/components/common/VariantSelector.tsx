@@ -36,7 +36,7 @@ const VariantSelector: React.FC<Props> = ({ variants, selectedVariantId, onSelec
             >
               <div className="flex flex-col items-center">
                 <span className={`text-xs font-semibold ${isVariantOutOfStock ? 'text-[#5A3825]/40' : isSelected ? 'text-[#FAF8F4]' : 'text-[#5A3825]'}`}>
-                  {variant.label || variant.pack || variant.name}
+                  {variant.name || variant.label || variant.pack}
                 </span>
 
                 {isVariantOutOfStock ? (

@@ -40,9 +40,10 @@ const AdminSettings: React.FC = () => {
   const [codMaxAmount, setCodMaxAmount] = useState(5000);
 
   const [freeShippingThreshold, setFreeShippingThreshold] = useState(999);
-  const [standardShippingFee, setStandardShippingFee] = useState(49);
+  const [standardShippingFee, setStandardShippingFee] = useState(80);
   const [expressShippingFee, setExpressShippingFee] = useState(99);
   const [shippingPartner, setShippingPartner] = useState('APSRTC Cargo & India Post');
+  const [deliveryNote, setDeliveryNote] = useState('');
 
   const [youtubeChannelUrl, setYoutubeChannelUrl] = useState('');
   const [youtubeChannelName, setYoutubeChannelName] = useState('');
@@ -71,10 +72,11 @@ const AdminSettings: React.FC = () => {
       setEnableCod(s.enableCod !== false);
       setCodMaxAmount(s.codMaxAmount || 5000);
 
-      setFreeShippingThreshold(s.freeShippingThreshold || 999);
-      setStandardShippingFee(s.standardShippingFee || 49);
-      setExpressShippingFee(s.expressShippingFee || 99);
+      setFreeShippingThreshold(s.freeShippingThreshold !== undefined ? Number(s.freeShippingThreshold) : 999);
+      setStandardShippingFee(s.standardShippingFee !== undefined ? Number(s.standardShippingFee) : 80);
+      setExpressShippingFee(s.expressShippingFee !== undefined ? Number(s.expressShippingFee) : 99);
       setShippingPartner(s.shippingPartner || 'APSRTC Cargo & India Post');
+      setDeliveryNote(s.deliveryNote || 'Flat ₹80 Delivery across Andhra Pradesh & Telangana');
 
       setYoutubeChannelUrl(s.youtubeChannelUrl || 'https://www.youtube.com/@urvaswadeshi');
       setYoutubeChannelName(s.youtubeChannelName || 'URVA Rural Heritage');
@@ -107,9 +109,10 @@ const AdminSettings: React.FC = () => {
       codMaxAmount: Number(codMaxAmount) || 5000,
 
       freeShippingThreshold: Number(freeShippingThreshold) || 999,
-      standardShippingFee: Number(standardShippingFee) || 49,
+      standardShippingFee: Number(standardShippingFee) !== undefined ? Number(standardShippingFee) : 80,
       expressShippingFee: Number(expressShippingFee) || 99,
       shippingPartner: shippingPartner.trim(),
+      deliveryNote: deliveryNote.trim(),
 
       youtubeChannelUrl: youtubeChannelUrl.trim(),
       youtubeChannelName: youtubeChannelName.trim(),
@@ -442,38 +445,51 @@ const AdminSettings: React.FC = () => {
         {/* ─── 3. SHIPPING & DELIVERY SETTINGS ─── */}
         {activeTab === 'shipping' && (
           <div className="bg-[#FAF8F4] p-6 rounded-3xl border border-[#E2D9CC] shadow-2xs space-y-5">
-            <h2 className="font-serif font-bold text-base text-[#5A3825] border-b border-[#E2D9CC] pb-3">
-              Shipping Charges & Dispatch Guidelines
-            </h2>
+            <div className="border-b border-[#E2D9CC] pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div>
+                <h2 className="font-serif font-bold text-base text-[#5A3825]">
+                  Shipping & Delivery Charges Management
+                </h2>
+                <p className="text-xs text-[#8C7364] mt-0.5">
+                  Set standard delivery charges, free shipping thresholds, and delivery notes applied across checkout.
+                </p>
+              </div>
+              <span className="self-start sm:self-auto bg-emerald-100 text-emerald-800 text-[11px] font-bold px-3 py-1 rounded-full border border-emerald-200">
+                Active: ₹{standardShippingFee} Flat Delivery
+              </span>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
+                  Standard Delivery Charge (₹) <span className="text-rose-600">*</span>
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  required
+                  value={standardShippingFee}
+                  onChange={(e) => setStandardShippingFee(Number(e.target.value))}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-[#F4F1EA] text-[#5A3825] text-sm font-bold focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
+                />
+                <span className="text-[11px] text-[#8C7364] mt-1 block">
+                  Delivery amount charged to customers on orders at checkout.
+                </span>
+              </div>
+
               <div>
                 <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
                   Free Shipping Minimum (₹)
                 </label>
                 <input
                   type="number"
+                  min="0"
                   value={freeShippingThreshold}
                   onChange={(e) => setFreeShippingThreshold(Number(e.target.value))}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-[#F4F1EA] text-[#5A3825] text-sm font-semibold focus:outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-[#F4F1EA] text-[#5A3825] text-sm font-semibold focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
                 />
                 <span className="text-[11px] text-[#8C7364] mt-1 block">
                   Orders equal or higher than this receive 100% free delivery.
-                </span>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
-                  Standard Delivery Charge (₹)
-                </label>
-                <input
-                  type="number"
-                  value={standardShippingFee}
-                  onChange={(e) => setStandardShippingFee(Number(e.target.value))}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-[#F4F1EA] text-[#5A3825] text-sm font-semibold focus:outline-none"
-                />
-                <span className="text-[11px] text-[#8C7364] mt-1 block">
-                  Applied to orders below the free shipping threshold.
                 </span>
               </div>
 
@@ -483,24 +499,43 @@ const AdminSettings: React.FC = () => {
                 </label>
                 <input
                   type="number"
+                  min="0"
                   value={expressShippingFee}
                   onChange={(e) => setExpressShippingFee(Number(e.target.value))}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-[#F4F1EA] text-[#5A3825] text-sm font-semibold focus:outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-[#F4F1EA] text-[#5A3825] text-sm font-semibold focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
-                Primary Logistics / Cargo Partner
-              </label>
-              <input
-                type="text"
-                value={shippingPartner}
-                onChange={(e) => setShippingPartner(e.target.value)}
-                placeholder="APSRTC Cargo & India Post"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-[#F4F1EA] text-[#5A3825] text-xs focus:outline-none"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div>
+                <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
+                  Delivery & Shipping Note for Checkout
+                </label>
+                <input
+                  type="text"
+                  value={deliveryNote}
+                  onChange={(e) => setDeliveryNote(e.target.value)}
+                  placeholder="Flat ₹80 Delivery across Andhra Pradesh & Telangana"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-[#F4F1EA] text-[#5A3825] text-xs focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
+                />
+                <span className="text-[11px] text-[#8C7364] mt-1 block">
+                  Shown to customers during checkout and order summary.
+                </span>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
+                  Primary Logistics / Cargo Partner
+                </label>
+                <input
+                  type="text"
+                  value={shippingPartner}
+                  onChange={(e) => setShippingPartner(e.target.value)}
+                  placeholder="APSRTC Cargo & India Post"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-[#F4F1EA] text-[#5A3825] text-xs focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
+                />
+              </div>
             </div>
           </div>
         )}
