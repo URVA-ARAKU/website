@@ -275,7 +275,7 @@ const Shipping: React.FC = () => {
                                 type="submit"
                                 className="w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-semibold py-3.5 px-4 rounded-lg uppercase tracking-wider transition-colors shadow-sm text-xs flex items-center justify-center gap-2 cursor-pointer"
                             >
-                                <span>Proceed to Pay with UPI (₹{finalTotal.toFixed(2)}) &gt;</span>
+                                <span>Proceed to Pay (₹{finalTotal.toFixed(2)}) &gt;</span>
                             </button>
                             <p className="text-[11px] text-center text-[#8C7364]">
                                 Includes ₹{itemsSubTotal.toFixed(0)} items + {activeShippingFee === 0 ? 'FREE delivery' : `₹${activeShippingFee} delivery charges`}

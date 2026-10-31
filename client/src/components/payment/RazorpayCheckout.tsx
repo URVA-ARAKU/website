@@ -40,8 +40,11 @@ const RazorpayCheckout: React.FC<RazorpayCheckoutProps> = ({
   const [createOrder, { isLoading: isCreatingOrder }] = useCreateRazorpayOrderMutation();
   const [verifyPayment, { isLoading: isVerifying }] = useVerifyRazorpayPaymentMutation();
 
-  // Load Razorpay script on component mount
+  // Load Razorpay script on component mount if not already present
   useEffect(() => {
+    if (window.Razorpay || document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]')) {
+      return;
+    }
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.async = true;
@@ -53,10 +56,6 @@ const RazorpayCheckout: React.FC<RazorpayCheckoutProps> = ({
       notify('Failed to load Razorpay. Please refresh and try again.', 'error');
     };
     document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
   }, []);
 
   const handlePaymentClick = async () => {
@@ -89,7 +88,7 @@ const RazorpayCheckout: React.FC<RazorpayCheckoutProps> = ({
         throw new Error(orderResponse.message || 'Failed to create order');
       }
 
-      const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID;
+      const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID || (orderResponse as any)?.key_id;
       if (!razorpayKeyId) {
         throw new Error('Razorpay Key ID not configured');
       }

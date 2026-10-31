@@ -8,6 +8,38 @@ import { createClient } from '@supabase/supabase-js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Helper to ensure .env is loaded into process.env across all runtime environments
+function loadLocalEnv() {
+  const envCandidates = [
+    path.resolve(process.cwd(), '.env'),
+    path.resolve(__dirname, '../.env'),
+    path.resolve(__dirname, '.env'),
+    path.resolve(process.cwd(), 'client/.env'),
+    path.resolve(__dirname, '../client/.env'),
+  ];
+  for (const envPath of envCandidates) {
+    if (fs.existsSync(envPath)) {
+      try {
+        const content = fs.readFileSync(envPath, 'utf8');
+        const lines = content.split(/\r?\n/);
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || trimmed.startsWith('#')) continue;
+          const eqIdx = trimmed.indexOf('=');
+          if (eqIdx > 0) {
+            const key = trimmed.slice(0, eqIdx).trim();
+            const val = trimmed.slice(eqIdx + 1).trim().replace(/^["']|["']$/g, '');
+            if (!process.env[key] && val) {
+              process.env[key] = val;
+            }
+          }
+        }
+      } catch (e) {}
+    }
+  }
+}
+loadLocalEnv();
+
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'https://nyydjisfdavwokfawrhr.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY || process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_T5w5cXt7kZ1ExWgnaF69Lg_zI-MJEMG';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -77,6 +109,9 @@ function getRazorpayInstance() {
 
 // Verify Razorpay payment signature using HMAC-SHA256
 function verifyRazorpaySignature(orderId, paymentId, signature) {
+  if (!RAZORPAY_CONFIG.KEY_SECRET || !orderId || !paymentId || !signature) {
+    return false;
+  }
   const expectedSignature = crypto
     .createHmac('sha256', RAZORPAY_CONFIG.KEY_SECRET)
     .update(`${orderId}|${paymentId}`)
@@ -758,18 +793,34 @@ export default async function handler(req, res) {
     }
 
     // ─── PAYMENTS: Razorpay Create Order ───
-    if (url.includes('/api/v1/payments/razorpay/create-order') || url.includes('/api/create-order')) {
+    if (
+      url.includes('/api/v1/payments/razorpay/create-order') ||
+      url.includes('/api/create-order') ||
+      url.endsWith('/create-order')
+    ) {
       if (req.method !== 'POST') {
         return res.status(405).json({ success: false, message: 'Method not allowed' });
       }
 
       try {
         const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-        const { amount, currency, receipt, description, customer_name, customer_email, customer_phone } = body;
+        const { amount, currency, receipt, notes, description, customer_name, customer_email, customer_phone } = body;
 
-        const amountInPaise = parseInt(amount, 10) || 49900;
-        if (amountInPaise < 100) {
-          return res.status(400).json({ success: false, message: 'Minimum amount must be at least 100 paise (₹1)' });
+        const amountInPaise = Number(amount);
+        if (!amount || isNaN(amountInPaise) || amountInPaise < 100) {
+          return res.status(400).json({
+            success: false,
+            message: 'Invalid amount. Minimum amount must be at least 100 paise (₹1)',
+          });
+        }
+
+        // Validate Razorpay credentials before calling SDK
+        if (!RAZORPAY_CONFIG.KEY_ID || !RAZORPAY_CONFIG.KEY_SECRET) {
+          console.error('❌ Razorpay credentials not configured in environment variables');
+          return res.status(401).json({
+            success: false,
+            message: 'Razorpay authentication failed: Missing RAZORPAY_KEY_ID or RAZORPAY_KEY_SECRET',
+          });
         }
 
         const orderReceipt = receipt || `order_${Date.now()}`;
@@ -777,10 +828,10 @@ export default async function handler(req, res) {
         try {
           const razorpay = getRazorpayInstance();
           const order = await razorpay.orders.create({
-            amount: amountInPaise,
+            amount: Math.round(amountInPaise),
             currency: currency || 'INR',
             receipt: orderReceipt,
-            notes: {
+            notes: notes || {
               customer_name: customer_name || 'URVA Customer',
               customer_email: customer_email || 'support@urvaswadeshi.in',
               customer_phone: customer_phone || '',
@@ -798,10 +849,17 @@ export default async function handler(req, res) {
             key_id: RAZORPAY_CONFIG.KEY_ID,
           });
         } catch (sdkError) {
-          console.error('❌ Razorpay SDK Order creation error:', sdkError?.description || sdkError?.message || sdkError);
-          return res.status(500).json({
+          console.error('❌ Razorpay SDK Order creation error:', sdkError);
+          const statusCode = Number(sdkError?.statusCode || sdkError?.status);
+          const isAuthFailure =
+            statusCode === 401 ||
+            (sdkError?.error?.code === 'BAD_REQUEST_ERROR' && sdkError?.message?.toLowerCase().includes('auth')) ||
+            (typeof sdkError?.message === 'string' && sdkError?.message?.toLowerCase().includes('credentials'));
+
+          return res.status(isAuthFailure ? 401 : 500).json({
             success: false,
-            message: sdkError?.description || sdkError?.message || 'Failed to create Razorpay order',
+            message: sdkError?.error?.description || sdkError?.description || sdkError?.message || 'Failed to create Razorpay order',
+            error: sdkError?.error || sdkError?.message,
           });
         }
       } catch (error) {
@@ -815,13 +873,20 @@ export default async function handler(req, res) {
     }
 
     // ─── PAYMENTS: Razorpay Verify Signature ───
-    if (url.includes('/api/v1/payments/razorpay/verify-payment') || url.includes('/api/verify-payment')) {
+    if (
+      url.includes('/api/v1/payments/razorpay/verify-payment') ||
+      url.includes('/api/verify-payment') ||
+      url.endsWith('/verify-payment')
+    ) {
       if (req.method !== 'POST') {
         return res.status(405).json({ success: false, message: 'Method not allowed' });
       }
 
       try {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body || {};
+        const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+        const razorpay_order_id = body.razorpay_order_id || body.order_id;
+        const razorpay_payment_id = body.razorpay_payment_id || body.payment_id;
+        const razorpay_signature = body.razorpay_signature || body.signature;
 
         // Validate required fields
         if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
@@ -847,6 +912,8 @@ export default async function handler(req, res) {
         return res.status(200).json({
           success: true,
           message: 'Payment verified successfully',
+          order_id: razorpay_order_id,
+          payment_id: razorpay_payment_id,
           razorpay_order_id,
           razorpay_payment_id,
         });

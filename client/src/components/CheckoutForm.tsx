@@ -8,22 +8,20 @@ import { RootState } from '../redux/store';
 import { NewOrderRequest } from '../types/api-types';
 import { notify } from '../utils/util';
 import { usePageSEO } from '../hooks/usePageSEO';
-import { uploadToCloudinary } from '../utils/cloudinary';
+import RazorpayCheckout from './payment/RazorpayCheckout';
 import {
-  FaQrcode,
-  FaCopy,
-  FaCheck,
-  FaUpload,
-  FaTrash,
-  FaMobileScreenButton,
   FaShieldHalved,
-  FaCircleInfo,
+  FaCreditCard,
+  FaLock,
+  FaLocationDot,
+  FaTruckFast,
+  FaCheck,
 } from 'react-icons/fa6';
 
 const CheckoutForm: React.FC = () => {
   usePageSEO({
-    title: 'Scan & Pay UPI Checkout | URVA',
-    description: 'Pay securely using any UPI app by scanning our generic QR code and uploading your payment confirmation.',
+    title: 'Secure Checkout | URVA',
+    description: 'Complete your URVA order securely with Razorpay payment gateway.',
     canonical: '/checkout',
     noIndex: true,
   });
@@ -66,108 +64,24 @@ const CheckoutForm: React.FC = () => {
   const [isOrderSummaryOpen, setIsOrderSummaryOpen] = useState<boolean>(false);
   const totalItemCount = cartItems.reduce((acc, it) => acc + (it.quantity || 1), 0);
 
-  // UPI Payment States
-  const [transactionId, setTransactionId] = useState<string>('');
-  const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null);
-  const [screenshotUrl, setScreenshotUrl] = useState<string>('');
-  const [isUploadingScreenshot, setIsUploadingScreenshot] = useState<boolean>(false);
-  const [isCopied, setIsCopied] = useState<boolean>(false);
-
-  // Official Merchant UPI ID and PhonePe QR Code
-  const UPI_ID = '9346422451@ybl';
-  const MERCHANT_NAME = 'URVA Rural Aura';
-
-  // Construct standard UPI Payment URL with guaranteed accurate effectiveTotal
-  const upiDeepLink = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${effectiveTotal.toFixed(2)}&cu=INR&tn=${encodeURIComponent('URVA Order Payment')}`;
-
-  // Official merchant PhonePe QR Code image
-  const qrCodeUrl = '/qr.jpeg';
-
-  // Copy UPI ID to clipboard
-  const handleCopyUpi = () => {
-    navigator.clipboard.writeText(UPI_ID);
-    setIsCopied(true);
-    notify('UPI ID copied to clipboard!', 'info');
-    setTimeout(() => setIsCopied(false), 2500);
-  };
-
-  // Handle Screenshot File Selection & Upload
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      notify('Please select a valid image file (PNG, JPG, JPEG, WEBP)', 'error');
-      return;
-    }
-
-    if (file.size > 10 * 1024 * 1024) {
-      notify('Image size must be less than 10MB', 'error');
-      return;
-    }
-
-    // Local instant preview
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      setScreenshotPreview(base64);
-    };
-    reader.readAsDataURL(file);
-
-    // Upload to Cloudinary with graceful fallback to base64
-    setIsUploadingScreenshot(true);
-    try {
-      const res = await uploadToCloudinary(file, 'urvaa/payments');
-      if (res && res.url) {
-        setScreenshotUrl(res.url);
-        notify('Payment screenshot uploaded successfully!', 'success');
-      }
-    } catch (err) {
-      console.warn('Cloudinary direct upload failed, preserving local screenshot base64:', err);
-      // Keep local base64 preview as screenshotUrl so proof is never lost
-      setScreenshotUrl('');
-    } finally {
-      setIsUploadingScreenshot(false);
-    }
-  };
-
-  const handleRemoveScreenshot = () => {
-    setScreenshotPreview(null);
-    setScreenshotUrl('');
-  };
-
-  // Order Submission Handler
-  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (cartItems.length === 0) {
-      notify('Your basket is empty. Please add products before checking out.', 'error');
-      navigate('/products');
-      return;
-    }
-
-    const trimmedTxnId = transactionId.trim();
-    if (!trimmedTxnId) {
-      notify('Please enter the 12-digit UPI Transaction ID / UTR number from your payment confirmation screen.', 'error');
-      return;
-    }
-
-    if (trimmedTxnId.length < 6) {
-      notify('Please enter a valid Transaction ID / UTR number (typically 12 digits).', 'error');
-      return;
-    }
-
+  // Razorpay Payment Success Handler
+  const handleRazorpaySuccess = async (paymentData: {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+  }) => {
     setIsProcessing(true);
     const guestUserId = 'guest_' + (shippingInfo.phone || Date.now());
-    const finalScreenshot = screenshotUrl || screenshotPreview || '';
 
     const orderData: NewOrderRequest = {
       shippingCharges: effectiveShipping,
       shippingInfo: {
         ...shippingInfo,
-        paymentMethod: 'UPI_QR',
-        transactionId: trimmedTxnId,
-        paymentScreenshot: finalScreenshot,
+        paymentMethod: 'Razorpay',
+        transactionId: paymentData.razorpay_payment_id,
+        razorpayPaymentId: paymentData.razorpay_payment_id,
+        razorpayOrderId: paymentData.razorpay_order_id,
+        razorpaySignature: paymentData.razorpay_signature,
         paidAmount: effectiveTotal,
         clientOrigin: window.location.origin,
       } as any,
@@ -186,14 +100,14 @@ const CheckoutForm: React.FC = () => {
       localStorage.setItem('guestUserId', guestUserId);
       dispatch(resetCart());
 
-      notify('Order placed successfully! We will verify your transaction shortly.', 'success');
-      window.location.href = `/my-orders?payment=submitted&orderId=${createdOrderId}`;
+      notify('Payment verified & order placed successfully!', 'success');
+      navigate(`/my-orders?payment=submitted&orderId=${createdOrderId}`);
     } catch (err: any) {
-      console.error('Order save error:', err);
+      console.error('Order save error after Razorpay verification:', err);
       localStorage.setItem('guestUserId', guestUserId);
       dispatch(resetCart());
       notify('Order placed! Redirecting to orders...', 'success');
-      window.location.href = `/my-orders?payment=submitted&orderId=ord_${Date.now()}`;
+      navigate(`/my-orders?payment=submitted&orderId=ord_${Date.now()}`);
     } finally {
       setIsProcessing(false);
     }
@@ -286,10 +200,10 @@ const CheckoutForm: React.FC = () => {
           )}
         </div>
 
-        {/* RESPONSIVE 2-COLUMN GRID (Left: Payment, Right: Order Summary on Desktop) */}
+        {/* RESPONSIVE 2-COLUMN GRID (Left: Razorpay Payment, Right: Order Summary on Desktop) */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-          {/* PRIMARY PAYMENT COLUMN (Takes front stage on mobile, 7 cols on desktop) */}
-          <div className="md:col-span-7 bg-[#FAF8F4] p-4 sm:p-7 rounded-3xl shadow-sm border border-[#E2D9CC] space-y-5">
+          {/* PRIMARY PAYMENT COLUMN */}
+          <div className="md:col-span-7 bg-[#FAF8F4] p-5 sm:p-7 rounded-3xl shadow-sm border border-[#E2D9CC] space-y-5">
             {/* Merchant Header */}
             <div className="flex items-center gap-3 border-b border-[#E2D9CC] pb-3.5">
               <img
@@ -299,201 +213,123 @@ const CheckoutForm: React.FC = () => {
               />
               <div className="text-left min-w-0">
                 <h1 className="text-lg sm:text-2xl font-serif font-bold tracking-tight text-[#5A3825] leading-tight">
-                  UPI Payment
+                  Secure Checkout
                 </h1>
                 <p className="text-[11px] sm:text-xs text-[#8C7364] mt-0.5 truncate">
-                  Pay directly with any UPI app or scan the PhonePe QR code
+                  Direct online payment powered by Razorpay
                 </p>
               </div>
             </div>
 
-            {/* STEP 1: Pay with UPI & QR Code */}
-            <div className="bg-[#F4F1EA] p-4 sm:p-5 rounded-2xl border-2 border-[#E2D9CC] space-y-4">
+            {/* Delivery Recipient Summary Pill */}
+            {shippingInfo.address && (
+              <div className="p-3.5 rounded-xl bg-[#F4F1EA] border border-[#E2D9CC] flex items-start justify-between gap-3 text-xs">
+                <div className="flex items-start gap-2.5 min-w-0">
+                  <FaLocationDot className="text-[#8B5A2B] text-sm mt-0.5 shrink-0" />
+                  <div className="min-w-0 leading-tight">
+                    <p className="font-bold text-[#5A3825] truncate">
+                      {shippingInfo.name || 'Customer'} · {shippingInfo.phone}
+                    </p>
+                    <p className="text-[11px] text-[#8C7364] mt-0.5 truncate">
+                      {shippingInfo.address}, {shippingInfo.city}, {shippingInfo.state} - {shippingInfo.pinCode}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => navigate('/shipping')}
+                  className="text-[11px] text-[#8B5A2B] hover:text-[#5A3825] font-semibold underline shrink-0 cursor-pointer"
+                >
+                  Edit
+                </button>
+              </div>
+            )}
+
+            {/* DIRECT RAZORPAY PAYMENT GATEWAY CARD */}
+            <div className="bg-[#F4F1EA] p-5 sm:p-6 rounded-2xl border-2 border-[#E2D9CC] space-y-4">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF8F4] border border-[#E2D9CC] text-xs font-bold text-[#8B5A2B] uppercase tracking-wider">
-                  <FaQrcode /> Step 1: Pay with UPI
+                  <FaShieldHalved /> Direct Online Payment
                 </div>
-                <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-                  Zero Transaction Fee
+                <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                  <FaLock className="text-[10px]" /> 256-Bit SSL Encrypted
                 </span>
               </div>
 
-              {/* PRIMARY "PAY WITH UPI" BUTTON */}
-              <div className="space-y-1.5">
-                <a
-                  href={upiDeepLink}
-                  onClick={() => notify('Opening your UPI app... Complete payment and enter the 12-digit UTR below.', 'info')}
-                  className="w-full flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-[#8B5A2B] hover:bg-[#6F441E] text-white shadow-sm hover:shadow-md transition-all duration-150 cursor-pointer group"
-                  style={{ color: '#ffffff' }}
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-lg bg-white/15 flex items-center justify-center text-white text-lg shrink-0" style={{ color: '#ffffff' }}>
-                      <FaMobileScreenButton />
-                    </div>
-                    <div className="text-left min-w-0">
-                      <span className="block text-sm sm:text-base font-bold text-white tracking-wide leading-tight truncate" style={{ color: '#ffffff' }}>
-                        Pay with UPI (₹ {effectiveTotal.toFixed(2)})
-                      </span>
-                      <span className="block text-[11px] sm:text-xs text-white/90 font-normal truncate" style={{ color: 'rgba(255,255,255,0.9)' }}>
-                        Tap to pay instantly via any UPI app
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 shrink-0 pl-2">
-                    <span className="text-white text-base group-hover:translate-x-1 transition-transform" style={{ color: '#ffffff' }}>
-                      ➔
-                    </span>
-                  </div>
-                </a>
-
-                <p className="text-[11px] text-center text-[#8C7364]">
-                  Total: ₹{effectiveTotal.toFixed(2)} (Items ₹{effectiveSubTotal.toFixed(0)} + {effectiveShipping === 0 ? 'FREE delivery' : `₹${effectiveShipping} delivery charges`}) · Tap above to pay via any UPI app
+              <div className="text-left space-y-1">
+                <h3 className="font-bold text-[#5A3825] text-base">
+                  Pay via Razorpay Payment Gateway
+                </h3>
+                <p className="text-xs text-[#8C7364] leading-relaxed">
+                  Choose your preferred payment method on the secure Razorpay checkout:
                 </p>
               </div>
 
-              {/* DIVIDER: OR SCAN QR CODE */}
-              <div className="relative flex py-0.5 items-center">
-                <div className="flex-grow border-t border-[#E2D9CC]"></div>
-                <span className="shrink-0 mx-2 text-[10px] uppercase font-bold tracking-wider text-[#8C7364] bg-[#F4F1EA] px-2">
-                  Or Scan QR Code to Pay
-                </span>
-                <div className="flex-grow border-t border-[#E2D9CC]"></div>
-              </div>
-
-              {/* QR Code Canvas */}
-              <div className="flex flex-col items-center justify-center">
-                <div className="p-2.5 sm:p-3 bg-white rounded-2xl border-2 border-[#5A3825] shadow-md transition-transform hover:scale-[1.02]">
-                  <img
-                    src={qrCodeUrl}
-                    alt={`Scan to pay ₹${effectiveTotal.toFixed(2)} to ${UPI_ID}`}
-                    className="w-40 h-40 sm:w-52 sm:h-52 object-contain rounded-lg"
-                  />
+              {/* Supported Payment Options Badges */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-center">
+                <div className="bg-[#FAF8F4] p-2.5 rounded-xl border border-[#E2D9CC] flex flex-col items-center justify-center">
+                  <span className="text-base">⚡</span>
+                  <span className="text-[11px] font-bold text-[#5A3825] mt-1">UPI</span>
+                  <span className="text-[9px] text-[#8C7364]">GPay, PhonePe, Paytm, CRED</span>
                 </div>
-                <div className="mt-2 text-center">
-                  <span className="text-xs font-semibold text-[#8C7364] block">Scan using any UPI App Camera</span>
-                  <span className="text-base sm:text-lg font-bold text-[#5A3825] font-serif">₹ {effectiveTotal.toFixed(2)}</span>
+                <div className="bg-[#FAF8F4] p-2.5 rounded-xl border border-[#E2D9CC] flex flex-col items-center justify-center">
+                  <FaCreditCard className="text-[#8B5A2B] text-base" />
+                  <span className="text-[11px] font-bold text-[#5A3825] mt-1">Cards</span>
+                  <span className="text-[9px] text-[#8C7364]">Debit & Credit Cards</span>
                 </div>
-              </div>
-
-              {/* UPI ID Copy Bar */}
-              <div className="max-w-md mx-auto">
-                <div className="flex items-center justify-between gap-2 p-2 px-3 bg-[#FAF8F4] rounded-xl border border-[#E2D9CC]">
-                  <div className="text-left overflow-hidden">
-                    <span className="text-[9px] uppercase font-bold text-[#8C7364] block tracking-wider">UPI ID:</span>
-                    <span className="text-xs sm:text-sm font-mono font-bold text-[#5A3825] truncate block">{UPI_ID}</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleCopyUpi}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#8B5A2B] hover:bg-[#5A3825] text-white text-xs font-semibold transition cursor-pointer shadow-xs shrink-0"
-                  >
-                    {isCopied ? <FaCheck size={11} /> : <FaCopy size={11} />}
-                    <span>{isCopied ? 'Copied' : 'Copy'}</span>
-                  </button>
+                <div className="bg-[#FAF8F4] p-2.5 rounded-xl border border-[#E2D9CC] flex flex-col items-center justify-center">
+                  <span className="text-base">🏦</span>
+                  <span className="text-[11px] font-bold text-[#5A3825] mt-1">NetBanking</span>
+                  <span className="text-[9px] text-[#8C7364]">All Indian Banks</span>
+                </div>
+                <div className="bg-[#FAF8F4] p-2.5 rounded-xl border border-[#E2D9CC] flex flex-col items-center justify-center">
+                  <span className="text-base">👛</span>
+                  <span className="text-[11px] font-bold text-[#5A3825] mt-1">Wallets</span>
+                  <span className="text-[9px] text-[#8C7364]">Amazon Pay & More</span>
                 </div>
               </div>
-            </div>
 
-            {/* STEP 2 & 3: Transaction ID & Screenshot Form */}
-            <form onSubmit={submitHandler} className="space-y-4">
-              {/* Step 2: Transaction ID Input */}
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <label htmlFor="transactionId" className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider">
-                    Step 2: Enter UPI Transaction ID / UTR Number <span className="text-rose-600">*</span>
-                  </label>
-                  <span className="text-[10px] text-[#8C7364]">12-digit number</span>
-                </div>
-                <input
-                  type="text"
-                  id="transactionId"
-                  required
-                  value={transactionId}
-                  onChange={(e) => setTransactionId(e.target.value)}
-                  placeholder="e.g., 428910482910 or UPI Ref No."
-                  className="w-full px-3.5 py-2.5 rounded-xl border-2 border-[#E2D9CC] bg-[#F4F1EA] text-[#5A3825] font-mono text-sm placeholder:text-[#8C7364]/60 focus:outline-none focus:border-[#5A3825] transition"
-                />
-                <div className="flex items-start gap-1.5 text-[11px] text-[#8C7364] px-1">
-                  <FaCircleInfo className="text-[#8B5A2B] mt-0.5 shrink-0" />
-                  <span>
-                    Found under payment details in your UPI app receipt as <strong>UTR</strong> or <strong>UPI Ref ID</strong>.
+              {/* Order Total Highlight Box */}
+              <div className="bg-[#FAF8F4] p-4 rounded-xl border border-[#E2D9CC] flex items-center justify-between">
+                <div>
+                  <span className="text-xs text-[#8C7364] block">Total Amount to Pay</span>
+                  <span className="text-2xl font-bold font-serif text-[#5A3825]">
+                    ₹ {effectiveTotal.toFixed(2)}
                   </span>
                 </div>
-              </div>
-
-              {/* Step 3: Payment Screenshot Upload */}
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider">
-                    Step 3: Upload Payment Screenshot <span className="text-[#8C7364] font-normal lowercase">(optional)</span>
-                  </label>
-                  {isUploadingScreenshot && (
-                    <span className="text-[10px] text-[#8B5A2B] font-semibold animate-pulse">Uploading to server...</span>
-                  )}
+                <div className="text-right text-[11px] text-[#8C7364]">
+                  <span>{totalItemCount} {totalItemCount === 1 ? 'item' : 'items'}</span>
+                  <span className="block text-emerald-800 font-semibold mt-0.5">Instant Order Confirmation</span>
                 </div>
-
-                {screenshotPreview ? (
-                  <div className="relative rounded-2xl border-2 border-[#8B5A2B] bg-[#F4F1EA] p-3 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2.5 overflow-hidden">
-                      <img
-                        src={screenshotPreview}
-                        alt="Payment screenshot proof"
-                        className="w-14 h-14 object-cover rounded-xl border border-[#E2D9CC] shadow-xs shrink-0"
-                      />
-                      <div>
-                        <span className="text-xs font-semibold text-[#5A3825] block">Screenshot Attached</span>
-                        <span className="text-[10px] text-emerald-700 font-medium">✓ Ready to submit with your order</span>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleRemoveScreenshot}
-                      className="p-2 rounded-xl border border-rose-200 text-rose-700 hover:bg-rose-50 text-xs transition cursor-pointer"
-                      title="Remove screenshot"
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                ) : (
-                  <label className="flex flex-col items-center justify-center border-2 border-dashed border-[#E2D9CC] hover:border-[#8B5A2B] bg-[#F4F1EA] hover:bg-[#FAF8F4] p-4 rounded-xl cursor-pointer transition-all duration-200 group">
-                    <FaUpload className="text-[#8B5A2B] text-lg mb-1 group-hover:scale-110 transition-transform" />
-                    <span className="text-xs font-bold text-[#5A3825]">Tap to upload payment screenshot (optional)</span>
-                    <span className="text-[10px] text-[#8C7364] mt-0.5">PNG, JPG, WEBP up to 10MB</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="hidden"
-                    />
-                  </label>
-                )}
               </div>
 
-              {/* Security & Verification Note */}
-              <div className="bg-[#F4F1EA] p-3 rounded-xl border border-[#E2D9CC] flex items-center gap-2 text-xs text-[#8C7364]">
-                <FaShieldHalved className="text-[#8B5A2B] text-sm shrink-0" />
-                <span>
-                  Your order is protected under URVA's Customer Guarantee. Verified within minutes.
+              {/* Direct Razorpay Checkout Button */}
+              <div className="pt-2">
+                <RazorpayCheckout
+                  amount={Math.round(effectiveTotal * 100)}
+                  currency="INR"
+                  receipt={`order_${Date.now()}`}
+                  description={`URVA order for ${shippingInfo.name || 'Customer'}`}
+                  customer_name={shippingInfo.name || ''}
+                  customer_email={shippingInfo.email || ''}
+                  customer_phone={shippingInfo.phone || ''}
+                  buttonText={`Pay ₹${effectiveTotal.toFixed(2)} with Razorpay ➔`}
+                  buttonClassName="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer active:scale-[0.99]"
+                  onPaymentSuccess={handleRazorpaySuccess}
+                  disabled={isProcessing || cartItems.length === 0}
+                />
+              </div>
+
+              {/* Trust Footer */}
+              <div className="pt-2 border-t border-[#E2D9CC]/70 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#8C7364] gap-2">
+                <span className="flex items-center gap-1.5">
+                  <FaCheck className="text-emerald-700 text-xs" /> 100% Genuine Rural Guarantee
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <FaTruckFast className="text-[#8B5A2B] text-xs" /> Dispatched within 24-48 Hours
                 </span>
               </div>
-
-              {/* Submit Order Button */}
-              <button
-                type="submit"
-                disabled={isProcessing || cartItems.length === 0}
-                className="w-full bg-[#8B5A2B] hover:bg-[#5A3825] text-white font-bold py-3.5 sm:py-4 px-6 rounded-2xl text-xs sm:text-sm uppercase tracking-wider transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
-              >
-                {isProcessing ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Confirming Order...</span>
-                  </>
-                ) : (
-                  <span>Submit Payment & Place Order (₹ {effectiveTotal.toFixed(2)}) ➔</span>
-                )}
-              </button>
-            </form>
+            </div>
           </div>
 
           {/* DESKTOP SIDEBAR: Order Details & Address (Hidden on mobile, 5 cols on desktop) */}
@@ -520,13 +356,11 @@ const CheckoutForm: React.FC = () => {
                       <img
                         src={item.photo || 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png'}
                         alt={item.name}
-                        className="w-11 h-11 object-cover rounded-lg border border-[#E2D9CC] bg-white shrink-0"
+                        className="w-11 h-11 object-cover rounded-xl border border-[#E2D9CC] bg-white shrink-0"
                       />
                       <div className="min-w-0">
                         <p className="font-semibold text-xs text-[#5A3825] truncate">{item.name}</p>
-                        <p className="text-[11px] text-[#8C7364]">
-                          Qty: <span className="font-semibold text-[#5A3825]">{item.quantity}</span> × ₹{(Number(item.price) || 0).toFixed(0)}
-                        </p>
+                        <p className="text-[11px] text-[#8C7364]">Qty: {item.quantity} · ₹{(Number(item.price) || 0).toFixed(0)} each</p>
                       </div>
                     </div>
                     <span className="font-bold text-xs text-[#5A3825] shrink-0">
@@ -537,43 +371,64 @@ const CheckoutForm: React.FC = () => {
               </div>
 
               {/* Price Breakdown */}
-              <div className="pt-3 border-t border-[#E2D9CC] text-xs space-y-1.5">
-                <div className="flex justify-between text-[#8C7364]">
+              <div className="pt-3 border-t border-[#E2D9CC] space-y-1.5 text-xs text-[#8C7364]">
+                <div className="flex justify-between">
                   <span>Items Subtotal:</span>
                   <span className="font-semibold text-[#5A3825]">₹ {effectiveSubTotal.toFixed(2)}</span>
                 </div>
                 {discount > 0 && (
                   <div className="flex justify-between text-emerald-800 font-semibold">
-                    <span>Discount:</span>
+                    <span>Discount Coupon:</span>
                     <span>- ₹ {discount.toFixed(2)}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-[#8C7364]">
-                  <span>Shipping Charges:</span>
-                  <span className="font-semibold text-[#5A3825]">₹ {effectiveShipping.toFixed(2)}</span>
+                <div className="flex justify-between">
+                  <span>Delivery Charges:</span>
+                  <span className="font-semibold text-[#5A3825]">
+                    {effectiveShipping === 0 ? (
+                      <span className="text-emerald-800 font-bold">FREE</span>
+                    ) : (
+                      `₹ ${effectiveShipping.toFixed(2)}`
+                    )}
+                  </span>
                 </div>
-                <div className="pt-2 border-t border-[#E2D9CC] flex justify-between items-baseline font-bold">
-                  <span className="text-[#5A3825]">Total Payable:</span>
-                  <span className="text-xl font-serif text-[#5A3825]">₹ {effectiveTotal.toFixed(2)}</span>
+                <div className="pt-2 border-t border-[#E2D9CC] flex justify-between font-bold text-sm text-[#5A3825]">
+                  <span>Total Payable:</span>
+                  <span className="text-base font-serif font-extrabold text-[#5A3825]">
+                    ₹ {effectiveTotal.toFixed(2)}
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Delivery Address Card */}
-            <div className="bg-[#FAF8F4] p-5 rounded-3xl border border-[#E2D9CC] shadow-sm text-xs space-y-1.5">
-              <p className="font-bold text-[#8B5A2B] uppercase tracking-wider text-[11px] mb-1">
-                📍 Delivery Address:
-              </p>
-              <p className="font-semibold text-[#5A3825]">{shippingInfo.name || 'Valued Customer'}</p>
-              <p className="text-[#8C7364] leading-relaxed">
-                {shippingInfo.address}, {shippingInfo.city}, {shippingInfo.state} - {shippingInfo.pinCode}
-              </p>
-              <p className="text-[10px] text-[#8C7364] italic pt-1 border-t border-[#E2D9CC]/60">
-                Dispatched via APSRTC Cargo / India Post
-              </p>
-            </div>
+            {shippingInfo.address && (
+              <div className="bg-[#FAF8F4] p-5 rounded-3xl border border-[#E2D9CC] shadow-sm space-y-2 text-xs">
+                <div className="flex items-center justify-between border-b border-[#E2D9CC] pb-2">
+                  <p className="font-bold text-[#8B5A2B] uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                    <span>📍</span> Shipping Address
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => navigate('/shipping')}
+                    className="text-[11px] text-[#8B5A2B] hover:text-[#5A3825] font-semibold underline cursor-pointer"
+                  >
+                    Change
+                  </button>
+                </div>
+                <p className="font-bold text-[#5A3825]">{shippingInfo.name || 'Valued Customer'}</p>
+                <p className="text-[#8C7364] leading-relaxed">
+                  {shippingInfo.address}
+                  {shippingInfo.landmark && `, near ${shippingInfo.landmark}`}
+                  <br />
+                  {shippingInfo.city}, {shippingInfo.state} - {shippingInfo.pinCode}
+                </p>
+                <p className="text-[11px] text-[#8C7364] pt-1">
+                  📞 Phone: <strong className="text-[#5A3825]">{shippingInfo.phone}</strong>
+                </p>
+              </div>
+            )}
           </div>
-
         </div>
       </div>
     </div>
