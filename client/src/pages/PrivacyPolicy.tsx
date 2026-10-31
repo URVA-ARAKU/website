@@ -45,10 +45,13 @@ const PrivacyPolicy: React.FC = () => {
             {/* Section 1 */}
             <section className="space-y-3">
               <h2 className="text-base sm:text-lg font-bold text-neutral-900">
-                1. Introduction & Our Commitment
+                1. Introduction & Compliance with DPDP Act, 2023
               </h2>
               <p>
-                URVA is dedicated to safeguarding your privacy in compliance with the Information Technology Act, 2000 and the Digital Personal Data Protection (DPDP) Act of India. We collect only the essential information necessary to provide seamless e-commerce services, process order deliveries, communicate tracking alerts, and provide responsive customer care.
+                URVA (&ldquo;We&rdquo;, &ldquo;Our&rdquo;, or &ldquo;Us&rdquo;) operates as a responsible <strong>Data Fiduciary</strong> in full adherence with the <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong>, the Information Technology Act, 2000, and the Consumer Protection (E-Commerce) Rules, 2020 of the Republic of India.
+              </p>
+              <p>
+                We only process personal data that you, as the <strong>Data Principal</strong>, provide with informed, affirmative consent or for specified legitimate uses such as completing order dispatches, issuing GST-compliant tax invoices, and fulfilling customer protection guarantees.
               </p>
             </section>
 
@@ -149,28 +152,46 @@ const PrivacyPolicy: React.FC = () => {
             {/* Section 7 */}
             <section className="space-y-3">
               <h2 className="text-base sm:text-lg font-bold text-neutral-900">
-                7. Your Data Protection Rights
+                7. Your Statutory Rights Under the DPDP Act, 2023
               </h2>
-              <p>Under Indian data protection frameworks, you are entitled to:</p>
-              <ul className="list-disc pl-5 space-y-1.5 text-neutral-600">
-                <li>Request access to the personal data we maintain about you.</li>
-                <li>Request correction of inaccurate or incomplete shipping information.</li>
-                <li>Request account deletion and removal of non-statutory records by writing to our privacy desk.</li>
-                <li>Opt out of non-essential promotional SMS/emails at any time via the unsubscribe link or contacting support.</li>
-              </ul>
+              <p>As a Data Principal under India&apos;s DPDP Act, you have explicit rights regarding your digital personal data:</p>
+              <div className="space-y-2 text-neutral-600">
+                <div className="p-3 bg-[#FAF7F2] rounded-xl border border-neutral-200/70">
+                  <strong className="text-neutral-900 text-xs block mb-0.5">🔍 Right to Access (Section 11):</strong>
+                  You may request a summary of the personal data being processed by URVA, the processing activities carried out, and the identities of third-party logistics/payment partners with whom your data has been shared.
+                </div>
+                <div className="p-3 bg-[#FAF7F2] rounded-xl border border-neutral-200/70">
+                  <strong className="text-neutral-900 text-xs block mb-0.5">✏️ Right to Correction & Erasure (Section 12):</strong>
+                  You have the right to correct inaccurate or misleading personal data, complete incomplete records, update your shipping address, or request total erasure of personal data that is no longer required for the purpose of order fulfillment or tax compliance.
+                </div>
+                <div className="p-3 bg-[#FAF7F2] rounded-xl border border-neutral-200/70">
+                  <strong className="text-neutral-900 text-xs block mb-0.5">⚖️ Right of Grievance Redressal (Section 13):</strong>
+                  You have the right to readily accessible grievance redressal provided by URVA&apos;s designated Grievance Officer. If unsatisfied with the resolution, you may escalate your complaint to the Data Protection Board of India.
+                </div>
+                <div className="p-3 bg-[#FAF7F2] rounded-xl border border-neutral-200/70">
+                  <strong className="text-neutral-900 text-xs block mb-0.5">👥 Right to Nominate (Section 14):</strong>
+                  You may designate any individual who shall, in the event of death or incapacity, exercise your data rights on your behalf.
+                </div>
+                <div className="p-3 bg-[#FAF7F2] rounded-xl border border-neutral-200/70">
+                  <strong className="text-neutral-900 text-xs block mb-0.5">🔄 Right to Withdraw Consent (Section 6(4)):</strong>
+                  You may withdraw your consent for future data processing at any time by emailing us at <a href="mailto:urvaaofficial@gmail.com" className="text-[#8B5A2B] font-semibold underline">urvaaofficial@gmail.com</a>. Upon receiving your withdrawal request, we will cease processing your personal data unless required under applicable laws (e.g. GST invoice retention).
+                </div>
+              </div>
             </section>
 
             {/* Section 8 */}
             <section className="space-y-3">
               <h2 className="text-base sm:text-lg font-bold text-neutral-900">
-                8. Data Retention & Policy Updates
+                8. Data Retention & Erasure Policy
               </h2>
               <p>
-                We retain transaction and order records for the duration required to satisfy customer care obligations, resolve warranty/return inquiries, and fulfill statutory tax retention mandates under Indian law.
+                In strict compliance with Section 8(7) of the DPDP Act, URVA will not retain your personal data longer than is strictly necessary to fulfill the purpose for which it was collected:
               </p>
-              <p>
-                We may periodically update this policy to mirror technological advancements or legislative adjustments. Any updates will be published on this page with an updated &ldquo;Effective Date&rdquo;.
-              </p>
+              <ul className="list-disc pl-5 space-y-1.5 text-neutral-600">
+                <li><strong>Order Fulfillment Data:</strong> Delivery addresses and contact numbers are archived after successful dispatch and return window expiration.</li>
+                <li><strong>Statutory Invoices:</strong> GST and financial transaction records are securely retained for the minimum statutory period mandated under Indian tax laws (typically 6-8 years).</li>
+                <li><strong>Erasure on Request:</strong> Upon receiving an erasure request for an account that has no active/pending shipments or disputes, all non-statutory records are permanently deleted from our databases.</li>
+              </ul>
             </section>
           </div>
 

@@ -51,23 +51,28 @@ export const LegalNav: React.FC<LegalNavProps> = ({ currentPath }) => {
 export const LegalContactCard: React.FC = () => {
   return (
     <div className="mt-12 pt-8 border-t border-[#E2D9CC] bg-[#FAF8F4] p-6 sm:p-8 rounded-2xl border border-[#E2D9CC]">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
         <div>
           <span className="text-[10px] font-bold uppercase tracking-widest text-[#8B5A2B] block mb-1">
-            GRIEVANCE & CUSTOMER CARE
+            STATUTORY GRIEVANCE REDRESSAL & DATA PROTECTION OFFICER (DPDP ACT 2023)
           </span>
           <h3 className="text-base font-serif font-bold text-[#5A3825]">
-            Have questions about our policies or your order?
+            Have questions about your data privacy or order?
           </h3>
           <p className="text-xs text-[#8C7364] mt-1 max-w-xl leading-relaxed">
-            Our dedicated support team is available Monday to Saturday, 9:00 AM – 7:00 PM IST. We strive to address all customer inquiries and grievances within 24 business hours.
+            Under India&apos;s <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong> and the Consumer Protection (E-Commerce) Rules, you have the right to access, rectify, or request erasure of your personal data. All data queries and customer grievances are acknowledged within 48 hours and resolved promptly.
           </p>
+          <div className="mt-3 text-[11px] text-[#5A3825] space-y-1">
+            <p><strong>Designated Officer:</strong> Grievance Redressal & Data Protection Officer</p>
+            <p><strong>Entity / Data Fiduciary:</strong> URVA (Urva Swadeshi), Araku Valley, Andhra Pradesh, India</p>
+            <p><strong>Response SLA:</strong> Acknowledgement within 48 hours · Resolution within 30 days</p>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col sm:flex-row md:flex-col items-start gap-3 shrink-0">
           <a
             href="mailto:urvaaofficial@gmail.com"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#F4F1EA] hover:bg-[#EAE5D9] text-[#5A3825] text-xs font-semibold border border-[#E2D9CC] transition shadow-xs"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#F4F1EA] hover:bg-[#EAE5D9] text-[#5A3825] text-xs font-semibold border border-[#E2D9CC] transition shadow-xs w-full justify-center"
           >
             <FaEnvelope className="text-[#8B5A2B]" />
             <span>urvaaofficial@gmail.com</span>
@@ -77,7 +82,7 @@ export const LegalContactCard: React.FC = () => {
             href="https://wa.me/919494957576"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold transition shadow-xs"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold transition shadow-xs w-full justify-center"
           >
             <FaWhatsapp />
             <span>+91 94949 57576</span>

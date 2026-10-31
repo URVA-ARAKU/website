@@ -321,13 +321,19 @@ const CheckoutForm: React.FC = () => {
               </div>
 
               {/* Trust Footer */}
-              <div className="pt-2 border-t border-[#E2D9CC]/70 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#8C7364] gap-2">
-                <span className="flex items-center gap-1.5">
-                  <FaCheck className="text-emerald-700 text-xs" /> 100% Genuine Rural Guarantee
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <FaTruckFast className="text-[#8B5A2B] text-xs" /> Dispatched within 24-48 Hours
-                </span>
+              <div className="pt-2 border-t border-[#E2D9CC]/70 space-y-2">
+                <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#8C7364] gap-2">
+                  <span className="flex items-center gap-1.5">
+                    <FaCheck className="text-emerald-700 text-xs" /> 100% Genuine Rural Guarantee
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <FaTruckFast className="text-[#8B5A2B] text-xs" /> Dispatched within 24-48 Hours
+                  </span>
+                </div>
+                <p className="text-[10px] text-center text-[#8C7364] flex items-center justify-center gap-1.5">
+                  <FaShieldHalved className="text-emerald-700 text-[10px]" />
+                  <span>Compliant with Indian DPDP Act 2023 · End-to-end encrypted · Zero card storage</span>
+                </p>
               </div>
             </div>
           </div>

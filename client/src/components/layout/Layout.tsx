@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
+import CookieConsent from '../common/CookieConsent';
 import { Outlet, useLocation } from 'react-router-dom';
 
 
@@ -17,6 +18,7 @@ const Layout: React.FC = () => {
                     <Outlet />
                 </main>
                 <Footer />
+                <CookieConsent />
             </div>
         </>
     );

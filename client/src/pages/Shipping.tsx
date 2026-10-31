@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { calculatePrice, saveShippingInfo, updateShippingFee } from '../redux/reducers/cart.reducer';
 import { RootState } from '../redux/store';
 import { notify } from '../utils/util';
@@ -62,6 +62,7 @@ const Shipping: React.FC = () => {
     );
     const [pinCode, setPinCode] = useState(shippingInfo.pinCode || '');
     const [phone, setPhone] = useState(shippingInfo.phone || '');
+    const [dpdpConsent, setDpdpConsent] = useState(true);
 
     const latitude = shippingInfo.latitude;
     const longitude = shippingInfo.longitude;
@@ -84,6 +85,10 @@ const Shipping: React.FC = () => {
         }
         if (!/^\d{6}$/.test(pinCode.trim())) {
             notify('Please enter a valid 6-digit Pincode', 'error');
+            return;
+        }
+        if (!dpdpConsent) {
+            notify('Please give consent to process your contact & address for delivery to proceed', 'error');
             return;
         }
 
@@ -267,6 +272,28 @@ const Shipping: React.FC = () => {
                                     required
                                 />
                             </div>
+                        </div>
+
+                        {/* DPDP Act 2023 Notice & Consent */}
+                        <div className="bg-[#FAF8F4] border border-[#E2D9CC] rounded-xl p-3.5 space-y-2 text-left">
+                            <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                                <input
+                                    type="checkbox"
+                                    checked={dpdpConsent}
+                                    onChange={(e) => setDpdpConsent(e.target.checked)}
+                                    className="mt-0.5 h-4 w-4 rounded border-[#C4A482] text-[#8B5A2B] focus:ring-[#8B5A2B] accent-[#8B5A2B] cursor-pointer shrink-0"
+                                    required
+                                />
+                                <span className="text-[11px] leading-relaxed text-[#5A3825]">
+                                    I consent to <strong>URVA</strong> collecting and processing my contact details and delivery address solely for order fulfillment, dispatch updates via SMS/WhatsApp, and customer support, in compliance with India's <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong> and{' '}
+                                    <Link to="/privacy" target="_blank" className="text-[#8B5A2B] underline font-medium hover:text-[#5A3825]">
+                                        Privacy Policy
+                                    </Link>.
+                                </span>
+                            </label>
+                            <p className="text-[10px] text-[#8C7364] pl-6.5 leading-normal">
+                                🔒 Your personal data is never shared with unauthorized third parties or sold. You may request data access, correction, or erasure at any time via our Grievance Desk.
+                            </p>
                         </div>
 
                         {/* Submit Button */}
