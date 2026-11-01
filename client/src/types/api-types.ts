@@ -61,6 +61,7 @@ export interface Product {
     description: string;
     featured: boolean;
     isActive?: boolean;
+    shippingClass?: 'Standard' | 'Leaf Plates' | string;
     variants?: any[];
     createdAt: string;
     updatedAt: string;
@@ -146,6 +147,8 @@ export type CartItem = {
     price: number;
     quantity: number;
     stock: number;
+    shippingClass?: 'Standard' | 'Leaf Plates' | string;
+    category?: string;
 };
 
 // Shipping Info
@@ -452,6 +455,11 @@ export interface StoreSettings {
     expressShippingFee?: number;
     shippingPartner?: string;
     deliveryNote?: string;
+    
+    // Dedicated Shipping Class for Volumetric/Heavy goods
+    leafPlatesShippingFee?: number;
+    leafPlatesShippingType?: 'flat' | 'quantity';
+    leafPlatesFreeShippingExcluded?: boolean;
     
     youtubeChannelUrl: string;
     youtubeChannelName?: string;

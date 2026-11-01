@@ -140,11 +140,19 @@ const ShippingPolicy: React.FC = () => {
             {/* Section 4 */}
             <section className="space-y-3">
               <h2 className="text-base sm:text-lg font-bold text-neutral-900">
-                4. Shipping Charges
+                4. Shipping Charges & Free Delivery Thresholds
               </h2>
               <p>
-                Shipping fees are calculated transparently based on destination and package weight, and are displayed clearly at checkout prior to payment completion. No hidden delivery surcharges are levied thereafter.
+                Shipping fees are calculated transparently based on destination and package dimensions, and are displayed clearly in your basket and at checkout prior to payment completion:
               </p>
+              <ul className="list-disc pl-5 space-y-1.5 text-neutral-600">
+                <li>
+                  <strong>Standard Free Shipping:</strong> Orders containing standard regional goods (Coffee, Honey, Sweets, Handlooms, etc.) above ₹1,000 qualify for 100% Free Doorstep Delivery across India.
+                </li>
+                <li>
+                  <strong>Leaf Plates (Volumetric Weight Class):</strong> Siali, Modugu, and natural leaf dining plates are high-volumetric goods packaged in large protective bundles. Due to bulk parcel cargo dimensions, leaf plates have a dedicated shipping fee and are excluded from the ₹1,000 free delivery rule.
+                </li>
+              </ul>
             </section>
 
             {/* Section 5 */}

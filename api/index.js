@@ -440,10 +440,34 @@ function mapProduct(row) {
     } catch (e) {}
   }
 
+  // Extract shipping class (explicit or auto-assigned)
+  let shippingClass = row.shipping_class || row.shippingClass || '';
+  if (!shippingClass && row.description && row.description.includes('__SHIPPING_CLASS__=')) {
+    try {
+      shippingClass = row.description.split('__SHIPPING_CLASS__=')[1].split('\n')[0].split('__')[0].trim();
+    } catch (e) {}
+  }
+  const checkText = `${row.name || ''} ${row.category || ''}`.toLowerCase();
+  if (!shippingClass) {
+    if (
+      checkText.includes('leaf plate') ||
+      checkText.includes('leaf plates') ||
+      checkText.includes('siali') ||
+      checkText.includes('modugu') ||
+      checkText.includes('areca') ||
+      (checkText.includes('leaf') && checkText.includes('plate'))
+    ) {
+      shippingClass = 'Leaf Plates';
+    } else {
+      shippingClass = 'Standard';
+    }
+  }
+
   // Strip internal encoding tags from clean user-facing description
   const cleanDescription = (row.description || '')
     .split('__PHOTOS__=')[0]
     .split('__VARIANTS__=')[0]
+    .split('__SHIPPING_CLASS__=')[0]
     .trim();
 
   let photo = (photos.length > 0 ? photos[0] : row.photo) || '';
@@ -492,6 +516,7 @@ function mapProduct(row) {
     photoPublicId: row.photo_public_id,
     featured: Boolean(row.featured),
     isActive: row.is_active !== false,
+    shippingClass,
     variants,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -1900,6 +1925,9 @@ export default async function handler(req, res) {
       if (rawPhotos.length > 0) {
         finalDescription += `\n\n__PHOTOS__=${JSON.stringify(rawPhotos)}`;
       }
+      if (body.shippingClass) {
+        finalDescription += `\n\n__SHIPPING_CLASS__=${body.shippingClass}`;
+      }
 
       const insertData = {
         name,
@@ -2101,7 +2129,12 @@ export default async function handler(req, res) {
         ? description
         : (product.description || '');
 
-      cleanDesc = cleanDesc.split('__PHOTOS__=')[0].split('__VARIANTS__=')[0].trim();
+      cleanDesc = cleanDesc.split('__PHOTOS__=')[0].split('__VARIANTS__=')[0].split('__SHIPPING_CLASS__=')[0].trim();
+      const targetShippingClass = body.shippingClass !== undefined
+        ? body.shippingClass
+        : (product.description && product.description.includes('__SHIPPING_CLASS__=')
+          ? product.description.split('__SHIPPING_CLASS__=')[1].split('\n')[0].split('__')[0].trim()
+          : '');
 
       // Prepare update data — only include fields that were sent
       const updateData = {};
@@ -2130,6 +2163,11 @@ export default async function handler(req, res) {
         }
         updateData.description = cleanDesc;
       }
+
+      if (targetShippingClass) {
+        cleanDesc += `\n\n__SHIPPING_CLASS__=${targetShippingClass}`;
+      }
+      updateData.description = cleanDesc;
 
       if (photo !== undefined && rawPhotos === undefined) updateData.photo = photo;
       updateData.updated_at = new Date().toISOString();

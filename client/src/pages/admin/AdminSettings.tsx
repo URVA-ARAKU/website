@@ -44,6 +44,11 @@ const AdminSettings: React.FC = () => {
   const [expressShippingFee, setExpressShippingFee] = useState(99);
   const [shippingPartner, setShippingPartner] = useState('APSRTC Cargo & India Post');
   const [deliveryNote, setDeliveryNote] = useState('');
+  
+  // Dedicated Shipping Class for Leaf Plates (High Volumetric Weight)
+  const [leafPlatesShippingFee, setLeafPlatesShippingFee] = useState(120);
+  const [leafPlatesShippingType, setLeafPlatesShippingType] = useState<'flat' | 'quantity'>('flat');
+  const [leafPlatesFreeShippingExcluded, setLeafPlatesFreeShippingExcluded] = useState(true);
 
   const [youtubeChannelUrl, setYoutubeChannelUrl] = useState('');
   const [youtubeChannelName, setYoutubeChannelName] = useState('');
@@ -77,6 +82,10 @@ const AdminSettings: React.FC = () => {
       setExpressShippingFee(s.expressShippingFee !== undefined ? Number(s.expressShippingFee) : 99);
       setShippingPartner(s.shippingPartner || 'APSRTC Cargo & India Post');
       setDeliveryNote(s.deliveryNote || 'Flat ₹80 Delivery across Andhra Pradesh & Telangana');
+
+      setLeafPlatesShippingFee(s.leafPlatesShippingFee !== undefined ? Number(s.leafPlatesShippingFee) : 120);
+      setLeafPlatesShippingType(s.leafPlatesShippingType === 'quantity' ? 'quantity' : 'flat');
+      setLeafPlatesFreeShippingExcluded(s.leafPlatesFreeShippingExcluded !== false);
 
       setYoutubeChannelUrl(s.youtubeChannelUrl || 'https://www.youtube.com/@urvaswadeshi');
       setYoutubeChannelName(s.youtubeChannelName || 'URVA Rural Heritage');
@@ -113,6 +122,9 @@ const AdminSettings: React.FC = () => {
       expressShippingFee: Number(expressShippingFee) || 99,
       shippingPartner: shippingPartner.trim(),
       deliveryNote: deliveryNote.trim(),
+      leafPlatesShippingFee: Number(leafPlatesShippingFee) || 120,
+      leafPlatesShippingType,
+      leafPlatesFreeShippingExcluded,
 
       youtubeChannelUrl: youtubeChannelUrl.trim(),
       youtubeChannelName: youtubeChannelName.trim(),
@@ -535,6 +547,87 @@ const AdminSettings: React.FC = () => {
                   placeholder="APSRTC Cargo & India Post"
                   className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-[#F4F1EA] text-[#5A3825] text-xs focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
                 />
+              </div>
+            </div>
+
+            {/* Dedicated Shipping Class: Leaf Plates (High Volumetric Weight) */}
+            <div className="bg-[#FAF7F2] p-5 rounded-2xl border-2 border-amber-300 space-y-4 mt-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-200/80 pb-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">📦</span>
+                    <h3 className="font-bold text-sm text-[#5A3825]">
+                      Shipping Class: Leaf Plates
+                    </h3>
+                    <span className="bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                      High Volumetric Weight
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#8C7364] mt-1">
+                    Leaf plates consume large cargo space. They are excluded from standard free shipping and charged this separate delivery rate.
+                  </p>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-bold text-[#8B5A2B] bg-white px-2.5 py-1 rounded-lg border border-[#E2D9CC]">
+                    Active: ₹{leafPlatesShippingFee} {leafPlatesShippingType === 'quantity' ? '/ pack' : 'Flat rate'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
+                    Leaf Plates Delivery Fee (₹) <span className="text-rose-600">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={leafPlatesShippingFee}
+                    onChange={(e) => setLeafPlatesShippingFee(Number(e.target.value))}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-white text-[#5A3825] text-sm font-bold focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
+                    placeholder="120"
+                  />
+                  <span className="text-[11px] text-[#8C7364] mt-1 block">
+                    Charged on carts containing Leaf Plates.
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
+                    Calculation Type
+                  </label>
+                  <select
+                    value={leafPlatesShippingType}
+                    onChange={(e) => setLeafPlatesShippingType(e.target.value as 'flat' | 'quantity')}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-white text-[#5A3825] text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
+                  >
+                    <option value="flat">Flat Rate (Per order with leaf plates)</option>
+                    <option value="quantity">Quantity Based (₹{leafPlatesShippingFee} × pack count)</option>
+                  </select>
+                  <span className="text-[11px] text-[#8C7364] mt-1 block">
+                    Choose flat rate per shipment or multiplied per bundle.
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
+                    Free Shipping Rule
+                  </label>
+                  <label className="flex items-center gap-2 mt-2 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={leafPlatesFreeShippingExcluded}
+                      onChange={(e) => setLeafPlatesFreeShippingExcluded(e.target.checked)}
+                      className="w-4 h-4 text-[#8B5A2B] accent-[#8B5A2B] rounded border-[#E2D9CC]"
+                    />
+                    <span className="text-xs font-semibold text-[#5A3825]">
+                      Exclude from Free Shipping over ₹{freeShippingThreshold}
+                    </span>
+                  </label>
+                  <span className="text-[11px] text-[#8C7364] mt-1 block">
+                    Always charge this separate shipping fee for leaf plates regardless of total order value.
+                  </span>
+                </div>
               </div>
             </div>
           </div>

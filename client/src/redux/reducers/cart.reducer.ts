@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { CartReducerIntialState, CartItem, ShippingInfo } from "../../types/api-types";
+import { CartReducerIntialState, CartItem, ShippingInfo, StoreSettings } from "../../types/api-types";
+import { calculateOrderShipping } from "../../utils/shipping";
 
 const getInitialCartItems = (): CartItem[] => {
     try {
@@ -31,13 +32,22 @@ const getInitialShippingInfo = (): ShippingInfo => {
     };
 };
 
-const getSavedShippingFee = (): number => {
-    if (typeof window === 'undefined') return 80;
+const getSavedStoreSettings = (): Partial<StoreSettings> => {
+    if (typeof window === 'undefined') {
+        return { standardShippingFee: 80, freeShippingThreshold: 999, leafPlatesShippingFee: 120 };
+    }
     try {
-        const saved = localStorage.getItem('standardShippingFee');
-        if (saved !== null && !isNaN(Number(saved))) return Number(saved);
+        const cached = localStorage.getItem('storeSettingsCache');
+        if (cached) return JSON.parse(cached);
     } catch {}
-    return 80;
+    const standardFee = Number(localStorage.getItem('standardShippingFee')) || 80;
+    return {
+        standardShippingFee: standardFee,
+        freeShippingThreshold: 999,
+        leafPlatesShippingFee: 120,
+        leafPlatesFreeShippingExcluded: true,
+        leafPlatesShippingType: 'flat',
+    };
 };
 
 const initialCartItems = getInitialCartItems();
@@ -45,7 +55,8 @@ const initialSubTotal = initialCartItems.reduce(
     (acc, item) => acc + (Number(item.price) || 0) * (Number(item.quantity) || 1),
     0
 );
-const initialShipping = initialCartItems.length > 0 ? getSavedShippingFee() : 0;
+const initialShippingCalc = calculateOrderShipping(initialCartItems, getSavedStoreSettings());
+const initialShipping = initialShippingCalc.totalShipping;
 
 const initialState: CartReducerIntialState = {
     loading: false,
@@ -64,8 +75,9 @@ const updateCartTotals = (state: CartReducerIntialState) => {
         0
     );
     state.subTotal = subTotal;
-    const fee = getSavedShippingFee();
-    state.shippingCharges = state.cartItems.length > 0 ? fee : 0;
+    const settings = getSavedStoreSettings();
+    const shippingCalc = calculateOrderShipping(state.cartItems, settings);
+    state.shippingCharges = shippingCalc.totalShipping;
     state.tax = 0;
     if (state.discount > subTotal) {
         state.discount = subTotal;
@@ -152,6 +164,20 @@ export const cartReducer = createSlice({
             updateCartTotals(state);
             saveToLocalStorage(state);
         },
+        applyStoreSettings: (state, action: PayloadAction<Partial<StoreSettings>>) => {
+            if (typeof window !== 'undefined' && action.payload) {
+                try {
+                    const current = getSavedStoreSettings();
+                    const merged = { ...current, ...action.payload };
+                    localStorage.setItem('storeSettingsCache', JSON.stringify(merged));
+                    if (action.payload.standardShippingFee !== undefined) {
+                        localStorage.setItem('standardShippingFee', String(action.payload.standardShippingFee));
+                    }
+                } catch {}
+            }
+            updateCartTotals(state);
+            saveToLocalStorage(state);
+        },
         resetCart: (state) => {
             localStorage.removeItem('cartItems');
             localStorage.removeItem('shippingInfo');
@@ -165,5 +191,5 @@ export const cartReducer = createSlice({
     }
 });
 
-export const { addToCart, removeCartItem, incrementCartItem, decrementCartItem, calculatePrice, discountApplied, resetCart, saveShippingInfo, updateShippingFee } = cartReducer.actions;
+export const { addToCart, removeCartItem, incrementCartItem, decrementCartItem, calculatePrice, discountApplied, resetCart, saveShippingInfo, updateShippingFee, applyStoreSettings } = cartReducer.actions;
 export default cartReducer.reducer;

@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import BackButton from '../components/common/BackBtn';
 import { useApplyCouponMutation } from '../redux/api/coupon.api';
 import { useGetStoreSettingsQuery } from '../redux/api/settings.api';
-import { calculatePrice, decrementCartItem, discountApplied, incrementCartItem, removeCartItem, resetCart } from '../redux/reducers/cart.reducer';
+import { applyStoreSettings, calculatePrice, decrementCartItem, discountApplied, incrementCartItem, removeCartItem, resetCart } from '../redux/reducers/cart.reducer';
 import { RootState } from '../redux/store';
 import { notify } from '../utils/util';
 import { usePageSEO } from '../hooks/usePageSEO';
+import { calculateOrderShipping, isLeafPlateItem } from '../utils/shipping';
 
 const Cart: React.FC = () => {
   usePageSEO({
@@ -21,9 +22,22 @@ const Cart: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems, subTotal, total, discount, shippingCharges } = useSelector((state: RootState) => state.cart);
   const { data: settingsData } = useGetStoreSettingsQuery();
-  const freeShippingThreshold = settingsData?.settings?.freeShippingThreshold ?? 999;
-  const isFreeShipping = shippingCharges === 0 || subTotal >= freeShippingThreshold;
-  const amountNeededForFreeShipping = Math.max(0, freeShippingThreshold - subTotal);
+
+  useEffect(() => {
+    if (settingsData?.settings) {
+      dispatch(applyStoreSettings(settingsData.settings));
+    }
+  }, [settingsData, dispatch]);
+
+  const shippingCalc = useMemo(() => {
+    return calculateOrderShipping(cartItems, settingsData?.settings);
+  }, [cartItems, settingsData]);
+
+  const freeShippingThreshold = shippingCalc.freeShippingThreshold;
+  const isFreeShipping = shippingCharges === 0;
+  const amountNeededForFreeShipping = shippingCalc.hasStandardItems
+    ? shippingCalc.amountNeededForFreeStandardShipping
+    : 0;
 
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState('');
@@ -123,7 +137,12 @@ const Cart: React.FC = () => {
                           <Link to={`/product/${item.productId.split('_')[0]}`}>
                             <h3 className="font-semibold text-sm text-[#5A3825] truncate">{item.name}</h3>
                           </Link>
-                          <p className="text-xs text-[#8C7364]">₹ {item.price.toFixed(2)} per unit</p>
+                          {isLeafPlateItem(item) && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-900 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded mt-0.5">
+                              📦 Class: Leaf Plates (High Volumetric)
+                            </span>
+                          )}
+                          <p className="text-xs text-[#8C7364] mt-0.5">₹ {item.price.toFixed(2)} per unit</p>
                           <p className="text-xs font-semibold text-[#5A3825] mt-0.5">Subtotal: ₹ {(item.price * item.quantity).toFixed(2)}</p>
                         </div>
                         <button
@@ -185,7 +204,14 @@ const Cart: React.FC = () => {
                                   (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/idi6k3ue/image/upload/v1791904965/urvaa/logo.png';
                                 }}
                               />
-                              <span className="font-semibold text-sm text-[#5A3825] group-hover:text-[#8B5A2B]">{item.name}</span>
+                              <div className="min-w-0">
+                                <span className="font-semibold text-sm text-[#5A3825] group-hover:text-[#8B5A2B] block">{item.name}</span>
+                                {isLeafPlateItem(item) && (
+                                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-900 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded mt-0.5">
+                                    📦 Class: Leaf Plates (High Volumetric)
+                                  </span>
+                                )}
+                              </div>
                             </Link>
                           </td>
                           <td className="p-4 text-sm font-medium text-[#5A3825]">₹ {item.price.toFixed(2)}</td>
@@ -268,13 +294,44 @@ const Cart: React.FC = () => {
                     </span>
                   </div>
 
-                  {amountNeededForFreeShipping > 0 && cartItems.length > 0 && (
+                  {/* Leaf Plates Specific Shipping Breakdown & Explanation */}
+                  {shippingCalc.hasLeafPlates && (
+                    <div className="bg-amber-50/80 border border-amber-200/90 rounded-xl p-3 text-[11px] text-[#5A3825] leading-relaxed space-y-1.5">
+                      <div className="flex items-center justify-between font-bold text-amber-950">
+                        <span className="flex items-center gap-1.5">
+                          <span>📦</span> Leaf Plates Volumetric Delivery:
+                        </span>
+                        <span>₹ {shippingCalc.leafPlatesShipping.toFixed(2)}</span>
+                      </div>
+                      <p className="text-[#8C7364]">
+                        Leaf plates are shipped in high-volumetric bundles and require dedicated cargo handling. They are excluded from the ₹{freeShippingThreshold} free shipping rule.
+                      </p>
+
+                      {shippingCalc.hasStandardItems && (
+                        <div className="pt-2 border-t border-amber-200/70 text-xs">
+                          {shippingCalc.isStandardFree ? (
+                            <div className="text-emerald-800 font-semibold flex items-center gap-1">
+                              <span>✓</span> Standard products qualified for <strong>FREE Delivery</strong>!
+                            </div>
+                          ) : (
+                            <div className="text-[#5A3825]">
+                              Standard items delivery: ₹{shippingCalc.standardShipping.toFixed(0)}. Add{' '}
+                              <strong className="text-[#8B5A2B]">₹{shippingCalc.amountNeededForFreeStandardShipping.toFixed(0)}</strong>{' '}
+                              more of standard goods for FREE delivery on those items!
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {!shippingCalc.hasLeafPlates && amountNeededForFreeShipping > 0 && cartItems.length > 0 && (
                     <div className="bg-amber-50 border border-amber-200/80 rounded-lg p-2.5 text-[11px] text-[#5A3825] leading-relaxed">
                       🚚 Add <span className="font-bold text-[#8B5A2B]">₹{amountNeededForFreeShipping.toFixed(0)}</span> more to qualify for <span className="font-bold text-emerald-800">FREE Delivery</span>!
                     </div>
                   )}
 
-                  {isFreeShipping && subTotal > 0 && (
+                  {!shippingCalc.hasLeafPlates && isFreeShipping && subTotal > 0 && (
                     <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-[11px] text-emerald-900 font-medium flex items-center gap-1.5">
                       <span>🎉</span>
                       <span>You've unlocked <strong>FREE Delivery</strong> on this order!</span>

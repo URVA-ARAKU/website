@@ -26,6 +26,7 @@ import {
   FaRupeeSign
 } from 'react-icons/fa';
 import { uploadToCloudinary } from '../../utils/cloudinary';
+import { isLeafPlateItem } from '../../utils/shipping';
 
 export interface ProductVariantItem {
   id: string;
@@ -65,6 +66,7 @@ const AdminManageProduct: React.FC = () => {
       ];
 
   const [categoryUpdate, setCategoryUpdate] = useState<string>('');
+  const [shippingClassUpdate, setShippingClassUpdate] = useState<string>('Standard');
   const [priceUpdate, setPriceUpdate] = useState<number>(0);
   const [stockUpdate, setStockUpdate] = useState<number>(0);
   const [descriptionUpdate, setDescriptionUpdate] = useState<string>('');
@@ -84,6 +86,7 @@ const AdminManageProduct: React.FC = () => {
       const p = data.product;
       setNameUpdate(p.name || '');
       setCategoryUpdate(p.category || 'Tribal Araku Products');
+      setShippingClassUpdate(p.shippingClass || (isLeafPlateItem(p) ? 'Leaf Plates' : 'Standard'));
       setPriceUpdate(p.price || 0);
       setStockUpdate(p.stock ?? 0);
       setDescriptionUpdate(p.description || '');
@@ -255,6 +258,7 @@ const AdminManageProduct: React.FC = () => {
       const updateBody: Record<string, any> = {
         name: nameUpdate.trim(),
         category: categoryUpdate,
+        shippingClass: shippingClassUpdate,
         price: calculatedBasePrice,
         stock: calculatedTotalStock,
         description: descriptionUpdate.trim(),
@@ -481,8 +485,8 @@ const AdminManageProduct: React.FC = () => {
                 />
               </div>
 
-              {/* Category & Base Price */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Category, Shipping Class & Base Price */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase text-neutral-600 tracking-wider">Category</label>
                   <select
@@ -498,8 +502,23 @@ const AdminManageProduct: React.FC = () => {
                 </div>
 
                 <div className="space-y-1.5">
+                  <label className="text-xs font-semibold uppercase text-neutral-600 tracking-wider flex items-center justify-between">
+                    <span>Shipping Class</span>
+                    <span className="text-[10px] text-[#8B5A2B] font-normal lowercase">volumetric</span>
+                  </label>
+                  <select
+                    value={shippingClassUpdate}
+                    onChange={(e) => setShippingClassUpdate(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-neutral-200 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10 bg-neutral-50 focus:bg-white font-medium text-neutral-900"
+                  >
+                    <option value="Standard">Standard (Free delivery over ₹1000)</option>
+                    <option value="Leaf Plates">Leaf Plates (High Volumetric Cargo)</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase text-neutral-600 tracking-wider">
-                    Base Price (₹) {variantsState.length > 0 && <span className="text-[10px] text-neutral-400 font-normal lowercase">(auto lowest variant)</span>}
+                    Base Price (₹) {variantsState.length > 0 && <span className="text-[10px] text-neutral-400 font-normal lowercase">(auto lowest)</span>}
                   </label>
                   <div className="relative">
                     <FaRupeeSign className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-xs" />

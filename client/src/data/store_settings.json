@@ -14,9 +14,12 @@
   "codMaxAmount": 5000,
   
   "freeShippingThreshold": 999,
-  "standardShippingFee": 49,
+  "standardShippingFee": 80,
   "expressShippingFee": 99,
   "shippingPartner": "APSRTC Cargo & India Post",
+  "leafPlatesShippingFee": 120,
+  "leafPlatesShippingType": "flat",
+  "leafPlatesFreeShippingExcluded": true,
   
   "youtubeChannelUrl": "https://www.youtube.com/@urvaswadeshi",
   "youtubeChannelName": "URVA Rural Heritage",

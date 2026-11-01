@@ -50,6 +50,7 @@ const AdminAddProduct: React.FC = () => {
     stock: 50,
     price: 0,
     description: '',
+    shippingClass: 'Standard',
   });
 
   const [hasVariants, setHasVariants] = useState(false);
@@ -218,6 +219,7 @@ const AdminAddProduct: React.FC = () => {
         stock: totalStock,
         price: basePrice,
         description: formData.description.trim(),
+        shippingClass: formData.shippingClass,
         photo: uploadedUrls[0],
         photos: uploadedUrls,
         variants: hasVariants && formattedVariants.length > 0 ? formattedVariants : []
@@ -293,6 +295,23 @@ const AdminAddProduct: React.FC = () => {
                 {availableCategories.map((c: string) => (
                   <option key={c} value={c}>{c}</option>
                 ))}
+              </select>
+            </div>
+
+            {/* Shipping Class */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold uppercase text-neutral-600 tracking-wider flex items-center justify-between">
+                <span>Shipping Class *</span>
+                <span className="text-[10px] text-[#8B5A2B] font-normal lowercase">volumetric rules</span>
+              </label>
+              <select
+                name="shippingClass"
+                value={formData.shippingClass}
+                onChange={handleChange}
+                className="w-full px-4 py-2.5 rounded-xl border border-neutral-200 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10 bg-neutral-50 focus:bg-white font-medium text-neutral-900"
+              >
+                <option value="Standard">Standard (Free delivery eligible over ₹1000)</option>
+                <option value="Leaf Plates">Leaf Plates (High Volumetric — Excluded from free delivery)</option>
               </select>
             </div>
 

@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import BackButton from '../components/common/BackBtn';
 import { useNewOrderMutation } from '../redux/api/order.api';
+import { useGetStoreSettingsQuery } from '../redux/api/settings.api';
 import { calculatePrice, resetCart } from '../redux/reducers/cart.reducer';
 import { RootState } from '../redux/store';
 import { NewOrderRequest } from '../types/api-types';
 import { notify } from '../utils/util';
 import { usePageSEO } from '../hooks/usePageSEO';
 import RazorpayCheckout from './payment/RazorpayCheckout';
+import { calculateOrderShipping } from '../utils/shipping';
 import {
   FaShieldHalved,
   FaCreditCard,
@@ -33,10 +35,8 @@ const CheckoutForm: React.FC = () => {
     shippingInfo,
     cartItems,
     subTotal,
-    tax,
     discount,
-    shippingCharges,
-    total,
+    tax,
   } = useSelector((state: RootState) => state.cart);
 
   // Recalculate price on mount and redirect if cart is empty
@@ -52,14 +52,20 @@ const CheckoutForm: React.FC = () => {
   const [newOrder] = useNewOrderMutation();
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
+  const { data: settingsData } = useGetStoreSettingsQuery();
+
+  const shippingCalc = useMemo(() => {
+    return calculateOrderShipping(cartItems, settingsData?.settings);
+  }, [cartItems, settingsData]);
+
   // Fallback calculation to guarantee positive total if cart has items
   const itemsSubTotal = cartItems.reduce(
     (acc, item) => acc + (Number(item.price) || 0) * (Number(item.quantity) || 1),
     0
   );
   const effectiveSubTotal = subTotal > 0 ? subTotal : itemsSubTotal;
-  const effectiveShipping = shippingCharges !== undefined && shippingCharges !== null && shippingCharges > 0 ? shippingCharges : (cartItems.length > 0 ? 80 : 0);
-  const effectiveTotal = total > 0 ? total : Math.max(0, effectiveSubTotal + effectiveShipping - (discount || 0));
+  const effectiveShipping = shippingCalc.totalShipping;
+  const effectiveTotal = Math.max(0, effectiveSubTotal + effectiveShipping - (discount || 0));
 
   const [isOrderSummaryOpen, setIsOrderSummaryOpen] = useState<boolean>(false);
   const totalItemCount = cartItems.reduce((acc, it) => acc + (it.quantity || 1), 0);
@@ -398,6 +404,20 @@ const CheckoutForm: React.FC = () => {
                     )}
                   </span>
                 </div>
+                {shippingCalc.hasLeafPlates && (
+                  <div className="bg-amber-50/80 border border-amber-200/80 rounded-lg p-2 text-[10px] text-[#5A3825] space-y-0.5">
+                    <div className="flex justify-between font-semibold text-amber-950">
+                      <span>📦 Leaf Plates Volumetric Cargo:</span>
+                      <span>₹ {shippingCalc.leafPlatesShipping.toFixed(2)}</span>
+                    </div>
+                    {shippingCalc.hasStandardItems && (
+                      <div className="flex justify-between text-[#8C7364]">
+                        <span>Standard Goods Delivery:</span>
+                        <span>{shippingCalc.isStandardFree ? 'FREE (Unlocked)' : `₹ ${shippingCalc.standardShipping.toFixed(2)}`}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div className="pt-2 border-t border-[#E2D9CC] flex justify-between font-bold text-sm text-[#5A3825]">
                   <span>Total Payable:</span>
                   <span className="text-base font-serif font-extrabold text-[#5A3825]">

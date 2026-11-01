@@ -26,6 +26,7 @@ import { addToCart, calculatePrice, decrementCartItem, incrementCartItem } from 
 import { RootState } from '../redux/store';
 import { usePageSEO } from '../hooks/usePageSEO';
 import { productSchema, breadcrumbSchema, webPageSchema, faqSchema } from '../seo/schemas';
+import { isLeafPlateItem } from '../utils/shipping';
 
 export interface ProductVariety {
   id: string;
@@ -59,6 +60,7 @@ const ProductDetails: React.FC = () => {
   const storeSettings = settingsData?.settings;
   const standardShippingFee = typeof storeSettings?.standardShippingFee === 'number' ? storeSettings.standardShippingFee : 80;
   const freeShippingThreshold = typeof storeSettings?.freeShippingThreshold === 'number' ? storeSettings.freeShippingThreshold : 999;
+  const leafPlatesShippingFee = typeof storeSettings?.leafPlatesShippingFee === 'number' ? storeSettings.leafPlatesShippingFee : 120;
 
   // Resolve Product Data strictly from Database
   const resolvedProduct = data?.product;
@@ -685,29 +687,45 @@ const ProductDetails: React.FC = () => {
               </div>
 
               {/* Delivery Charges & Shipping Clarity Card */}
-              <div className="bg-[#FAF8F4] border border-[#E2D9CC] rounded-xl p-3.5 space-y-2">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-[#5A3825] flex items-center gap-1.5 uppercase tracking-wide text-[11px]">
-                    <FaTruck className="text-[#8B5A2B] text-sm shrink-0" /> Delivery Charges
-                  </span>
-                  <span className="font-bold text-xs">
-                    {standardShippingFee === 0 ? (
-                      <span className="text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[11px]">FREE Delivery</span>
-                    ) : (
-                      <span className="text-[#5A3825] bg-[#F4F1EA] px-2 py-0.5 rounded border border-[#E2D9CC] text-[11px]">₹{standardShippingFee} Standard</span>
-                    )}
-                  </span>
-                </div>
-                <div className="text-[11px] text-[#8C7364] leading-relaxed">
-                  {freeShippingThreshold > 0
-                    ? `✨ Free doorstep delivery on orders above ₹${freeShippingThreshold}.`
-                    : 'Safe doorstep delivery across all cities & towns.'}
-                </div>
-                <div className="pt-2 border-t border-[#E2D9CC]/70 flex items-center gap-2 text-[11px] text-emerald-900 font-medium">
-                  <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse shrink-0" />
-                  <span>In Stock — Dispatched within 24 to 48 hours</span>
-                </div>
-              </div>
+              {(() => {
+                const isLeaf = isLeafPlateItem(resolvedProduct);
+                return (
+                  <div className={`border rounded-xl p-3.5 space-y-2 ${isLeaf ? 'bg-[#FAF7F2] border-amber-300' : 'bg-[#FAF8F4] border-[#E2D9CC]'}`}>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-bold text-[#5A3825] flex items-center gap-1.5 uppercase tracking-wide text-[11px]">
+                        <FaTruck className="text-[#8B5A2B] text-sm shrink-0" />
+                        {isLeaf ? 'Shipping Class: Leaf Plates' : 'Delivery Charges'}
+                      </span>
+                      <span className="font-bold text-xs">
+                        {isLeaf ? (
+                          <span className="text-amber-900 bg-amber-100 border border-amber-300 px-2.5 py-0.5 rounded-full text-[11px]">
+                            ₹{leafPlatesShippingFee} Volumetric Cargo
+                          </span>
+                        ) : standardShippingFee === 0 ? (
+                          <span className="text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[11px]">FREE Delivery</span>
+                        ) : (
+                          <span className="text-[#5A3825] bg-[#F4F1EA] px-2 py-0.5 rounded border border-[#E2D9CC] text-[11px]">₹{standardShippingFee} Standard</span>
+                        )}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-[#8C7364] leading-relaxed">
+                      {isLeaf ? (
+                        <span>
+                          📦 <strong>High Volumetric Weight Goods:</strong> Due to large bundle parcel volume, leaf plates are delivered via dedicated cargo and excluded from the standard free delivery threshold.
+                        </span>
+                      ) : freeShippingThreshold > 0 ? (
+                        `✨ Free doorstep delivery on orders above ₹${freeShippingThreshold}.`
+                      ) : (
+                        'Safe doorstep delivery across all cities & towns.'
+                      )}
+                    </div>
+                    <div className="pt-2 border-t border-[#E2D9CC]/70 flex items-center gap-2 text-[11px] text-emerald-900 font-medium">
+                      <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse shrink-0" />
+                      <span>In Stock — Dispatched within 24 to 48 hours</span>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* Direct WhatsApp Support */}
               <a

@@ -20,6 +20,7 @@ import SkeletonLoader from '../../components/common/SkeletonLoader';
 import { useAllProductsQuery, useDeleteProductMutation, useToggleActiveProductMutation } from '../../redux/api/product.api';
 import { CustomError, Product } from '../../types/api-types';
 import { notify } from '../../utils/util';
+import { isLeafPlateItem } from '../../utils/shipping';
 
 const AdminProducts: React.FC = () => {
   const navigate = useNavigate();
@@ -400,6 +401,11 @@ const AdminProducts: React.FC = () => {
                         <span className="inline-block px-2.5 py-1 rounded-full text-[11px] font-medium bg-neutral-100 text-neutral-800 border border-neutral-200">
                           {p.category || 'General'}
                         </span>
+                        {isLeafPlateItem(p) && (
+                          <span className="block mt-1 text-[10px] font-bold text-amber-900 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded w-max">
+                            📦 Leaf Plates
+                          </span>
+                        )}
                       </td>
 
                       {/* Pricing */}

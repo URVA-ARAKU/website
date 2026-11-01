@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { calculatePrice, saveShippingInfo, updateShippingFee } from '../redux/reducers/cart.reducer';
+import { applyStoreSettings, calculatePrice, saveShippingInfo } from '../redux/reducers/cart.reducer';
 import { RootState } from '../redux/store';
 import { notify } from '../utils/util';
 import BackButton from '../components/common/BackBtn';
 import { usePageSEO } from '../hooks/usePageSEO';
 import { useGetStoreSettingsQuery } from '../redux/api/settings.api';
+import { calculateOrderShipping } from '../utils/shipping';
 
 const INDIAN_STATES = [
     "Andhra Pradesh",
@@ -25,12 +26,12 @@ const Shipping: React.FC = () => {
     const navigate = useNavigate();
 
     const { user } = useSelector((state: RootState) => state.user);
-    const { shippingInfo, cartItems, subTotal, total, shippingCharges } = useSelector((state: RootState) => state.cart);
+    const { shippingInfo, cartItems, subTotal, discount } = useSelector((state: RootState) => state.cart);
     const { data: settingsData } = useGetStoreSettingsQuery();
 
     useEffect(() => {
-        if (settingsData?.settings?.standardShippingFee !== undefined) {
-            dispatch(updateShippingFee(settingsData.settings.standardShippingFee));
+        if (settingsData?.settings) {
+            dispatch(applyStoreSettings(settingsData.settings));
         }
     }, [settingsData, dispatch]);
 
@@ -43,12 +44,13 @@ const Shipping: React.FC = () => {
         }
     }, [cartItems.length, navigate, dispatch]);
 
-    const activeShippingFee = settingsData?.settings?.standardShippingFee !== undefined
-        ? Number(settingsData.settings.standardShippingFee)
-        : (shippingCharges || 80);
+    const shippingCalc = useMemo(() => {
+        return calculateOrderShipping(cartItems, settingsData?.settings);
+    }, [cartItems, settingsData]);
 
+    const activeShippingFee = shippingCalc.totalShipping;
     const itemsSubTotal = subTotal > 0 ? subTotal : cartItems.reduce((acc, it) => acc + (Number(it.price) || 0) * (Number(it.quantity) || 1), 0);
-    const finalTotal = total > 0 ? total : Math.max(0, itemsSubTotal + activeShippingFee);
+    const finalTotal = Math.max(0, itemsSubTotal + activeShippingFee - (discount || 0));
 
     const [name, setName] = useState(shippingInfo.name || user?.name || '');
     const [email, setEmail] = useState(shippingInfo.email || user?.email || '');
@@ -305,7 +307,7 @@ const Shipping: React.FC = () => {
                                 <span>Proceed to Pay (₹{finalTotal.toFixed(2)}) &gt;</span>
                             </button>
                             <p className="text-[11px] text-center text-[#8C7364]">
-                                Includes ₹{itemsSubTotal.toFixed(0)} items + {activeShippingFee === 0 ? 'FREE delivery' : `₹${activeShippingFee} delivery charges`}
+                                Includes ₹{itemsSubTotal.toFixed(0)} items + {activeShippingFee === 0 ? 'FREE delivery' : `₹${activeShippingFee} delivery charges${shippingCalc.hasLeafPlates ? ' (incl. Leaf Plates volumetric cargo)' : ''}`}
                             </p>
                         </div>
                     </form>
