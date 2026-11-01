@@ -34,7 +34,17 @@ const getInitialShippingInfo = (): ShippingInfo => {
 
 const getSavedStoreSettings = (): Partial<StoreSettings> => {
     if (typeof window === 'undefined') {
-        return { standardShippingFee: 80, freeShippingThreshold: 999, leafPlatesShippingFee: 120 };
+        return {
+            standardShippingFee: 80,
+            freeShippingThreshold: 999,
+            leafPlatesShippingFee: 120,
+            leafPlatesShippingType: 'tiered',
+            leafPlatesBasePlates: 200,
+            leafPlatesBaseFee: 120,
+            leafPlatesIncrementPerPlates: 100,
+            leafPlatesIncrementFee: 60,
+            leafPlatesFreeShippingExcluded: true,
+        };
     }
     try {
         const cached = localStorage.getItem('storeSettingsCache');
@@ -45,8 +55,12 @@ const getSavedStoreSettings = (): Partial<StoreSettings> => {
         standardShippingFee: standardFee,
         freeShippingThreshold: 999,
         leafPlatesShippingFee: 120,
+        leafPlatesShippingType: 'tiered',
+        leafPlatesBasePlates: 200,
+        leafPlatesBaseFee: 120,
+        leafPlatesIncrementPerPlates: 100,
+        leafPlatesIncrementFee: 60,
         leafPlatesFreeShippingExcluded: true,
-        leafPlatesShippingType: 'flat',
     };
 };
 

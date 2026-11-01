@@ -299,12 +299,12 @@ const Cart: React.FC = () => {
                     <div className="bg-amber-50/80 border border-amber-200/90 rounded-xl p-3 text-[11px] text-[#5A3825] leading-relaxed space-y-1.5">
                       <div className="flex items-center justify-between font-bold text-amber-950">
                         <span className="flex items-center gap-1.5">
-                          <span>📦</span> Leaf Plates Volumetric Delivery:
+                          <span>📦</span> Leaf Plates Delivery ({shippingCalc.totalPlatesCount} plates):
                         </span>
                         <span>₹ {shippingCalc.leafPlatesShipping.toFixed(2)}</span>
                       </div>
                       <p className="text-[#8C7364]">
-                        Leaf plates are shipped in high-volumetric bundles and require dedicated cargo handling. They are excluded from the ₹{freeShippingThreshold} free shipping rule.
+                        ₹{shippingCalc.leafPlatesBaseFee} covers up to {shippingCalc.leafPlatesBasePlates} plates. Delivery charges scale as plate count increases due to parcel volumetric weight (+₹{shippingCalc.leafPlatesIncrementFee} per additional 100 plates). Excluded from the ₹{freeShippingThreshold} free shipping rule.
                       </p>
 
                       {shippingCalc.hasStandardItems && (

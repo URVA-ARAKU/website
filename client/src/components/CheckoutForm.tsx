@@ -407,7 +407,7 @@ const CheckoutForm: React.FC = () => {
                 {shippingCalc.hasLeafPlates && (
                   <div className="bg-amber-50/80 border border-amber-200/80 rounded-lg p-2 text-[10px] text-[#5A3825] space-y-0.5">
                     <div className="flex justify-between font-semibold text-amber-950">
-                      <span>📦 Leaf Plates Volumetric Cargo:</span>
+                      <span>📦 Leaf Plates Volumetric Cargo ({shippingCalc.totalPlatesCount} plates):</span>
                       <span>₹ {shippingCalc.leafPlatesShipping.toFixed(2)}</span>
                     </div>
                     {shippingCalc.hasStandardItems && (

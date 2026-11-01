@@ -150,7 +150,7 @@ const ShippingPolicy: React.FC = () => {
                   <strong>Standard Free Shipping:</strong> Orders containing standard regional goods (Coffee, Honey, Sweets, Handlooms, etc.) above ₹1,000 qualify for 100% Free Doorstep Delivery across India.
                 </li>
                 <li>
-                  <strong>Leaf Plates (Volumetric Weight Class):</strong> Siali, Modugu, and natural leaf dining plates are high-volumetric goods packaged in large protective bundles. Due to bulk parcel cargo dimensions, leaf plates have a dedicated shipping fee and are excluded from the ₹1,000 free delivery rule.
+                  <strong>Leaf Plates (Volumetric Weight Class):</strong> Siali, Modugu, and natural leaf dining plates are high-volumetric goods packaged in large protective bundles. Due to bulk parcel cargo dimensions, leaf plates have a dedicated shipping fee (starting at ₹120 for up to 200 plates, and scaling progressively as plate count increases) and are excluded from the ₹1,000 free delivery rule.
                 </li>
               </ul>
             </section>

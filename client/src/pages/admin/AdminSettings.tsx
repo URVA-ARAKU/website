@@ -47,8 +47,12 @@ const AdminSettings: React.FC = () => {
   
   // Dedicated Shipping Class for Leaf Plates (High Volumetric Weight)
   const [leafPlatesShippingFee, setLeafPlatesShippingFee] = useState(120);
-  const [leafPlatesShippingType, setLeafPlatesShippingType] = useState<'flat' | 'quantity'>('flat');
+  const [leafPlatesShippingType, setLeafPlatesShippingType] = useState<'tiered' | 'flat' | 'quantity'>('tiered');
   const [leafPlatesFreeShippingExcluded, setLeafPlatesFreeShippingExcluded] = useState(true);
+  const [leafPlatesBasePlates, setLeafPlatesBasePlates] = useState(200);
+  const [leafPlatesBaseFee, setLeafPlatesBaseFee] = useState(120);
+  const [leafPlatesIncrementPerPlates, setLeafPlatesIncrementPerPlates] = useState(100);
+  const [leafPlatesIncrementFee, setLeafPlatesIncrementFee] = useState(60);
 
   const [youtubeChannelUrl, setYoutubeChannelUrl] = useState('');
   const [youtubeChannelName, setYoutubeChannelName] = useState('');
@@ -84,8 +88,12 @@ const AdminSettings: React.FC = () => {
       setDeliveryNote(s.deliveryNote || 'Flat ₹80 Delivery across Andhra Pradesh & Telangana');
 
       setLeafPlatesShippingFee(s.leafPlatesShippingFee !== undefined ? Number(s.leafPlatesShippingFee) : 120);
-      setLeafPlatesShippingType(s.leafPlatesShippingType === 'quantity' ? 'quantity' : 'flat');
+      setLeafPlatesShippingType((s.leafPlatesShippingType as any) || 'tiered');
       setLeafPlatesFreeShippingExcluded(s.leafPlatesFreeShippingExcluded !== false);
+      setLeafPlatesBasePlates(s.leafPlatesBasePlates !== undefined ? Number(s.leafPlatesBasePlates) : 200);
+      setLeafPlatesBaseFee(s.leafPlatesBaseFee !== undefined ? Number(s.leafPlatesBaseFee) : 120);
+      setLeafPlatesIncrementPerPlates(s.leafPlatesIncrementPerPlates !== undefined ? Number(s.leafPlatesIncrementPerPlates) : 100);
+      setLeafPlatesIncrementFee(s.leafPlatesIncrementFee !== undefined ? Number(s.leafPlatesIncrementFee) : 60);
 
       setYoutubeChannelUrl(s.youtubeChannelUrl || 'https://www.youtube.com/@urvaswadeshi');
       setYoutubeChannelName(s.youtubeChannelName || 'URVA Rural Heritage');
@@ -125,6 +133,10 @@ const AdminSettings: React.FC = () => {
       leafPlatesShippingFee: Number(leafPlatesShippingFee) || 120,
       leafPlatesShippingType,
       leafPlatesFreeShippingExcluded,
+      leafPlatesBasePlates: Number(leafPlatesBasePlates) || 200,
+      leafPlatesBaseFee: Number(leafPlatesBaseFee) || 120,
+      leafPlatesIncrementPerPlates: Number(leafPlatesIncrementPerPlates) || 100,
+      leafPlatesIncrementFee: Number(leafPlatesIncrementFee) || 60,
 
       youtubeChannelUrl: youtubeChannelUrl.trim(),
       youtubeChannelName: youtubeChannelName.trim(),
@@ -569,7 +581,7 @@ const AdminSettings: React.FC = () => {
                 </div>
                 <div className="text-right">
                   <span className="text-xs font-bold text-[#8B5A2B] bg-white px-2.5 py-1 rounded-lg border border-[#E2D9CC]">
-                    Active: ₹{leafPlatesShippingFee} {leafPlatesShippingType === 'quantity' ? '/ pack' : 'Flat rate'}
+                    Active: ₹{leafPlatesBaseFee} (up to {leafPlatesBasePlates} plates) + ₹{leafPlatesIncrementFee} / {leafPlatesIncrementPerPlates} plates
                   </span>
                 </div>
               </div>
@@ -577,57 +589,141 @@ const AdminSettings: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
-                    Leaf Plates Delivery Fee (₹) <span className="text-rose-600">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={leafPlatesShippingFee}
-                    onChange={(e) => setLeafPlatesShippingFee(Number(e.target.value))}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-white text-[#5A3825] text-sm font-bold focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
-                    placeholder="120"
-                  />
-                  <span className="text-[11px] text-[#8C7364] mt-1 block">
-                    Charged on carts containing Leaf Plates.
-                  </span>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
                     Calculation Type
                   </label>
                   <select
                     value={leafPlatesShippingType}
-                    onChange={(e) => setLeafPlatesShippingType(e.target.value as 'flat' | 'quantity')}
+                    onChange={(e) => setLeafPlatesShippingType(e.target.value as 'tiered' | 'flat' | 'quantity')}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-white text-[#5A3825] text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
                   >
-                    <option value="flat">Flat Rate (Per order with leaf plates)</option>
-                    <option value="quantity">Quantity Based (₹{leafPlatesShippingFee} × pack count)</option>
+                    <option value="tiered">Tiered by Plate Count (Scales with Plates - Recommended)</option>
+                    <option value="flat">Flat Rate (Fixed fee per order)</option>
+                    <option value="quantity">Per Pack / Bundle (₹ × pack count)</option>
                   </select>
                   <span className="text-[11px] text-[#8C7364] mt-1 block">
-                    Choose flat rate per shipment or multiplied per bundle.
+                    Choose how charges scale as customers order more plates.
                   </span>
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
-                    Free Shipping Rule
+                    Base Delivery Fee (₹) <span className="text-rose-600">*</span>
                   </label>
-                  <label className="flex items-center gap-2 mt-2 cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      checked={leafPlatesFreeShippingExcluded}
-                      onChange={(e) => setLeafPlatesFreeShippingExcluded(e.target.checked)}
-                      className="w-4 h-4 text-[#8B5A2B] accent-[#8B5A2B] rounded border-[#E2D9CC]"
-                    />
-                    <span className="text-xs font-semibold text-[#5A3825]">
-                      Exclude from Free Shipping over ₹{freeShippingThreshold}
-                    </span>
-                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={leafPlatesBaseFee}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setLeafPlatesBaseFee(val);
+                      setLeafPlatesShippingFee(val);
+                    }}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-white text-[#5A3825] text-sm font-bold focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
+                    placeholder="120"
+                  />
                   <span className="text-[11px] text-[#8C7364] mt-1 block">
-                    Always charge this separate shipping fee for leaf plates regardless of total order value.
+                    Delivery fee for up to {leafPlatesBasePlates} plates (e.g. ₹120).
                   </span>
                 </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
+                    Base Plate Capacity (Plates)
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={leafPlatesBasePlates}
+                    onChange={(e) => setLeafPlatesBasePlates(Number(e.target.value))}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-white text-[#5A3825] text-sm font-bold focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
+                    placeholder="200"
+                  />
+                  <span className="text-[11px] text-[#8C7364] mt-1 block">
+                    Number of plates covered by the base delivery fee.
+                  </span>
+                </div>
+              </div>
+
+              {leafPlatesShippingType === 'tiered' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1 border-t border-amber-200/60">
+                  <div>
+                    <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
+                      Additional Fee as Plates Increase (₹)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={leafPlatesIncrementFee}
+                      onChange={(e) => setLeafPlatesIncrementFee(Number(e.target.value))}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-white text-[#5A3825] text-sm font-bold focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
+                      placeholder="60"
+                    />
+                    <span className="text-[11px] text-[#8C7364] mt-1 block">
+                      Extra delivery charge added per incremental slab (e.g. +₹60).
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#5A3825] uppercase tracking-wider mb-1.5">
+                      Incremental Slab Size (Plates)
+                    </label>
+                    <input
+                      type="number"
+                      min="10"
+                      value={leafPlatesIncrementPerPlates}
+                      onChange={(e) => setLeafPlatesIncrementPerPlates(Number(e.target.value))}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2D9CC] bg-white text-[#5A3825] text-sm font-bold focus:outline-none focus:ring-1 focus:ring-[#5A3825]"
+                      placeholder="100"
+                    />
+                    <span className="text-[11px] text-[#8C7364] mt-1 block">
+                      Add the extra fee for every this many additional plates.
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Dynamic Rate Preview */}
+              <div className="bg-white/80 p-3 rounded-xl border border-amber-200/80 text-xs text-[#5A3825] space-y-1.5">
+                <span className="font-bold text-[11px] uppercase tracking-wider text-[#8B5A2B] block">
+                  📈 Live Rate Preview for Customers:
+                </span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-[11px]">
+                  <div className="p-2 rounded-lg bg-[#FAF8F4] border border-[#E2D9CC]">
+                    <span className="text-[#8C7364] block">1 – {leafPlatesBasePlates} Plates</span>
+                    <strong className="text-[#5A3825] text-xs">₹{leafPlatesBaseFee}</strong>
+                  </div>
+                  <div className="p-2 rounded-lg bg-[#FAF8F4] border border-[#E2D9CC]">
+                    <span className="text-[#8C7364] block">{leafPlatesBasePlates + 1} – {leafPlatesBasePlates + leafPlatesIncrementPerPlates} Plates</span>
+                    <strong className="text-[#5A3825] text-xs">₹{leafPlatesBaseFee + leafPlatesIncrementFee}</strong>
+                  </div>
+                  <div className="p-2 rounded-lg bg-[#FAF8F4] border border-[#E2D9CC]">
+                    <span className="text-[#8C7364] block">{leafPlatesBasePlates + leafPlatesIncrementPerPlates * 2} Plates</span>
+                    <strong className="text-[#5A3825] text-xs">₹{leafPlatesBaseFee + leafPlatesIncrementFee * 2}</strong>
+                  </div>
+                  <div className="p-2 rounded-lg bg-[#FAF8F4] border border-[#E2D9CC]">
+                    <span className="text-[#8C7364] block">1,000 Plates</span>
+                    <strong className="text-[#5A3825] text-xs">
+                      ₹{leafPlatesBaseFee + Math.ceil(Math.max(0, 1000 - leafPlatesBasePlates) / leafPlatesIncrementPerPlates) * leafPlatesIncrementFee}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={leafPlatesFreeShippingExcluded}
+                    onChange={(e) => setLeafPlatesFreeShippingExcluded(e.target.checked)}
+                    className="w-4 h-4 text-[#8B5A2B] accent-[#8B5A2B] rounded border-[#E2D9CC]"
+                  />
+                  <span className="text-xs font-semibold text-[#5A3825]">
+                    Exclude Leaf Plates from Free Shipping above ₹{freeShippingThreshold}
+                  </span>
+                </label>
+                <span className="text-[11px] text-[#8C7364] mt-0.5 block pl-6">
+                  Leaf plates are always charged this progressive volumetric cargo fee regardless of total order amount.
+                </span>
               </div>
             </div>
           </div>

@@ -26,7 +26,7 @@ import { addToCart, calculatePrice, decrementCartItem, incrementCartItem } from 
 import { RootState } from '../redux/store';
 import { usePageSEO } from '../hooks/usePageSEO';
 import { productSchema, breadcrumbSchema, webPageSchema, faqSchema } from '../seo/schemas';
-import { isLeafPlateItem } from '../utils/shipping';
+import { isLeafPlateItem, getPlateCountPerUnit } from '../utils/shipping';
 
 export interface ProductVariety {
   id: string;
@@ -60,7 +60,6 @@ const ProductDetails: React.FC = () => {
   const storeSettings = settingsData?.settings;
   const standardShippingFee = typeof storeSettings?.standardShippingFee === 'number' ? storeSettings.standardShippingFee : 80;
   const freeShippingThreshold = typeof storeSettings?.freeShippingThreshold === 'number' ? storeSettings.freeShippingThreshold : 999;
-  const leafPlatesShippingFee = typeof storeSettings?.leafPlatesShippingFee === 'number' ? storeSettings.leafPlatesShippingFee : 120;
 
   // Resolve Product Data strictly from Database
   const resolvedProduct = data?.product;
@@ -689,6 +688,21 @@ const ProductDetails: React.FC = () => {
               {/* Delivery Charges & Shipping Clarity Card */}
               {(() => {
                 const isLeaf = isLeafPlateItem(resolvedProduct);
+                const platesPerUnit = getPlateCountPerUnit(resolvedProduct);
+                const currentPlates = platesPerUnit * Math.max(1, quantity || 1);
+                const leafPlatesBaseFee = typeof storeSettings?.leafPlatesBaseFee === 'number'
+                  ? storeSettings.leafPlatesBaseFee
+                  : 120;
+                const leafPlatesBasePlates = typeof storeSettings?.leafPlatesBasePlates === 'number'
+                  ? storeSettings.leafPlatesBasePlates
+                  : 200;
+                const leafPlatesIncrementFee = typeof storeSettings?.leafPlatesIncrementFee === 'number'
+                  ? storeSettings.leafPlatesIncrementFee
+                  : 60;
+                const dynamicLeafFee = currentPlates <= leafPlatesBasePlates
+                  ? leafPlatesBaseFee
+                  : leafPlatesBaseFee + Math.ceil((currentPlates - leafPlatesBasePlates) / 100) * leafPlatesIncrementFee;
+
                 return (
                   <div className={`border rounded-xl p-3.5 space-y-2 ${isLeaf ? 'bg-[#FAF7F2] border-amber-300' : 'bg-[#FAF8F4] border-[#E2D9CC]'}`}>
                     <div className="flex items-center justify-between text-xs">
@@ -699,7 +713,7 @@ const ProductDetails: React.FC = () => {
                       <span className="font-bold text-xs">
                         {isLeaf ? (
                           <span className="text-amber-900 bg-amber-100 border border-amber-300 px-2.5 py-0.5 rounded-full text-[11px]">
-                            ₹{leafPlatesShippingFee} Volumetric Cargo
+                            ₹{dynamicLeafFee} Cargo ({currentPlates} plates)
                           </span>
                         ) : standardShippingFee === 0 ? (
                           <span className="text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[11px]">FREE Delivery</span>
@@ -711,7 +725,7 @@ const ProductDetails: React.FC = () => {
                     <div className="text-[11px] text-[#8C7364] leading-relaxed">
                       {isLeaf ? (
                         <span>
-                          📦 <strong>High Volumetric Weight Goods:</strong> Due to large bundle parcel volume, leaf plates are delivered via dedicated cargo and excluded from the standard free delivery threshold.
+                          📦 <strong>Volumetric Cargo:</strong> ₹{leafPlatesBaseFee} covers up to {leafPlatesBasePlates} plates. Courier charges scale progressively as plate count increases due to bulk parcel size (+₹{leafPlatesIncrementFee}/100 plates). Excluded from the ₹{freeShippingThreshold} free delivery rule.
                         </span>
                       ) : freeShippingThreshold > 0 ? (
                         `✨ Free doorstep delivery on orders above ₹${freeShippingThreshold}.`

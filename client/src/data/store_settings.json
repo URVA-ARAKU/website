@@ -18,8 +18,12 @@
   "expressShippingFee": 99,
   "shippingPartner": "APSRTC Cargo & India Post",
   "leafPlatesShippingFee": 120,
-  "leafPlatesShippingType": "flat",
+  "leafPlatesShippingType": "tiered",
   "leafPlatesFreeShippingExcluded": true,
+  "leafPlatesBasePlates": 200,
+  "leafPlatesBaseFee": 120,
+  "leafPlatesIncrementPerPlates": 100,
+  "leafPlatesIncrementFee": 60,
   
   "youtubeChannelUrl": "https://www.youtube.com/@urvaswadeshi",
   "youtubeChannelName": "URVA Rural Heritage",

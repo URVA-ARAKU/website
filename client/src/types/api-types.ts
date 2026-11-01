@@ -458,8 +458,12 @@ export interface StoreSettings {
     
     // Dedicated Shipping Class for Volumetric/Heavy goods
     leafPlatesShippingFee?: number;
-    leafPlatesShippingType?: 'flat' | 'quantity';
+    leafPlatesShippingType?: 'flat' | 'quantity' | 'tiered';
     leafPlatesFreeShippingExcluded?: boolean;
+    leafPlatesBasePlates?: number;
+    leafPlatesBaseFee?: number;
+    leafPlatesIncrementPerPlates?: number;
+    leafPlatesIncrementFee?: number;
     
     youtubeChannelUrl: string;
     youtubeChannelName?: string;
